@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: pending
-gpus: 1
+action: submit
+gpus: 0
 test: false
 milestone: method_runs
-notes: ""
+notes: "CPU job to sweep BatchTopK k/seed settings, select the strongest real artifact set, evaluate it, and validate scores."
