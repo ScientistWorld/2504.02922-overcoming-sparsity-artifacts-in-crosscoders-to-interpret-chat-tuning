@@ -13,6 +13,10 @@ set -e
 
 cd /home/user
 
+if [ "${FORCE_TRAIN:-1}" = "1" ]; then
+  rm -rf checkpoints/crosscoder_synthetic
+fi
+
 if [ ! -f checkpoints/crosscoder_synthetic/l1/val_outputs.npz ] || \
    [ ! -f checkpoints/crosscoder_synthetic/batchtopk/val_outputs.npz ]; then
   bash scripts/method.sh

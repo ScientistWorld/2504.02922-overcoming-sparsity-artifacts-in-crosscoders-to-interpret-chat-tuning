@@ -99,8 +99,6 @@ def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[
         "fraction_top_norm_true_chat": float(aligned_true.mean()),
         "fraction_top_norm_weak_or_shared": float((aligned_weak | aligned_shared).mean()),
         "fraction_top_norm_scaling_specific": float(scaling_specific.mean()),
-        "mean_nu_r_top_norm": float(np.nanmean(nu_r[top_chat])),
-        "mean_nu_e_top_norm": float(np.nanmean(nu_e[top_chat])),
         "chat_only_latent_count": int(np.sum(delta >= 0.9)),
         "false_ft_only_rate_pi06": false_ft_only_rate_pi06,
         "reconstruction_fve": float(fve),

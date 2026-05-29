@@ -4,6 +4,7 @@
 
 Tests whether latents identified as fine-tuned-model-specific by decoder norm are genuinely specific rather than shared concepts misclassified by the sparsity mechanism.
 
+- **Metric**: `false_ft_only_rate_pi06` (lower is better)
 - **Metric**: `fraction_top_norm_scaling_specific` (higher is better)
 - **Metric**: `fraction_top_norm_true_chat` (higher is better)
 - **Run**: `bash scripts/evaluate.sh checkpoints/crosscoder_synthetic`

@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "Rerun evaluation after fixing Latent Scaling per-latent dot products; reuse existing crosscoder artifacts if present, otherwise train, then run validate.py --compare."
+notes: "Retrain and evaluate after removing undeclared diagnostic score fields and increasing L1 sparsity penalty to better match the paper's comparable-L0 protocol."

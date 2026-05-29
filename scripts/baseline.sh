@@ -25,6 +25,6 @@ python3 -m method.train \
   --batch-size "${BATCH_SIZE:-256}" \
   --n-latents "${N_LATENTS:-88}" \
   --k "${K:-4}" \
-  --mu "${MU:-0.002}"
+  --mu "${MU:-0.02}"
 
 bash scripts/evaluate.sh checkpoints/crosscoder_synthetic

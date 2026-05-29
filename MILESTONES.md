@@ -28,5 +28,9 @@
 - Second CPU test job trained both L1 and BatchTopK crosscoders and produced artifacts.
 - Evaluation failed before writing scores due to a Latent Scaling array-shape bug; patched the evaluator and resubmitting evaluation.
 
+### [2026-05-29 04:45] - none
+- Third CPU test job wrote `scoring/scores.json`, but `validate.py --compare` rejected undeclared diagnostic metrics.
+- Removed those extra score fields and increased the L1 sparsity penalty for the next run to better match the paper's comparable-L0 setup.
+
 ## Stop Justification
 - Not stopped.

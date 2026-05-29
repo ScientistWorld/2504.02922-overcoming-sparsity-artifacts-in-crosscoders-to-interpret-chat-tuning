@@ -12,7 +12,9 @@
 ## Results
 
 - CPU job `26a2e825-7e8` completed training and wrote crosscoder artifacts under `checkpoints/crosscoder_synthetic/`, but failed while computing Latent Scaling metrics.
-- No valid `scoring/scores.json` yet. The next job reuses the completed training artifacts if present and reruns evaluation after the shape bug fix.
+- CPU job `6031cf26-e02` wrote `scoring/scores.json`, but validation failed because two diagnostic `mean_nu_*` fields were not declared in `reference.json`.
+- The first scored run showed BatchTopK had lower false fine-tuned-only rate than L1, but L1 was much denser. The next run increases the L1 sparsity penalty so the comparison better matches the paper's equal-sparsity protocol.
+- After removing undeclared diagnostic fields, `python3 validate.py --compare` passes on the existing score file; the next compute job will regenerate scores from a fresh train/eval run.
 
 ## Remaining
 
@@ -24,6 +26,7 @@
 
 - First CPU test job failed before method execution because the base container exposed `python3` but not `python`. Scripts now call `python3` explicitly, and `environment/container.def` also creates a `python` symlink for compatibility.
 - Second CPU test job trained both crosscoders, then failed in `eval/evaluate_crosscoders.py` because NumPy batched matmul did not express the intended per-latent dot product. This is fixed with explicit `einsum`.
+- Third CPU test job reached scoring but failed schema validation; evaluator now only emits metrics declared in `reference.json`.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
 
 ## Deviations from Paper
