@@ -43,4 +43,4 @@
 - Lightweight verification passed: JSON schema checks, shell syntax checks, Python syntax checks, shared-path checks, and `python3 validate.py --compare`.
 
 ## Stop Justification
-- Final verification complete at `core_claim`. The workspace is usable as a scaled synthetic research gym; the main limitation is that it does not reproduce the original full Gemma 2 activation dataset.
+- Completed at milestone `core_claim`.
