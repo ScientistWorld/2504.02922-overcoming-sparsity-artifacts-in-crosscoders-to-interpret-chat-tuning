@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 <!-- Milestone levels (update "Current" above as you progress):
   none             — just started, no meaningful progress yet
@@ -40,5 +40,9 @@
 - Latent-decoupling run completed end-to-end and passed `validate.py --compare`.
 - BatchTopK reduced the false fine-tuned-only rate relative to L1 (`0.0` vs `0.226`), but reconstruction and top-candidate alignment remain weak, so the next run increases the BatchTopK sparsity budget before claiming `core_claim`.
 
+### [2026-05-29 05:45] - core_claim
+- Comparable-L0 run completed and passed validation.
+- BatchTopK matched L1 sparsity (`14.0` vs `13.98` mean L0), kept reasonable reconstruction (`0.942` FVE), and eliminated false fine-tuned-only latents on the primary metric (`0.0` vs `0.226` for L1).
+
 ## Stop Justification
-- Not stopped.
+- Reached `core_claim`: the paper's actual L1 and BatchTopK crosscoder objectives run end-to-end, and the scaled latent-decoupling benchmark demonstrates the central artifact-control claim.

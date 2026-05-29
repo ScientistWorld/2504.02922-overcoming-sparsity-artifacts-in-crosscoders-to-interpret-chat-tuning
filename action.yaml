@@ -27,8 +27,6 @@
 #   milestone: core_claim
 #   notes: "Reproduced the core claim. Environment packaged."
 
-action: submit
-gpus: 0
-test: true
-milestone: method_runs
-notes: "Retrain and evaluate the latent-decoupling benchmark with BatchTopK k=14 so its L0 budget is comparable to the L1 run before claiming the core artifact-control result."
+action: done
+milestone: core_claim
+notes: "Core claim reproduced: comparable-L0 BatchTopK eliminates false fine-tuned-only latents relative to L1 on the latent-decoupling benchmark, with reusable method/eval/scripts packaged."

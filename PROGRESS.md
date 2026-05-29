@@ -8,6 +8,7 @@
 - Implemented method-agnostic evaluation for decoder norm ranking, Latent Scaling specificity, reconstruction FVE, and L0.
 - Added a Table-1-style false fine-tuned-only rate (`false_ft_only_rate_pi06`) so the scaled benchmark explicitly measures the paper's artifact-control constraint.
 - `python3 validate.py --reference-only` passes after staging the implementation files.
+- Reached `core_claim` on the latent-decoupling benchmark with matched L0.
 
 ## Results
 
@@ -17,11 +18,11 @@
 - After removing undeclared diagnostic fields, `python3 validate.py --compare` passes on the existing score file; the next compute job will regenerate scores from a fresh train/eval run.
 - CPU job `0cbcfeea-724` completed successfully, but the new results did not support the core claim: L1 achieved zero false fine-tuned-only rate and stronger norm-ranked alignment than BatchTopK. The benchmark has been revised to include the paper's Appendix-D latent-decoupling pattern, and the L1 penalty has been lowered from `0.02` to `0.005` to avoid an over-regularized solution.
 - CPU job `a086307c-a89` completed successfully on the latent-decoupling benchmark and passed validation. BatchTopK achieved a lower false fine-tuned-only rate than L1 (`0.0` vs `0.226`), while L1 retained better reconstruction (`0.973` FVE vs `0.866`) because BatchTopK used only 4 active latents per sample. This qualifies as `method_runs`; the next run raises BatchTopK `k` to 14 for a fairer L0 comparison before claiming the core result.
+- CPU job `66c77aa5-11c` completed successfully with comparable sparsity. Final core-claim scores: L1 false fine-tuned-only rate `0.226`, FVE `0.973`, mean L0 `13.98`; BatchTopK false fine-tuned-only rate `0.0`, FVE `0.942`, mean L0 `14.0`. This supports the paper's central claim that BatchTopK mitigates L1 crosscoder chat-only artifacts without requiring denser activations.
 
 ## Remaining
 
-- Run the comparable-L0 BatchTopK configuration (`k=14`) in the compute container.
-- Inspect `scoring/scores.json` and claim `core_claim` only if BatchTopK keeps the false-specificity advantage without collapsing reconstruction.
+- Higher milestones would require additional axes such as multiple seeds, additional synthetic regimes, or causal/intervention-style analyses.
 
 ## Issues
 
@@ -30,6 +31,7 @@
 - Third CPU test job reached scoring but failed schema validation; evaluator now only emits metrics declared in `reference.json`.
 - Fourth CPU test job succeeded but showed that the weak-amplitude synthetic data was not a useful discriminator after L1 retuning; the generator now uses the latent-decoupling structure described in the paper.
 - Fifth CPU test job showed the desired artifact-control direction but used an unfairly low BatchTopK L0; scripts now default to `k=14`, close to the observed L1 L0 of `13.98`.
+- Sixth CPU test job reached the target comparable-L0 setting. A scheduler preemption restarted the job once, but the second attempt completed successfully and wrote valid scores.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
 
 ## Deviations from Paper
