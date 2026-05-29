@@ -1,7 +1,7 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Run evaluate_train.sh and evaluate_test.sh on the frozen crosscoder suite to populate split scores."
+notes: "Complementary validation-sample/concept split; 36 train metrics and 36 test metrics populated across 2 experiments x 2 methods. Train/test differ on sample-dependent metrics with no missing values; decoder-level counts can match by construction."
