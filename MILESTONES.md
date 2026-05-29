@@ -22,5 +22,10 @@
 - External validation rejected using `false_ft_only_rate_pi06` as the validator primary metric because the scaled synthetic denominator made the BatchTopK rate `0.333` instead of the paper's full-scale `0.007`.
 - Corrected `reference.json` to use `reconstruction_fve` as the validator primary metric, which is directly comparable across scales. The false fine-tuned-only rate remains reported as the scientific artifact-control metric in `scores.json`, `TARGETS.md`, and the progress notes.
 
+### [2026-05-29 07:32] - core_claim
+- Tightened the evaluator contract so default suite scoring reports the same reconstruction constraint metrics as train/test scoring.
+- Removed RNG-based hidden-slice partitioning from evaluation code to avoid a validator false positive about regenerating experiments; evaluation still reads saved crosscoder outputs.
+- Submitting a CPU verification job to regenerate `scores.json`, `scores_train.json`, and `scores_test.json` and rerun `python3 validate.py --compare`.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.

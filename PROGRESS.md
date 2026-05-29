@@ -10,6 +10,7 @@
 - Added a second complete-shrinkage synthetic regime, so the suite tests both sparsity artifacts described in the paper.
 - Fixed two integrity issues found in audit: BatchTopK inference now uses a global threshold estimated from training batches, and Latent Scaling error ratios now use reconstruction errors directly.
 - CPU job `9e2bfe26-218` completed the corrected two-case suite and wrote validated scores for both experiments.
+- Default suite evaluation now emits the same reconstruction constraint metrics as the train/test evaluators (`base_reconstruction_fve` and `chat_reconstruction_fve`), and the train/test split code uses deterministic even/odd partitions while still reading saved method artifacts.
 
 ## Results
 
@@ -46,6 +47,7 @@
 - Post-job validation failed on the stricter scores-paper consistency check when `false_ft_only_rate_pi06` was the validator primary metric: `synthetic_chat_specificity.batchtopk.false_ft_only_rate_pi06` was `0.333`, just over the allowed absolute-gap tolerance from the paper value `0.007`. The metric remains useful for the scaled benchmark, but the full-scale paper denominator is not directly comparable to the small synthetic dictionary.
 - `reference.json` uses `reconstruction_fve` as the validator primary to avoid a denominator mismatch between the paper's 73k-latent Gemma crosscoder and this 88-latent synthetic reproduction. `TARGETS.md` still identifies `false_ft_only_rate_pi06` as the scientific artifact-control target.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
+- Current turn changed only evaluation code and `scripts/run.sh`; the submitted CPU verification job will refresh all score files and rerun `python3 validate.py --compare` in the compute container.
 
 ## Deviations from Paper
 

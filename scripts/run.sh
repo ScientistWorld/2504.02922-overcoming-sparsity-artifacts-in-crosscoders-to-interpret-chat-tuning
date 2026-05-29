@@ -8,3 +8,5 @@ cd /home/user
 
 bash scripts/evaluate_train.sh --suite /home/user/checkpoints/crosscoder_suite /home/user/data/benchmarks
 bash scripts/evaluate_test.sh --suite /home/user/checkpoints/crosscoder_suite /home/user/data/benchmarks
+bash scripts/evaluate.sh --suite /home/user/checkpoints/crosscoder_suite /home/user/data/benchmarks
+python3 validate.py --compare

@@ -85,6 +85,8 @@ def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[
 
     mse_base = float(np.mean((base - base_recon) ** 2))
     mse_chat = float(np.mean((chat - chat_recon) ** 2))
+    base_fve = 1.0 - (mse_base / max(float(np.var(base)), 1e-12))
+    chat_fve = 1.0 - (mse_chat / max(float(np.var(chat)), 1e-12))
     variance = 0.5 * float(np.var(base) + np.var(chat))
     fve = 1.0 - (0.5 * (mse_base + mse_chat) / max(variance, 1e-12))
 
@@ -95,6 +97,8 @@ def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[
         "chat_only_latent_count": int(np.sum(delta >= 0.9)),
         "false_ft_only_rate_pi06": false_ft_only_rate_pi06,
         "reconstruction_fve": float(fve),
+        "base_reconstruction_fve": float(base_fve),
+        "chat_reconstruction_fve": float(chat_fve),
         "mean_l0": float((features > 0).sum(axis=1).mean()),
     }
 

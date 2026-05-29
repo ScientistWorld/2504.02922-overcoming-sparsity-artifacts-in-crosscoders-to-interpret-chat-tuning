@@ -63,18 +63,14 @@ def _best_alignment(decoder: np.ndarray, directions: np.ndarray, indices: list[i
 
 
 def _slice_indices(n: int) -> np.ndarray:
-    rng = np.random.default_rng(SPLIT_SEED)
-    perm = rng.permutation(n)
-    return np.sort(perm[n // 2 :])
+    return np.arange(1, n, 2, dtype=np.int64)
 
 
 def _slice_concepts(meta: dict) -> dict[str, list[int]]:
     sliced: dict[str, list[int]] = {}
-    for offset, (name, values) in enumerate(sorted(meta["concept_indices"].items())):
+    for name, values in sorted(meta["concept_indices"].items()):
         items = np.array(values, dtype=np.int64)
-        rng = np.random.default_rng(SPLIT_SEED + 1009 * (offset + 1))
-        perm = rng.permutation(items)
-        sliced[name] = sorted(int(x) for x in perm[len(perm) // 2 :])
+        sliced[name] = sorted(int(x) for x in items[1::2])
     return sliced
 
 

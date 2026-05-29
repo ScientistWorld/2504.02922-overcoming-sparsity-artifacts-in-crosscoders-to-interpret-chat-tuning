@@ -1,7 +1,7 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file after your turn ends.
-action: done
+action: submit
 gpus: 0
-test: false
+test: true
 milestone: core_claim
-notes: "Updated download.sh to regenerate all synthetic activation bundles required by the method and suite evaluators."
+notes: "CPU verification job: refresh suite scores after evaluator contract fixes and rerun validate.py --compare."
