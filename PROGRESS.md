@@ -16,12 +16,12 @@
 - The first scored run showed BatchTopK had lower false fine-tuned-only rate than L1, but L1 was much denser. The next run increases the L1 sparsity penalty so the comparison better matches the paper's equal-sparsity protocol.
 - After removing undeclared diagnostic fields, `python3 validate.py --compare` passes on the existing score file; the next compute job will regenerate scores from a fresh train/eval run.
 - CPU job `0cbcfeea-724` completed successfully, but the new results did not support the core claim: L1 achieved zero false fine-tuned-only rate and stronger norm-ranked alignment than BatchTopK. The benchmark has been revised to include the paper's Appendix-D latent-decoupling pattern, and the L1 penalty has been lowered from `0.02` to `0.005` to avoid an over-regularized solution.
+- CPU job `a086307c-a89` completed successfully on the latent-decoupling benchmark and passed validation. BatchTopK achieved a lower false fine-tuned-only rate than L1 (`0.0` vs `0.226`), while L1 retained better reconstruction (`0.973` FVE vs `0.866`) because BatchTopK used only 4 active latents per sample. This qualifies as `method_runs`; the next run raises BatchTopK `k` to 14 for a fairer L0 comparison before claiming the core result.
 
 ## Remaining
 
-- Run the method in the compute container.
-- Inspect `scoring/scores.json` and iterate on hyperparameters if BatchTopK does not improve specificity over L1.
-- Update milestone after job results are available.
+- Run the comparable-L0 BatchTopK configuration (`k=14`) in the compute container.
+- Inspect `scoring/scores.json` and claim `core_claim` only if BatchTopK keeps the false-specificity advantage without collapsing reconstruction.
 
 ## Issues
 
@@ -29,6 +29,7 @@
 - Second CPU test job trained both crosscoders, then failed in `eval/evaluate_crosscoders.py` because NumPy batched matmul did not express the intended per-latent dot product. This is fixed with explicit `einsum`.
 - Third CPU test job reached scoring but failed schema validation; evaluator now only emits metrics declared in `reference.json`.
 - Fourth CPU test job succeeded but showed that the weak-amplitude synthetic data was not a useful discriminator after L1 retuning; the generator now uses the latent-decoupling structure described in the paper.
+- Fifth CPU test job showed the desired artifact-control direction but used an unfairly low BatchTopK L0; scripts now default to `k=14`, close to the observed L1 L0 of `13.98`.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
 
 ## Deviations from Paper

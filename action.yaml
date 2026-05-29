@@ -30,5 +30,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: none
-notes: "Regenerate the revised latent-decoupling synthetic benchmark, retrain L1 and BatchTopK crosscoders with lower L1 penalty, evaluate, and compare scores."
+milestone: method_runs
+notes: "Retrain and evaluate the latent-decoupling benchmark with BatchTopK k=14 so its L0 budget is comparable to the L1 run before claiming the core artifact-control result."

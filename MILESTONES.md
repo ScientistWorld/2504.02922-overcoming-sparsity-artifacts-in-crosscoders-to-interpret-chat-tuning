@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: none**
+**Current: method_runs**
 
 <!-- Milestone levels (update "Current" above as you progress):
   none             — just started, no meaningful progress yet
@@ -35,6 +35,10 @@
 ### [2026-05-29 04:55] - none
 - Fourth CPU test job completed and validated, but did not support the core claim: L1 also avoided false fine-tuned-only latents under the weak-amplitude benchmark.
 - Revised the synthetic generator to include the paper's latent-decoupling setup and lowered the L1 penalty before resubmitting.
+
+### [2026-05-29 05:20] - method_runs
+- Latent-decoupling run completed end-to-end and passed `validate.py --compare`.
+- BatchTopK reduced the false fine-tuned-only rate relative to L1 (`0.0` vs `0.226`), but reconstruction and top-candidate alignment remain weak, so the next run increases the BatchTopK sparsity budget before claiming `core_claim`.
 
 ## Stop Justification
 - Not stopped.
