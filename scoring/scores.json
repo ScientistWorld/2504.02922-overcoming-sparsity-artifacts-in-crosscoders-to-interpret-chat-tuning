@@ -1,0 +1,30 @@
+{
+  "experiments": {
+    "synthetic_chat_specificity": {
+      "results": {
+        "l1": {
+          "fraction_top_norm_true_chat": 1.0,
+          "fraction_top_norm_weak_or_shared": 0.5384615384615384,
+          "fraction_top_norm_scaling_specific": 0.9230769230769231,
+          "mean_nu_r_top_norm": 0.14741863310337067,
+          "mean_nu_e_top_norm": 0.03270282596349716,
+          "chat_only_latent_count": 20,
+          "false_ft_only_rate_pi06": 0.050000000000000044,
+          "reconstruction_fve": 0.9886914484188476,
+          "mean_l0": 19.232421875
+        },
+        "batchtopk": {
+          "fraction_top_norm_true_chat": 0.5384615384615384,
+          "fraction_top_norm_weak_or_shared": 0.5384615384615384,
+          "fraction_top_norm_scaling_specific": 0.46153846153846156,
+          "mean_nu_r_top_norm": 0.1669161319732666,
+          "mean_nu_e_top_norm": 0.14408908784389496,
+          "chat_only_latent_count": 6,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": 0.9181018743721384,
+          "mean_l0": 4.0
+        }
+      }
+    }
+  }
+}
