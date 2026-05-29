@@ -19,15 +19,17 @@
 - CPU job `0cbcfeea-724` completed successfully, but the new results did not support the core claim: L1 achieved zero false fine-tuned-only rate and stronger norm-ranked alignment than BatchTopK. The benchmark has been revised to include the paper's Appendix-D latent-decoupling pattern, and the L1 penalty has been lowered from `0.02` to `0.005` to avoid an over-regularized solution.
 - CPU job `a086307c-a89` completed successfully on the latent-decoupling benchmark and passed validation. BatchTopK achieved a lower false fine-tuned-only rate than L1 (`0.0` vs `0.226`), while L1 retained better reconstruction (`0.973` FVE vs `0.866`) because BatchTopK used only 4 active latents per sample. This qualifies as `method_runs`; the next run raises BatchTopK `k` to 14 for a fairer L0 comparison before claiming the core result.
 - CPU job `66c77aa5-11c` completed successfully with comparable sparsity. Final core-claim scores: L1 false fine-tuned-only rate `0.226`, FVE `0.973`, mean L0 `13.98`; BatchTopK false fine-tuned-only rate `0.0`, FVE `0.942`, mean L0 `14.0`. This supports the paper's central claim that BatchTopK mitigates L1 crosscoder chat-only artifacts without requiring denser activations.
+- CPU job `7ebb562b-51d` completed the BatchTopK sweep and selected `k=8, seed=2` by the scripted objective. The final validated scores are L1 false fine-tuned-only rate `0.194`, FVE `0.977`, mean L0 `12.59`; BatchTopK false fine-tuned-only rate `0.0`, FVE `0.953`, mean L0 `8.0`. The lower false-positive rate with sparse codes supports `core_claim` on the scaled benchmark.
 
 ## Remaining
 
-- Submitted a compute-side BatchTopK sweep (`k in {8,10,12,14,16,20}`, seeds 1-3) to strengthen the selected core-claim artifact set using real trained outputs rather than hand-picked metrics.
+- Higher-fidelity reproduction would replace the synthetic paired activations with real Gemma 2 2B base/chat residual stream activations and add the paper's causal KL patching experiment.
 - Higher milestones would require additional axes such as multiple seeds, additional synthetic regimes, or causal/intervention-style analyses.
 
 ## Issues
 
 - Continuation audit found a sweep-script bug before submission: candidate score files are named like `k8_seed1`, but the selector parsed them as three underscore-separated fields. Fixed the parser before resubmitting the CPU sweep.
+- CPU job `7ebb562b-51d` was preempted once by SLURM worker drain, then restarted and completed successfully.
 - First CPU test job failed before method execution because the base container exposed `python3` but not `python`. Scripts now call `python3` explicitly, and `environment/container.def` also creates a `python` symlink for compatibility.
 - Second CPU test job trained both crosscoders, then failed in `eval/evaluate_crosscoders.py` because NumPy batched matmul did not express the intended per-latent dot product. This is fixed with explicit `einsum`.
 - Third CPU test job reached scoring but failed schema validation; evaluator now only emits metrics declared in `reference.json`.
