@@ -28,7 +28,7 @@ mkdir -p scoring
 
 ARTIFACTS="${1:-checkpoints/crosscoder_synthetic}"
 
-python -m eval.evaluate_crosscoders \
+python3 -m eval.evaluate_crosscoders \
   --artifacts "$ARTIFACTS" \
   --data data/synthetic_activations.npz \
   --metadata data/synthetic_metadata.json \

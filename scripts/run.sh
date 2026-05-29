@@ -14,4 +14,4 @@ set -e
 cd /home/user
 
 bash scripts/method.sh
-python validate.py --compare
+python3 validate.py --compare

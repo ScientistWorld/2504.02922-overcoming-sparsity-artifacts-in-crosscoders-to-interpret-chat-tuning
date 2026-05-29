@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU test job to install dependencies, generate the scaled paired-activation benchmark, train L1 and BatchTopK crosscoders, evaluate latent-scaling artifact metrics, and run validate.py --compare."
+notes: "Retry CPU smoke job after fixing python/python3 executable mismatch; generate data, train L1 and BatchTopK crosscoders, evaluate latent-scaling artifact metrics, and run validate.py --compare."

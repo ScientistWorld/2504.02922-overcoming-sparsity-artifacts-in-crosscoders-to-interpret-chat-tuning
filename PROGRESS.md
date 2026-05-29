@@ -7,7 +7,7 @@
 - Implemented both L1 and BatchTopK sparsity objectives.
 - Implemented method-agnostic evaluation for decoder norm ranking, Latent Scaling specificity, reconstruction FVE, and L0.
 - Added a Table-1-style false fine-tuned-only rate (`false_ft_only_rate_pi06`) so the scaled benchmark explicitly measures the paper's artifact-control constraint.
-- `python validate.py --reference-only` passes after staging the implementation files.
+- `python3 validate.py --reference-only` passes after staging the implementation files.
 
 ## Results
 
@@ -21,6 +21,7 @@
 
 ## Issues
 
+- First CPU test job failed before method execution because the base container exposed `python3` but not `python`. Scripts now call `python3` explicitly, and `environment/container.def` also creates a `python` symlink for compatibility.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
 
 ## Deviations from Paper

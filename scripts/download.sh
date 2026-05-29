@@ -19,4 +19,4 @@ set -e
 
 cd /home/user
 
-python data/synthetic_activations.py --out-dir data --seed 0
+python3 data/synthetic_activations.py --out-dir data --seed 0

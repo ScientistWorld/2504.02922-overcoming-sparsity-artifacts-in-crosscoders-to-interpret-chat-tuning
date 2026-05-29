@@ -17,8 +17,8 @@ set -e
 
 cd /home/user
 
-python data/synthetic_activations.py --out-dir data --seed 0
-python -m method.train \
+python3 data/synthetic_activations.py --out-dir data --seed 0
+python3 -m method.train \
   --data data/synthetic_activations.npz \
   --out-dir checkpoints/crosscoder_synthetic \
   --epochs "${EPOCHS:-80}" \

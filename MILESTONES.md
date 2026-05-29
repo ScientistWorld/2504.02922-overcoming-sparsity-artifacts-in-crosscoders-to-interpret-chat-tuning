@@ -20,5 +20,9 @@
 - Implemented the scaled benchmark, method code, evaluation code, scripts, and scoring reference.
 - Submitting first compute job; no milestone above `none` is claimed until the method runs successfully.
 
+### [2026-05-29 04:15] - none
+- First CPU test job failed at startup because the container lacked a `python` executable.
+- Patched scripts to use `python3` and added a container-level `python -> python3` symlink before resubmitting.
+
 ## Stop Justification
 - Not stopped.
