@@ -23,4 +23,4 @@
 - Corrected `reference.json` to use `reconstruction_fve` as the validator primary metric, which is directly comparable across scales. The false fine-tuned-only rate remains reported as the scientific artifact-control metric in `scores.json`, `TARGETS.md`, and the progress notes.
 
 ## Stop Justification
-- Stopping at `core_claim`: the actual crosscoder method and BatchTopK objective run end-to-end, the corrected evaluator reads saved method artifacts, and the scaled suite demonstrates reduced false fine-tuned-only artifacts while preserving high reconstruction. Higher milestones would require real Gemma 2 activation extraction/training and causal KL patching.
+- Completed at milestone `core_claim`.

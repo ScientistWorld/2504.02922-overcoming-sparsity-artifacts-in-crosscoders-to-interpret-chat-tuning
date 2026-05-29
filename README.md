@@ -2,7 +2,7 @@
 
 This paper shows that standard L1 crosscoders can misidentify shared concepts as chat-model-only latents when comparing base and chat-tuned language models. It introduces Latent Scaling to diagnose those artifacts and shows that BatchTopK sparsity substantially reduces them.
 
-The reproduction implements the actual crosscoder architecture, L1 and BatchTopK training objectives, decoder norm ranking, and Latent Scaling diagnostics on a scaled paired-activation benchmark. The final validated sweep reproduces the core artifact-control claim: BatchTopK eliminates false fine-tuned-only latents on the benchmark while preserving sparse activations and reasonable reconstruction.
+The reproduction implements the actual crosscoder architecture, L1 and BatchTopK training objectives, decoder norm ranking, and Latent Scaling diagnostics on scaled paired-activation benchmarks. The corrected two-case suite supports the core claim on the scaled setting: BatchTopK reduces false fine-tuned-only artifacts versus L1 in both synthetic regimes while preserving high reconstruction. Higher-fidelity reproduction on real Gemma 2 activations remains future work.
 
 ---
 
@@ -31,21 +31,30 @@ The decoder reconstructs both models with separate decoder vectors per latent:
 This reproduction implements both sparsity mechanisms from the paper:
 
 - L1 crosscoder: reconstruction loss plus `mu * sum_j f_j (||d_j_base|| + ||d_j_chat||)`.
-- BatchTopK crosscoder: select the top `batch_size * k` scaled activations `f_j (||d_j_base|| + ||d_j_chat||)` across each batch and train reconstruction loss on those sparse activations.
+- BatchTopK crosscoder: select the top `batch_size * k` scaled activations `f_j (||d_j_base|| + ||d_j_chat||)` across each batch and train reconstruction loss on those sparse activations. At inference, estimate the paper's global threshold `theta` from training batches and keep activations whose scaled value exceeds that threshold.
 
-The evaluator implements the paper's decoder norm difference and Latent Scaling diagnostics. Latent Scaling fits a scalar beta for each latent direction against base/chat reconstruction and error targets, then uses ratio thresholds to identify true model-specific latents.
+The encoder and both model decoders are initialized from paired latent directions with the L1 norm scale set to `0.05` and the BatchTopK norm scale set to `1.0`, matching the paper's initialization pattern at reduced width.
+
+The evaluator implements the paper's decoder norm difference and Latent Scaling diagnostics. Latent Scaling fits a scalar beta for each latent direction against base/chat reconstruction and reconstruction-error targets, then uses ratio thresholds to identify true model-specific latents.
 
 Deviation: the original paper trains on Gemma 2 2B base/chat layer-13 activations from 100M tokens. This reproduction uses synthetic paired activations with known latent ground truth because full activation extraction and crosscoder training are outside the current budget. The algorithmic procedure is preserved at smaller scale.
+
+Deviation: the paper's BatchTopK setup includes an auxiliary loss for inactive latent recycling. This scaled reproduction omits that auxiliary term because the small synthetic dictionary does not exhibit the same dead-latent regime; the core BatchTopK selection and thresholded inference computation are preserved.
 
 ---
 
 # Evaluation
 
-Evaluation reads saved method artifacts from `checkpoints/crosscoder_synthetic/<method>/val_outputs.npz` and writes `scoring/scores.json`.
+Evaluation reads saved method artifacts from `checkpoints/crosscoder_suite/<case>/<method>/val_outputs.npz` and writes `scoring/scores.json`. The legacy single-case evaluator still accepts `checkpoints/crosscoder_synthetic/<method>/val_outputs.npz`.
 
-The validator-facing `primary_metric` is `reconstruction_fve` because it is on the same absolute scale as the paper's reported reconstruction scores. The central artifact-control target remains `false_ft_only_rate_pi06`, which is the highest-weight false-positive metric in `reference.json` and `TARGETS.md`; its absolute value is benchmark-scale dependent in this synthetic reproduction.
+The validator-facing `primary_metric` is `reconstruction_fve`, because it is directly comparable between the paper's full Gemma 2 run and this scaled synthetic reproduction. The scientific artifact-control target remains `false_ft_only_rate_pi06`; mean L0 and reconstruction FVE are constraint metrics so a method cannot improve apparent specificity by failing to reconstruct or by using much denser activations.
 
-The primary experiment is `synthetic_chat_specificity`. It ranks latents by relative decoder norm difference and measures whether the top chat-specific candidates align with ground-truth chat-only factors rather than decoupled shared or shared factors. It also computes Latent Scaling ratios to test whether top candidates behave like genuinely chat-specific latents.
+The suite contains two experiments:
+
+- `synthetic_chat_specificity`: latent-decoupling setting where a shared concept has shared and model-exclusive activation subsets.
+- `synthetic_complete_shrinkage`: complete-shrinkage setting where a concept is present in both streams but lower-amplitude in the base stream.
+
+Both experiments rank latents by relative decoder norm difference and measure whether the top chat-specific candidates align with ground-truth chat-only factors rather than weak/shared factors. They also compute Latent Scaling ratios to test whether top candidates behave like genuinely chat-specific latents.
 
 Metrics include:
 
@@ -117,12 +126,36 @@ Metrics include:
 
 </details>
 
+### Iteration 3: gpt-5.5
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 8m | **GPU**: 0.0h
+- **Jobs**: 8 total (5 completed, 3 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-29 06:51] - method_runs
+- Implemented the paper's shared-encoder, two-decoder crosscoder on paired synthetic activations.
+- Trained L1 and BatchTopK variants end-to-end and evaluated saved artifacts with decoder norm and Latent Scaling diagnostics.
+
+### [2026-05-29 07:20] - method_runs
+- Audited the initial core-claim result and found reproduction-integrity fixes needed before advancing: BatchTopK inference now uses an estimated global threshold, Latent Scaling error ratios now target reconstruction error directly, and the next run uses fixed hyperparameters instead of selecting by validation metrics.
+- Added a second complete-shrinkage synthetic regime for the next compute job, but it has not run yet.
+
+### [2026-05-29 07:02] - core_claim
+- CPU job `9e2bfe26-218` completed the corrected two-case suite and passed `python3 validate.py --compare`.
+- On `synthetic_chat_specificity`, BatchTopK reduced the false fine-tuned-only rate from `0.531` to `0.333` and chat-only latent count from `32` to `3`, with reconstruction FVE `0.953` and mean L0 `14.30`.
+- On `synthetic_complete_shrinkage`, BatchTopK reduced the false fine-tuned-only rate from `0.448` to `0.000` and chat-only latent count from `29` to `1`, with reconstruction FVE `0.972` and mean L0 `14.17`.
+- This supports the core artifact-control claim on scaled synthetic paired activations, but not higher milestones: some alignment diagnostics remain mixed and the run does not use real Gemma 2 activation data.
+
+</details>
+
 
 ---
 
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Stop Justification
-- Completed at milestone `method_runs`.
+- Completed at milestone `core_claim`.
