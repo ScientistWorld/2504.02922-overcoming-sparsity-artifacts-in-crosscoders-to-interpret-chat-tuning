@@ -6,6 +6,7 @@
 - Implemented the paper's shared-encoder/two-decoder crosscoder architecture.
 - Implemented both L1 and BatchTopK sparsity objectives.
 - Implemented method-agnostic evaluation for decoder norm ranking, Latent Scaling specificity, reconstruction FVE, and L0.
+- Added a Table-1-style false fine-tuned-only rate (`false_ft_only_rate_pi06`) so the scaled benchmark explicitly measures the paper's artifact-control constraint.
 - `python validate.py --reference-only` passes after staging the implementation files.
 
 ## Results

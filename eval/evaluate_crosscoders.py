@@ -74,6 +74,7 @@ def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[
 
     top_n = max(1, int(round(len(delta) * 0.15)))
     top_chat = np.argsort(-delta)[:top_n]
+    ft_only = delta >= 0.9
     true_chat_alignment = _best_alignment(chat_decoder, directions, idx["chat_only"])
     weak_shared_alignment = _best_alignment(chat_decoder, directions, idx["weak_shared"])
     shared_alignment = _best_alignment(chat_decoder, directions, idx["shared"])
@@ -82,6 +83,10 @@ def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[
     aligned_weak = weak_shared_alignment[top_chat] >= 0.45
     aligned_shared = shared_alignment[top_chat] >= 0.45
     scaling_specific = (nu_r[top_chat] < 0.5) & (nu_e[top_chat] < 0.2)
+    ft_only_specific_pi06 = (nu_r[ft_only] < 0.6) & (nu_e[ft_only] < 0.6)
+    false_ft_only_rate_pi06 = (
+        1.0 - float(ft_only_specific_pi06.mean()) if np.any(ft_only) else 0.0
+    )
 
     mse_base = float(np.mean((base - base_recon) ** 2))
     mse_chat = float(np.mean((chat - chat_recon) ** 2))
@@ -95,6 +100,7 @@ def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[
         "mean_nu_r_top_norm": float(np.nanmean(nu_r[top_chat])),
         "mean_nu_e_top_norm": float(np.nanmean(nu_e[top_chat])),
         "chat_only_latent_count": int(np.sum(delta >= 0.9)),
+        "false_ft_only_rate_pi06": false_ft_only_rate_pi06,
         "reconstruction_fve": float(fve),
         "mean_l0": float((features > 0).sum(axis=1).mean()),
     }
