@@ -5,13 +5,15 @@
       "weight": 0.5,
       "primary_metric": "reconstruction_fve",
       "metrics": {
-        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0},
-        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7},
-        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7},
-        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1},
-        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0},
-        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.2},
-        "mean_l0": {"higher_is_better": false, "coefficient": -0.1}
+        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top chat-norm latents whose reconstruction and residual scaling indicate genuine chat-specific structure."},
+        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top chat-norm latents aligned to held-out true chat-only concept directions."},
+        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top chat-norm latents aligned to weak shared or fully shared concept directions."},
+        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive decoder-norm chat-only labels so methods cannot win by over-marking latents as chat-specific."},
+        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes high-norm chat-only labels whose scaling statistics fail the pi=0.6 specificity check."},
+        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.15, "description": "Rewards aggregate fraction of variance explained across both paired activation streams."},
+        "base_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the base activation stream to catch one-sided reconstruction shortcuts."},
+        "chat_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the chat activation stream to catch one-sided reconstruction shortcuts."},
+        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser latent activations so specificity gains cannot come only from using many more active features."}
       },
       "results": {
         "l1": {
@@ -41,13 +43,15 @@
       "weight": 0.5,
       "primary_metric": "reconstruction_fve",
       "metrics": {
-        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0},
-        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7},
-        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7},
-        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1},
-        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0},
-        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.2},
-        "mean_l0": {"higher_is_better": false, "coefficient": -0.1}
+        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top chat-norm latents whose reconstruction and residual scaling indicate genuine chat-specific structure."},
+        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top chat-norm latents aligned to held-out true chat-only concept directions."},
+        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top chat-norm latents aligned to weak shared or fully shared concept directions."},
+        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive decoder-norm chat-only labels so methods cannot win by over-marking latents as chat-specific."},
+        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes high-norm chat-only labels whose scaling statistics fail the pi=0.6 specificity check."},
+        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.15, "description": "Rewards aggregate fraction of variance explained across both paired activation streams."},
+        "base_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the base activation stream to catch one-sided reconstruction shortcuts."},
+        "chat_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the chat activation stream to catch one-sided reconstruction shortcuts."},
+        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser latent activations so specificity gains cannot come only from using many more active features."}
       },
       "results": {
         "l1": {
