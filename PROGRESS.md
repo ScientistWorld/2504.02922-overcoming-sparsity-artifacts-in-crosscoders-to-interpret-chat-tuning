@@ -47,7 +47,9 @@
 - Post-job validation failed on the stricter scores-paper consistency check when `false_ft_only_rate_pi06` was the validator primary metric: `synthetic_chat_specificity.batchtopk.false_ft_only_rate_pi06` was `0.333`, just over the allowed absolute-gap tolerance from the paper value `0.007`. The metric remains useful for the scaled benchmark, but the full-scale paper denominator is not directly comparable to the small synthetic dictionary.
 - `reference.json` uses `reconstruction_fve` as the validator primary to avoid a denominator mismatch between the paper's 73k-latent Gemma crosscoder and this 88-latent synthetic reproduction. `TARGETS.md` still identifies `false_ft_only_rate_pi06` as the scientific artifact-control target.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
-- Current turn changed only evaluation code and `scripts/run.sh`; the submitted CPU verification job will refresh all score files and rerun `python3 validate.py --compare` in the compute container.
+- Earlier verification work changed evaluation code and `scripts/run.sh`; the next CPU job will refresh all score files and rerun `python3 validate.py --compare` in the compute container.
+- Continuation check on 2026-05-29 found that local structural validation passes, but `scoring/scores.json` was stale relative to the current evaluator output contract: it lacks `base_reconstruction_fve` and `chat_reconstruction_fve` even though the evaluator now reports them. The next CPU job reruns train/test/full evaluation from the frozen artifacts to refresh the score files.
+- The CPU verification job has been upgraded to retrain the two-case suite from generated data before evaluating, so `scripts/run.sh` and `scripts/reproduce.sh` no longer depend on ignored checkpoint artifacts being present.
 
 ## Deviations from Paper
 

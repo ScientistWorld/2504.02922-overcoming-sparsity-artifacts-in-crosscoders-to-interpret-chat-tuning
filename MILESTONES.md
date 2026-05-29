@@ -32,5 +32,10 @@
 - Tightened method-agnostic documentation in `briefing/problem.md`, `briefing/evaluation.md`, `scoring/TARGETS.md`, `scoring/CONSTRAINTS.md`, `scoring/DIRECTION.md`, and visible data/eval comments.
 - Local lightweight checks passed: Python syntax compilation, shell syntax checks, and `python3 validate.py --compare`.
 
+### [2026-05-29 08:05] - core_claim
+- Reopened the final state for one more CPU verification because `scoring/scores.json` was older than the current evaluator and did not include the newer base/chat reconstruction constraint metrics.
+- Prepared `scripts/run.sh` to regenerate train-slice, held-out test-slice, and full-suite score files from the frozen method artifacts, then rerun `python3 validate.py --compare`.
+- Strengthened `scripts/run.sh` and `scripts/reproduce.sh` to retrain the two-case suite from generated data before scoring, so a fresh clone does not depend on ignored checkpoint artifacts.
+
 ## Stop Justification
-- Completed at milestone `core_claim`.
+- Not stopped: submitting a CPU verification job to refresh score files before any milestone advance.

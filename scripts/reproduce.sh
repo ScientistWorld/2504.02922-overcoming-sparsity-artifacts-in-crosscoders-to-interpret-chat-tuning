@@ -18,4 +18,7 @@ set -e
 
 cd /home/user
 
-bash scripts/run.sh
+bash scripts/method.sh --suite
+bash scripts/evaluate_train.sh --suite checkpoints/crosscoder_suite data/benchmarks
+bash scripts/evaluate_test.sh --suite checkpoints/crosscoder_suite data/benchmarks
+python3 validate.py --compare
