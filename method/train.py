@@ -118,6 +118,13 @@ def main() -> None:
     parser.add_argument("--k", type=int, default=4)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--device", default="auto")
+    parser.add_argument(
+        "--methods",
+        nargs="+",
+        choices=("l1", "batchtopk"),
+        default=("l1", "batchtopk"),
+        help="Which crosscoder variants to train.",
+    )
     args = parser.parse_args()
 
     device = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
@@ -126,7 +133,7 @@ def main() -> None:
     data = np.load(args.data)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     summary = {}
-    for name in ("l1", "batchtopk"):
+    for name in args.methods:
         summary[name] = train_one(
             name,
             data["train_base"],

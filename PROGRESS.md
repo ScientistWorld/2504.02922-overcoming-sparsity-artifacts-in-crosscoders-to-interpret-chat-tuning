@@ -22,6 +22,7 @@
 
 ## Remaining
 
+- Submitted a compute-side BatchTopK sweep (`k in {8,10,12,14,16,20}`, seeds 1-3) to strengthen the selected core-claim artifact set using real trained outputs rather than hand-picked metrics.
 - Higher milestones would require additional axes such as multiple seeds, additional synthetic regimes, or causal/intervention-style analyses.
 
 ## Issues
