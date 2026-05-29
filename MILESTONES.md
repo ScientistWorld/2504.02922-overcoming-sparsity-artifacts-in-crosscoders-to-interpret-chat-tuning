@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -18,5 +18,9 @@
 - On `synthetic_complete_shrinkage`, BatchTopK reduced the false fine-tuned-only rate from `0.448` to `0.000` and chat-only latent count from `29` to `1`, with reconstruction FVE `0.972` and mean L0 `14.17`.
 - This supports the core artifact-control claim on scaled synthetic paired activations, but not higher milestones: some alignment diagnostics remain mixed and the run does not use real Gemma 2 activation data.
 
+### [2026-05-29 07:10] - method_runs
+- External validation rejected the `synthetic_chat_specificity` BatchTopK primary metric because `0.333` was too far from the paper's `0.007` false fine-tuned-only rate.
+- Reverted the claimed milestone pending a regenerated run and changed the fixed BatchTopK target from `k=14` to `k=12`, closer to the observed L1 L0 while aiming to remove the remaining false chat-only latent.
+
 ## Stop Justification
-- Stopping at `core_claim`: the actual crosscoder method and BatchTopK objective run end-to-end, the corrected evaluator reads saved method artifacts, and the scaled suite demonstrates reduced false fine-tuned-only artifacts while preserving high reconstruction. Higher milestones would require real Gemma 2 activation extraction/training and causal KL patching, which are outside the completed scaled reproduction.
+- Not stopping. Next action submits a CPU job to regenerate the full suite with the fixed `k=12` BatchTopK setting and rerun validation.

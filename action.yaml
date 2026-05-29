@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
+action: submit
 gpus: 0
-test: false
-milestone: core_claim
-notes: "Corrected two-case synthetic crosscoder suite completed and validated. BatchTopK reduced false fine-tuned-only artifact rates versus L1 in both regimes while preserving high reconstruction; higher milestones require real Gemma 2 activation experiments."
+test: true
+milestone: method_runs
+notes: "Regenerate the corrected two-case crosscoder suite with fixed BatchTopK k=12 after validation rejected k=14 decoupling false FT-only rate. Expect lower synthetic_chat_specificity BatchTopK false_ft_only_rate_pi06 and rerun validate.py --compare."
