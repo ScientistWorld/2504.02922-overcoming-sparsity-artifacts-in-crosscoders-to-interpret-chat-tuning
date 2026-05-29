@@ -1,5 +1,6 @@
 {
   "seed": 0,
+  "scenario": "decoupling",
   "n_train": 4096,
   "n_val": 1024,
   "d_model": 32,
