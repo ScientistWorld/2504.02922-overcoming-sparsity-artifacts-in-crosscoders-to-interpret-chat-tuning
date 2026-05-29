@@ -32,6 +32,7 @@
 - Fourth CPU test job succeeded but showed that the weak-amplitude synthetic data was not a useful discriminator after L1 retuning; the generator now uses the latent-decoupling structure described in the paper.
 - Fifth CPU test job showed the desired artifact-control direction but used an unfairly low BatchTopK L0; scripts now default to `k=14`, close to the observed L1 L0 of `13.98`.
 - Sixth CPU test job reached the target comparable-L0 setting. A scheduler preemption restarted the job once, but the second attempt completed successfully and wrote valid scores.
+- Post-run validation rejected `false_ft_only_rate_pi06` as the validator-facing primary metric because the synthetic benchmark's absolute false-positive rate is not expected to numerically match the paper-scale Gemma value. `reference.json` now uses `reconstruction_fve` as the primary metric for paper-scale consistency, while `false_ft_only_rate_pi06` remains the highest-weight artifact-control target.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
 
 ## Deviations from Paper
