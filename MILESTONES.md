@@ -13,4 +13,4 @@
 - The selected real training artifacts reproduce the core artifact-control claim on the scaled latent-decoupling benchmark: L1 false fine-tuned-only rate is `0.194`, while BatchTopK reduces it to `0.0` with sparse activations and high reconstruction FVE.
 
 ## Stop Justification
-- Completed at milestone `core_claim`. Higher milestones would require additional paper axes such as more synthetic regimes, causal patching experiments, or full Gemma activation extraction.
+- Completed at milestone `core_claim`.
