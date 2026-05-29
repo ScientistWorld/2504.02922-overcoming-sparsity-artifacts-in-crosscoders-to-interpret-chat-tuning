@@ -1,0 +1,61 @@
+{
+  "slice": "train",
+  "split": {
+    "strategy": "fixed 50/50 validation-sample and concept-family partition",
+    "seed": 250402922
+  },
+  "experiments": {
+    "synthetic_chat_specificity": {
+      "results": {
+        "batchtopk": {
+          "fraction_top_norm_true_chat": 0.3076923076923077,
+          "fraction_top_norm_weak_or_shared": 0.15384615384615385,
+          "fraction_top_norm_scaling_specific": 0.3076923076923077,
+          "chat_only_latent_count": 3,
+          "false_ft_only_rate_pi06": 0.6666666666666667,
+          "reconstruction_fve": 0.9530628398255189,
+          "base_reconstruction_fve": 0.9502570812039258,
+          "chat_reconstruction_fve": 0.9556846191016968,
+          "mean_l0": 14.232421875
+        },
+        "l1": {
+          "fraction_top_norm_true_chat": 0.38461538461538464,
+          "fraction_top_norm_weak_or_shared": 0.3076923076923077,
+          "fraction_top_norm_scaling_specific": 0.38461538461538464,
+          "chat_only_latent_count": 32,
+          "false_ft_only_rate_pi06": 0.46875,
+          "reconstruction_fve": 0.9815434860267351,
+          "base_reconstruction_fve": 0.9808990021177176,
+          "chat_reconstruction_fve": 0.9821457098044645,
+          "mean_l0": 11.48046875
+        }
+      }
+    },
+    "synthetic_complete_shrinkage": {
+      "results": {
+        "batchtopk": {
+          "fraction_top_norm_true_chat": 0.3076923076923077,
+          "fraction_top_norm_weak_or_shared": 0.38461538461538464,
+          "fraction_top_norm_scaling_specific": 0.7692307692307693,
+          "chat_only_latent_count": 1,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": 0.9719174033877787,
+          "base_reconstruction_fve": 0.9732091107961997,
+          "chat_reconstruction_fve": 0.9711047657873068,
+          "mean_l0": 14.158203125
+        },
+        "l1": {
+          "fraction_top_norm_true_chat": 0.6923076923076923,
+          "fraction_top_norm_weak_or_shared": 0.0,
+          "fraction_top_norm_scaling_specific": 1.0,
+          "chat_only_latent_count": 29,
+          "false_ft_only_rate_pi06": 0.4482758620689655,
+          "reconstruction_fve": 0.9903113963778835,
+          "base_reconstruction_fve": 0.9902025062830495,
+          "chat_reconstruction_fve": 0.9903799011993346,
+          "mean_l0": 6.873046875
+        }
+      }
+    }
+  }
+}
