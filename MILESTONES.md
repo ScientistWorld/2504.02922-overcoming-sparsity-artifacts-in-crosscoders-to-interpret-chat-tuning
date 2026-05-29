@@ -45,4 +45,4 @@
 - BatchTopK matched L1 sparsity (`14.0` vs `13.98` mean L0), kept reasonable reconstruction (`0.942` FVE), and eliminated false fine-tuned-only latents on the primary metric (`0.0` vs `0.226` for L1).
 
 ## Stop Justification
-- Reached `core_claim`: the paper's actual L1 and BatchTopK crosscoder objectives run end-to-end, and the scaled latent-decoupling benchmark demonstrates the central artifact-control claim.
+- Completed at milestone `core_claim`.
