@@ -11,7 +11,8 @@
 
 ## Results
 
-- No compute-node results yet. A first job is being submitted to train both crosscoders and write `scoring/scores.json`.
+- CPU job `26a2e825-7e8` completed training and wrote crosscoder artifacts under `checkpoints/crosscoder_synthetic/`, but failed while computing Latent Scaling metrics.
+- No valid `scoring/scores.json` yet. The next job reuses the completed training artifacts if present and reruns evaluation after the shape bug fix.
 
 ## Remaining
 
@@ -22,6 +23,7 @@
 ## Issues
 
 - First CPU test job failed before method execution because the base container exposed `python3` but not `python`. Scripts now call `python3` explicitly, and `environment/container.def` also creates a `python` symlink for compatibility.
+- Second CPU test job trained both crosscoders, then failed in `eval/evaluate_crosscoders.py` because NumPy batched matmul did not express the intended per-latent dot product. This is fixed with explicit `einsum`.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
 
 ## Deviations from Paper

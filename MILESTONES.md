@@ -24,5 +24,9 @@
 - First CPU test job failed at startup because the container lacked a `python` executable.
 - Patched scripts to use `python3` and added a container-level `python -> python3` symlink before resubmitting.
 
+### [2026-05-29 04:30] - none
+- Second CPU test job trained both L1 and BatchTopK crosscoders and produced artifacts.
+- Evaluation failed before writing scores due to a Latent Scaling array-shape bug; patched the evaluator and resubmitting evaluation.
+
 ## Stop Justification
 - Not stopped.

@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "Retry CPU smoke job after fixing python/python3 executable mismatch; generate data, train L1 and BatchTopK crosscoders, evaluate latent-scaling artifact metrics, and run validate.py --compare."
+notes: "Rerun evaluation after fixing Latent Scaling per-latent dot products; reuse existing crosscoder artifacts if present, otherwise train, then run validate.py --compare."

@@ -13,5 +13,9 @@ set -e
 
 cd /home/user
 
-bash scripts/method.sh
+if [ ! -f checkpoints/crosscoder_synthetic/l1/val_outputs.npz ] || \
+   [ ! -f checkpoints/crosscoder_synthetic/batchtopk/val_outputs.npz ]; then
+  bash scripts/method.sh
+fi
+bash scripts/evaluate.sh checkpoints/crosscoder_synthetic
 python3 validate.py --compare

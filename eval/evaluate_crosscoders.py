@@ -37,8 +37,10 @@ def _latent_scaling_metrics(
 
     base_without_j = base[:, None, :] - (base_recon[:, None, :] - features[:, :, None] * base_decoder[None, :, :])
     chat_without_j = chat[:, None, :] - (chat_recon[:, None, :] - features[:, :, None] * chat_decoder[None, :, :])
-    numerator_base = ((base_without_j @ chat_decoder[:, :, None]).squeeze(-1) * features).sum(axis=0)
-    numerator_chat = ((chat_without_j @ chat_decoder[:, :, None]).squeeze(-1) * features).sum(axis=0)
+    projected_base = np.einsum("nld,ld->nl", base_without_j, chat_decoder)
+    projected_chat = np.einsum("nld,ld->nl", chat_without_j, chat_decoder)
+    numerator_base = (projected_base * features).sum(axis=0)
+    numerator_chat = (projected_chat * features).sum(axis=0)
     denominator = (features * features).sum(axis=0) * (chat_decoder * chat_decoder).sum(axis=1)
     beta_e_base = numerator_base / np.maximum(denominator, 1e-12)
     beta_e_chat = numerator_chat / np.maximum(denominator, 1e-12)
