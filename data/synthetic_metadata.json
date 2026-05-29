@@ -64,6 +64,8 @@
     ]
   },
   "activation_rate": 0.08,
-  "base_weak_scale": 0.28,
+  "base_weak_scale": 1.0,
+  "decoupled_shared_rate": 0.07,
+  "decoupled_exclusive_rate": 0.055,
   "noise_std": 0.03
 }
