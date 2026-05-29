@@ -14,4 +14,4 @@ Future work should remain within sparse dictionary learning over paired base/fin
 
 ## Out of Bounds
 
-Do not replace the task with supervised classification over ground-truth concept labels. Do not use a method that bypasses a shared sparse latent representation with separate model-specific reconstructions. Do not change the data-generating process and claim direct improvement on the same experiment.
+Do not replace the task with supervised classification over ground-truth concept labels. A valid method must produce candidate factors with per-stream reconstruction artifacts in the documented output format, so the evaluator can test both specificity and reconstruction. Do not change the data-generating process and claim direct improvement on the same experiment.

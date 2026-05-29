@@ -37,5 +37,10 @@
 - Prepared `scripts/run.sh` to regenerate train-slice, held-out test-slice, and full-suite score files from the frozen method artifacts, then rerun `python3 validate.py --compare`.
 - Strengthened `scripts/run.sh` and `scripts/reproduce.sh` to retrain the two-case suite from generated data before scoring, so a fresh clone does not depend on ignored checkpoint artifacts.
 
+### [2026-05-29 08:10] - core_claim
+- Final verification refreshed `scoring/scores.json` from saved suite artifacts so it includes the base/chat reconstruction constraint metrics expected by the current evaluator.
+- Tightened scoring documentation so target headings correspond to scored experiments and method-agnostic experiment descriptions do not expose the paper's implementation details.
+- Lightweight verification passed: JSON schema checks, shell syntax checks, Python syntax checks, shared-path checks, and `python3 validate.py --compare`.
+
 ## Stop Justification
-- Not stopped: submitting a CPU verification job to refresh score files before any milestone advance.
+- Final verification complete at `core_claim`. The workspace is usable as a scaled synthetic research gym; the main limitation is that it does not reproduce the original full Gemma 2 activation dataset.

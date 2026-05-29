@@ -3,7 +3,7 @@
 Evaluation reads saved method artifacts and writes `scoring/scores.json`. The suite entry point is:
 
 ```bash
-bash scripts/evaluate.sh --suite checkpoints/crosscoder_suite data/benchmarks
+bash scripts/evaluate.sh --suite
 ```
 
 For each benchmark case and method, the evaluator expects a `val_outputs.npz` artifact containing validation-set candidate activations, reconstructed base and fine-tuned activation streams, and one vector per candidate for each stream. This is an output contract only; it does not prescribe how the method must train or infer those quantities.

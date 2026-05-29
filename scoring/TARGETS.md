@@ -1,35 +1,53 @@
 # Evaluation Targets
 
-## Primary: synthetic_chat_specificity
+Future scientist agents are scored on the experiments present in `scoring/scores.json`.
+Each experiment combines benefit metrics with constraint metrics so improvements must
+separate model-specific factors while preserving reconstruction and sparsity.
 
-Tests whether candidates identified as fine-tuned-model-specific are genuinely specific rather than shared factors misclassified by the scoring procedure.
+## synthetic_chat_specificity
 
-- **Metric**: `false_ft_only_rate_pi06` (lower is better)
-- **Metric**: `fraction_top_norm_scaling_specific` (higher is better)
-- **Metric**: `fraction_top_norm_true_chat` (higher is better)
-- **Run**: `bash scripts/evaluate.sh --suite checkpoints/crosscoder_suite data/benchmarks`
+Tests whether submitted candidate factors distinguish genuinely fine-tuned-model-specific
+activation structure from factors present in both paired activation streams.
 
-## Primary: synthetic_complete_shrinkage
+Primary scientific targets:
 
-Tests the complete-shrinkage failure mode, where a lower-amplitude shared factor can be treated as fine-tuned-only by a naive specificity score.
+- `false_ft_only_rate_pi06` lower is better: fewer reported fine-tuned-specific candidates fail the independent specificity check.
+- `fraction_top_norm_scaling_specific` higher is better: more top-ranked candidates pass the independent specificity check.
+- `fraction_top_norm_true_chat` higher is better: more top-ranked candidates align to held-out fine-tuned-specific ground truth.
 
-- **Metric**: `false_ft_only_rate_pi06` (lower is better)
-- **Metric**: `fraction_top_norm_scaling_specific` (higher is better)
-- **Metric**: `fraction_top_norm_true_chat` (higher is better)
-- **Run**: `bash scripts/evaluate.sh --suite checkpoints/crosscoder_suite data/benchmarks`
+Constraint targets:
 
-## Constraint: shared_concept_false_positives
+- `fraction_top_norm_weak_or_shared` lower is better: top-ranked candidates should not align to shared-factor families.
+- `reconstruction_fve`, `base_reconstruction_fve`, and `chat_reconstruction_fve` higher are better: the submitted artifacts should reconstruct both streams.
+- `mean_l0` lower is better: gains should not come from activating many more candidates per sample.
+- `chat_only_latent_count` lower is better: gains should not come from over-labeling candidates as fine-tuned-specific.
 
-The method should not improve apparent model-specificity by labeling decoupled shared factors as fine-tuned-only.
+Run:
 
-- **Metric**: `fraction_top_norm_weak_or_shared` (lower is better)
-- **Run**: `bash scripts/evaluate.sh --suite checkpoints/crosscoder_suite data/benchmarks`
+```bash
+bash scripts/evaluate.sh --suite
+```
 
-## Constraint: reconstruction_and_sparsity
+## synthetic_complete_shrinkage
 
-The submitted representation should still reconstruct paired activations with sparse candidate activations, so improvements cannot come from ignoring reconstruction quality or by activating many more candidates.
+Tests whether submitted candidate factors avoid marking lower-amplitude shared
+activation structure as fine-tuned-model-specific.
 
-- **Metric**: `reconstruction_fve` (higher is better)
-- **Metric**: `mean_l0` (lower is better)
-- **Metric**: `chat_only_latent_count` (lower is better as an artifact-control proxy)
-- **Run**: `bash scripts/evaluate.sh --suite checkpoints/crosscoder_suite data/benchmarks`
+Primary scientific targets:
+
+- `false_ft_only_rate_pi06` lower is better.
+- `fraction_top_norm_scaling_specific` higher is better.
+- `fraction_top_norm_true_chat` higher is better.
+
+Constraint targets:
+
+- `fraction_top_norm_weak_or_shared` lower is better.
+- `reconstruction_fve`, `base_reconstruction_fve`, and `chat_reconstruction_fve` higher are better.
+- `mean_l0` lower is better.
+- `chat_only_latent_count` lower is better.
+
+Run:
+
+```bash
+bash scripts/evaluate.sh --suite
+```

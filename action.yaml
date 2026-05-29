@@ -1,7 +1,7 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file after your turn ends.
-action: submit
+action: done
 gpus: 0
-test: true
+test: false
 milestone: core_claim
-notes: "CPU verification: regenerate synthetic data, retrain L1 and BatchTopK crosscoders for both suite cases, refresh train/test/full scores, and rerun validate.py --compare."
+notes: "Final verification passed after refreshing score constraints and tightening method-agnostic scoring documentation; key limitation is scaled synthetic data."

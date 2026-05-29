@@ -1,19 +1,20 @@
 {
   "experiments": {
     "synthetic_chat_specificity": {
-      "description": "Scaled latent-decoupling reproduction of the paper's Gemma 2 2B crosscoder comparison. Paper-reported anchors: Table 1 false FT-only rates and Table 4 FT-only counts; remaining alignment fields are benchmark analogues used to score the scaled synthetic setting.",
+      "description": "Scaled shared-factor decoupling benchmark for paired base/fine-tuned activation streams. Paper-reported anchors: Table 1 false fine-tuned-only rates and Table 4 fine-tuned-only candidate counts; remaining alignment fields are benchmark analogues used to score the scaled synthetic setting.",
       "weight": 0.5,
+      "notes": "The benchmark uses fewer candidates than the paper's 73,728-candidate Gemma setting, so raw candidate counts are scale anchors rather than expected exact matches. The paper reports aggregate validation FVE, not separate base/chat FVE.",
       "primary_metric": "reconstruction_fve",
       "metrics": {
-        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top chat-norm latents whose reconstruction and residual scaling indicate genuine chat-specific structure."},
-        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top chat-norm latents aligned to held-out true chat-only concept directions."},
-        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top chat-norm latents aligned to weak shared or fully shared concept directions."},
-        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive decoder-norm chat-only labels so methods cannot win by over-marking latents as chat-specific."},
-        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes high-norm chat-only labels whose scaling statistics fail the pi=0.6 specificity check."},
+        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top fine-tuned-specific candidates whose reconstruction and residual evidence indicate genuine stream-specific structure."},
+        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top fine-tuned-specific candidates aligned to held-out true fine-tuned-only concept directions."},
+        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top fine-tuned-specific candidates aligned to weak shared or fully shared concept directions."},
+        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive fine-tuned-only candidate labels so methods cannot win by over-marking candidates as specific."},
+        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes fine-tuned-only candidate labels whose independent evidence fails the pi=0.6 specificity check."},
         "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.15, "description": "Rewards aggregate fraction of variance explained across both paired activation streams."},
         "base_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the base activation stream to catch one-sided reconstruction shortcuts."},
         "chat_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the chat activation stream to catch one-sided reconstruction shortcuts."},
-        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser latent activations so specificity gains cannot come only from using many more active features."}
+        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser candidate activations so specificity gains cannot come only from using many more active factors."}
       },
       "results": {
         "l1": {
@@ -39,19 +40,20 @@
       }
     },
     "synthetic_complete_shrinkage": {
-      "description": "Scaled complete-shrinkage reproduction of the same paper claim: weak concepts present in both streams can be misidentified as fine-tuned-only by L1 norm differences, while BatchTopK should reduce that artifact.",
+      "description": "Scaled complete-shrinkage benchmark: weak concepts present in both streams can be misidentified as fine-tuned-only when stream-specific evidence is measured naively.",
       "weight": 0.5,
+      "notes": "The benchmark uses fewer candidates than the paper's 73,728-candidate Gemma setting, so raw candidate counts are scale anchors rather than expected exact matches. The paper reports aggregate validation FVE, not separate base/chat FVE.",
       "primary_metric": "reconstruction_fve",
       "metrics": {
-        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top chat-norm latents whose reconstruction and residual scaling indicate genuine chat-specific structure."},
-        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top chat-norm latents aligned to held-out true chat-only concept directions."},
-        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top chat-norm latents aligned to weak shared or fully shared concept directions."},
-        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive decoder-norm chat-only labels so methods cannot win by over-marking latents as chat-specific."},
-        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes high-norm chat-only labels whose scaling statistics fail the pi=0.6 specificity check."},
+        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top fine-tuned-specific candidates whose reconstruction and residual evidence indicate genuine stream-specific structure."},
+        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top fine-tuned-specific candidates aligned to held-out true fine-tuned-only concept directions."},
+        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top fine-tuned-specific candidates aligned to weak shared or fully shared concept directions."},
+        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive fine-tuned-only candidate labels so methods cannot win by over-marking candidates as specific."},
+        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes fine-tuned-only candidate labels whose independent evidence fails the pi=0.6 specificity check."},
         "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.15, "description": "Rewards aggregate fraction of variance explained across both paired activation streams."},
         "base_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the base activation stream to catch one-sided reconstruction shortcuts."},
         "chat_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the chat activation stream to catch one-sided reconstruction shortcuts."},
-        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser latent activations so specificity gains cannot come only from using many more active features."}
+        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser candidate activations so specificity gains cannot come only from using many more active factors."}
       },
       "results": {
         "l1": {

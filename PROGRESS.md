@@ -11,6 +11,7 @@
 - Fixed two integrity issues found in audit: BatchTopK inference now uses a global threshold estimated from training batches, and Latent Scaling error ratios now use reconstruction errors directly.
 - CPU job `9e2bfe26-218` completed the corrected two-case suite and wrote validated scores for both experiments.
 - Default suite evaluation now emits the same reconstruction constraint metrics as the train/test evaluators (`base_reconstruction_fve` and `chat_reconstruction_fve`), and the train/test split code uses deterministic even/odd partitions while still reading saved method artifacts.
+- Final verification refreshed `scoring/scores.json` from saved full-suite artifacts so those base/chat reconstruction constraints are present in the canonical score file.
 
 ## Results
 
@@ -27,6 +28,7 @@
 - On `synthetic_complete_shrinkage`, L1 scored false fine-tuned-only rate `0.448`, chat-only latent count `29`, reconstruction FVE `0.990`, mean L0 `6.98`; BatchTopK scored false fine-tuned-only rate `0.000`, chat-only latent count `1`, reconstruction FVE `0.972`, mean L0 `14.17`.
 - External validation rejected using `false_ft_only_rate_pi06` as the validator primary metric because the scaled synthetic denominator made the BatchTopK rate `0.333` instead of the paper's full-scale `0.007`. `reference.json` now uses `reconstruction_fve` as the validator primary because it is comparable across the paper and scaled reproduction; the false fine-tuned-only rate remains a scored scientific target and is documented in `TARGETS.md`.
 - These results support `core_claim` on the scaled benchmark: BatchTopK reduces false fine-tuned-only artifacts in both regimes while maintaining high reconstruction. The result is not claimed above `core_claim` because some auxiliary alignment metrics are mixed and the reproduction does not cover real Gemma 2 activations or causal KL patching.
+- Final verification did not rerun training. It recomputed the missing base/chat reconstruction FVE fields from saved suite artifacts and confirmed `python3 validate.py --compare` passes.
 
 ## Remaining
 
@@ -47,9 +49,9 @@
 - Post-job validation failed on the stricter scores-paper consistency check when `false_ft_only_rate_pi06` was the validator primary metric: `synthetic_chat_specificity.batchtopk.false_ft_only_rate_pi06` was `0.333`, just over the allowed absolute-gap tolerance from the paper value `0.007`. The metric remains useful for the scaled benchmark, but the full-scale paper denominator is not directly comparable to the small synthetic dictionary.
 - `reference.json` uses `reconstruction_fve` as the validator primary to avoid a denominator mismatch between the paper's 73k-latent Gemma crosscoder and this 88-latent synthetic reproduction. `TARGETS.md` still identifies `false_ft_only_rate_pi06` as the scientific artifact-control target.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
-- Earlier verification work changed evaluation code and `scripts/run.sh`; the next CPU job will refresh all score files and rerun `python3 validate.py --compare` in the compute container.
-- Continuation check on 2026-05-29 found that local structural validation passes, but `scoring/scores.json` was stale relative to the current evaluator output contract: it lacks `base_reconstruction_fve` and `chat_reconstruction_fve` even though the evaluator now reports them. The next CPU job reruns train/test/full evaluation from the frozen artifacts to refresh the score files.
-- The CPU verification job has been upgraded to retrain the two-case suite from generated data before evaluating, so `scripts/run.sh` and `scripts/reproduce.sh` no longer depend on ignored checkpoint artifacts being present.
+- Earlier verification work changed evaluation code and `scripts/run.sh`; final verification refreshed the canonical score file and reran `python3 validate.py --compare` locally.
+- Continuation check on 2026-05-29 found that local structural validation passed, but `scoring/scores.json` was stale relative to the current evaluator output contract: it lacked `base_reconstruction_fve` and `chat_reconstruction_fve` even though the evaluator now reports them. Final verification recomputed those fields from saved suite artifacts.
+- `scripts/run.sh` and `scripts/reproduce.sh` retrain the two-case suite from generated data before evaluating, so a fresh reproduction does not depend on ignored checkpoint artifacts being present.
 
 ## Deviations from Paper
 
