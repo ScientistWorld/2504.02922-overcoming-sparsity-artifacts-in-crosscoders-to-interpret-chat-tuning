@@ -1,12 +1,12 @@
-"""Synthetic paired activation benchmark for crosscoder model diffing.
+"""Synthetic paired activation benchmark for model-difference factor discovery.
 
 The paper trains on residual-stream activations from base/chat Gemma models.
 This generator is a scaled-down substitute for those activations: it creates
 paired base/chat vectors from sparse ground-truth concepts with shared,
 base-only, chat-only, and decoupled shared factors. The decoupled factors
 follow the paper's Appendix D setup: one concept direction appears on shared,
-base-exclusive, and chat-exclusive subsets. A norm-difference classifier can
-therefore mistake part of a shared concept for a chat-only latent.
+base-exclusive, and chat-exclusive subsets. A naive specificity score can
+therefore mistake part of a shared concept for a fine-tuned-specific factor.
 """
 
 from __future__ import annotations
@@ -86,8 +86,8 @@ def generate_dataset(
             # Appendix-D latent decoupling substitute: each direction is active
             # in both models on a shared subset, plus separately active on
             # base-only and chat-only subsets. The concept itself is not novel
-            # to the chat model, but a crosscoder can represent the
-            # chat-exclusive subset with a high norm-difference latent.
+            # to the chat model, but the model-exclusive subset can still look
+            # fine-tuned-specific to a naive factor ranking.
             dec_shared = _sparse_positive(
                 rng, n_samples, len(weak), decoupled_shared_rate
             )
@@ -102,8 +102,8 @@ def generate_dataset(
         else:
             # Complete-shrinkage substitute: the same weak-shared directions
             # appear in both streams, but are lower-amplitude in the base
-            # stream. L1 pressure can zero the base decoder for these latents
-            # even though they still explain base residual error.
+            # stream. A method should avoid treating this amplitude difference
+            # as evidence that the factor is absent from the base stream.
             weak_coeff = _sparse_positive(rng, n_samples, len(weak), activation_rate)
             base_coeff[:, weak] = base_weak_scale * weak_coeff
             chat_coeff[:, weak] = weak_coeff

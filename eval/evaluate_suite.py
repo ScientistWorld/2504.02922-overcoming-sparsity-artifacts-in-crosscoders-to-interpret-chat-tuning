@@ -1,4 +1,4 @@
-"""Evaluate a suite of crosscoder benchmark cases.
+"""Evaluate a suite of paired activation-factor benchmark cases.
 
 This module stays inside eval/ and only reads saved method artifacts. Each case
 uses the same output contract:
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import numpy as np
 
-from eval.evaluate_crosscoders import evaluate_one
+from eval.evaluate_crosscoders import discover_methods, evaluate_one, run_dir_for_method
 
 
 CASES = {
@@ -41,10 +41,9 @@ def main() -> None:
             (data_dir / "synthetic_metadata.json").read_text(encoding="utf-8")
         )
         results = {}
-        for method_name in ("l1", "batchtopk"):
-            run_dir = artifact_dir / method_name
-            if (run_dir / "val_outputs.npz").exists():
-                results[method_name] = evaluate_one(run_dir, data, meta)
+        for method_name in discover_methods(artifact_dir):
+            run_dir = run_dir_for_method(artifact_dir, method_name)
+            results[method_name] = evaluate_one(run_dir, data, meta)
         experiments[experiment_name] = {"results": results}
 
     scores = {"experiments": experiments}

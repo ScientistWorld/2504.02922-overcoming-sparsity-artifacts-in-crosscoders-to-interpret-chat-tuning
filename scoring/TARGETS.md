@@ -2,7 +2,7 @@
 
 ## Primary: synthetic_chat_specificity
 
-Tests whether latents identified as fine-tuned-model-specific by decoder norm are genuinely specific rather than shared concepts misclassified by the sparsity mechanism.
+Tests whether candidates identified as fine-tuned-model-specific are genuinely specific rather than shared factors misclassified by the scoring procedure.
 
 - **Metric**: `false_ft_only_rate_pi06` (lower is better)
 - **Metric**: `fraction_top_norm_scaling_specific` (higher is better)
@@ -11,7 +11,7 @@ Tests whether latents identified as fine-tuned-model-specific by decoder norm ar
 
 ## Primary: synthetic_complete_shrinkage
 
-Tests the paper's complete-shrinkage failure mode, where a lower-amplitude shared concept can be treated as fine-tuned-only by L1 norm differences.
+Tests the complete-shrinkage failure mode, where a lower-amplitude shared factor can be treated as fine-tuned-only by a naive specificity score.
 
 - **Metric**: `false_ft_only_rate_pi06` (lower is better)
 - **Metric**: `fraction_top_norm_scaling_specific` (higher is better)
@@ -20,14 +20,14 @@ Tests the paper's complete-shrinkage failure mode, where a lower-amplitude share
 
 ## Constraint: shared_concept_false_positives
 
-The method should not improve apparent model-specificity by labeling decoupled shared concepts as fine-tuned-only.
+The method should not improve apparent model-specificity by labeling decoupled shared factors as fine-tuned-only.
 
 - **Metric**: `fraction_top_norm_weak_or_shared` (lower is better)
 - **Run**: `bash scripts/evaluate.sh --suite checkpoints/crosscoder_suite data/benchmarks`
 
 ## Constraint: reconstruction_and_sparsity
 
-The dictionary should still reconstruct paired activations with sparse codes, so improvements cannot come from ignoring reconstruction quality or by activating many more latents.
+The submitted representation should still reconstruct paired activations with sparse candidate activations, so improvements cannot come from ignoring reconstruction quality or by activating many more candidates.
 
 - **Metric**: `reconstruction_fve` (higher is better)
 - **Metric**: `mean_l0` (lower is better)

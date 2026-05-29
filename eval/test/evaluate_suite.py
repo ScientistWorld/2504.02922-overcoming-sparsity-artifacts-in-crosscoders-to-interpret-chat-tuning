@@ -1,4 +1,4 @@
-"""Evaluate the held-out test slice for all crosscoder benchmark cases."""
+"""Evaluate the held-out test slice for all paired activation-factor cases."""
 
 from __future__ import annotations
 

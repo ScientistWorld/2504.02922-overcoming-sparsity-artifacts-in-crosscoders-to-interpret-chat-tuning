@@ -1,4 +1,4 @@
-"""Evaluate crosscoder artifacts without importing from method/."""
+"""Evaluate paired activation-factor artifacts without importing from method/."""
 
 from __future__ import annotations
 
@@ -44,10 +44,30 @@ def _latent_scaling_metrics(
 
 
 def _best_alignment(decoder: np.ndarray, directions: np.ndarray, indices: list[int]) -> np.ndarray:
+    if not indices:
+        return np.zeros(decoder.shape[0], dtype=np.float32)
     dec = decoder / (np.linalg.norm(decoder, axis=1, keepdims=True) + 1e-8)
     dirs = directions[indices]
     dirs = dirs / (np.linalg.norm(dirs, axis=1, keepdims=True) + 1e-8)
     return np.abs(dec @ dirs.T).max(axis=1)
+
+
+def discover_methods(artifacts: Path) -> list[str]:
+    if (artifacts / "val_outputs.npz").exists():
+        return [artifacts.name]
+    if not artifacts.exists():
+        return []
+    return sorted(
+        path.name
+        for path in artifacts.iterdir()
+        if path.is_dir() and (path / "val_outputs.npz").exists()
+    )
+
+
+def run_dir_for_method(artifacts: Path, method_name: str) -> Path:
+    if (artifacts / "val_outputs.npz").exists() and artifacts.name == method_name:
+        return artifacts
+    return artifacts / method_name
 
 
 def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[str, float]:
@@ -103,6 +123,20 @@ def evaluate_one(run_dir: Path, data: np.lib.npyio.NpzFile, meta: dict) -> dict[
     }
 
 
+def evaluate_artifacts(
+    artifacts: Path,
+    data_path: Path,
+    metadata_path: Path,
+    experiment_name: str,
+) -> dict:
+    data = np.load(data_path)
+    meta = json.loads(metadata_path.read_text(encoding="utf-8"))
+    results = {}
+    for name in discover_methods(artifacts):
+        results[name] = evaluate_one(run_dir_for_method(artifacts, name), data, meta)
+    return {"experiments": {experiment_name: {"results": results}}}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--artifacts", type=Path, default=Path("checkpoints/crosscoder_synthetic"))
@@ -112,15 +146,9 @@ def main() -> None:
     parser.add_argument("--experiment-name", default="synthetic_chat_specificity")
     args = parser.parse_args()
 
-    data = np.load(args.data)
-    meta = json.loads(args.metadata.read_text(encoding="utf-8"))
-    results = {}
-    for name in ("l1", "batchtopk"):
-        run_dir = args.artifacts / name
-        if (run_dir / "val_outputs.npz").exists():
-            results[name] = evaluate_one(run_dir, data, meta)
-
-    scores = {"experiments": {args.experiment_name: {"results": results}}}
+    scores = evaluate_artifacts(
+        args.artifacts, args.data, args.metadata, args.experiment_name
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(scores, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(scores, indent=2))

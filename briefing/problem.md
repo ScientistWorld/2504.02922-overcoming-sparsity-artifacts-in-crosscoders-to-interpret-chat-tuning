@@ -1,7 +1,7 @@
 # Problem
 
-The paper studies model diffing: given paired activations from a base model and a chat-tuned model on the same inputs, identify which latent factors are genuinely specific to the chat-tuned model and which are shared with the base model.
+The task is model-difference factor discovery. Given paired activation vectors from a base model and a fine-tuned model on the same inputs, a method should produce candidate factors that distinguish what is genuinely specific to the fine-tuned model from what is shared by both models.
 
-A successful system should learn sparse latent factors that reconstruct both activation streams while allowing each latent to have separate base and chat decoder directions. The main risk is false positives: a latent can appear chat-only by decoder norm even though the corresponding concept is present in the base activations.
+The main failure mode is false specificity: a shared factor can look fine-tuned-only when its strength, sparsity, or occurrence pattern differs between the two activation streams. A useful method should surface true fine-tuned-specific factors while avoiding these shared-factor false positives.
 
-This reproduction uses a scaled paired-activation benchmark generated in `data/`. It preserves the paper's problem structure with shared, base-only, chat-only, and decoupled shared activation factors, while avoiding the full Gemma activation extraction cost. Decoupled shared factors appear in both activation streams, but on overlapping and model-exclusive subsets, so a norm-based chat-only detector can produce false positives.
+This reproduction uses a scaled paired-activation benchmark generated in `data/`. The benchmark contains ground-truth factor families: shared, base-specific, fine-tuned-specific, and shared factors with unequal or partially separated behavior across the two streams. These cases preserve the paper's model-diffing difficulty while avoiding the cost of extracting full large-language-model activations.

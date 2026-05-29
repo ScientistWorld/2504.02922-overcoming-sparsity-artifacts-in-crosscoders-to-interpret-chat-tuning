@@ -1,4 +1,4 @@
-"""Evaluate crosscoder artifacts on the visible train evaluation slice.
+"""Evaluate paired activation-factor artifacts on the visible train slice.
 
 This module intentionally does not import from method/ or eval/test/. It reads
 saved validation artifacts and scores only a deterministic half of the

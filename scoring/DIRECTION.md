@@ -4,13 +4,13 @@
 
 This benchmark studies model diffing: identifying which activation factors are genuinely specific to a fine-tuned model rather than shared with its base model.
 
-## Core Contribution
+## Core Direction
 
-The paper's contribution is improving crosscoder-based model diffing by diagnosing sparsity artifacts and using a sparsity mechanism that better separates shared and model-specific latents.
+Improve paired sparse factor discovery so that shared activation factors are not mistaken for fine-tuned-specific factors.
 
 ## Approach Scope
 
-Future work should remain within crosscoder-style sparse dictionary learning over paired base/fine-tuned activations. Valid changes include better sparsity mechanisms, initialization, optimization, latent ranking, and artifact diagnostics.
+Future work should remain within sparse dictionary learning over paired base/fine-tuned activations. Valid changes include better sparsity controls, initialization, optimization, candidate ranking, and artifact diagnostics.
 
 ## Out of Bounds
 

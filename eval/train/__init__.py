@@ -1,1 +1,1 @@
-"""Visible train-slice evaluators for the crosscoder benchmark."""
+"""Visible train-slice evaluators for the paired activation-factor benchmark."""

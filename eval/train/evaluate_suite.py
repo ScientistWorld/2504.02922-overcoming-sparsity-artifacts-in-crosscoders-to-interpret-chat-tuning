@@ -1,4 +1,4 @@
-"""Evaluate the visible train slice for all crosscoder benchmark cases."""
+"""Evaluate the visible train slice for all paired activation-factor cases."""
 
 from __future__ import annotations
 

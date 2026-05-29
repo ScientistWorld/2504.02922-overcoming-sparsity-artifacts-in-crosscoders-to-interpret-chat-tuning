@@ -1,4 +1,4 @@
-"""Evaluate crosscoder artifacts on the held-out test evaluation slice.
+"""Evaluate paired activation-factor artifacts on the held-out test slice.
 
 This module intentionally does not import from method/ or eval/train/. It reads
 saved validation artifacts and scores the complementary deterministic half of

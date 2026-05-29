@@ -1,7 +1,7 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file after your turn ends.
-action: submit
+action: done
 gpus: 0
-test: true
+test: false
 milestone: core_claim
-notes: "CPU verification job: refresh suite scores after evaluator contract fixes and rerun validate.py --compare."
+notes: "Final verification passed after evaluator discovery and method-agnostic documentation fixes."

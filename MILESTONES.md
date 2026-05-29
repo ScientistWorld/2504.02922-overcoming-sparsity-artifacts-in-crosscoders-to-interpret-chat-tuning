@@ -25,7 +25,12 @@
 ### [2026-05-29 07:32] - core_claim
 - Tightened the evaluator contract so default suite scoring reports the same reconstruction constraint metrics as train/test scoring.
 - Removed RNG-based hidden-slice partitioning from evaluation code to avoid a validator false positive about regenerating experiments; evaluation still reads saved crosscoder outputs.
-- Submitting a CPU verification job to regenerate `scores.json`, `scores_train.json`, and `scores_test.json` and rerun `python3 validate.py --compare`.
+- Prepared a CPU verification job to regenerate score files and rerun `python3 validate.py --compare`.
+
+### [2026-05-29 07:33] - core_claim
+- Final verification found and fixed a reusable-evaluator issue: suite scoring now discovers all method artifact directories instead of assuming only the reproduced method names.
+- Tightened method-agnostic documentation in `briefing/problem.md`, `briefing/evaluation.md`, `scoring/TARGETS.md`, `scoring/CONSTRAINTS.md`, `scoring/DIRECTION.md`, and visible data/eval comments.
+- Local lightweight checks passed: Python syntax compilation, shell syntax checks, and `python3 validate.py --compare`.
 
 ## Stop Justification
 - Completed at milestone `core_claim`.
