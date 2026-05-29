@@ -2,8 +2,8 @@
 # Once you set action to 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: pending
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Fixed 50/50 validation-sample plus concept-family train/test split; 7 metrics per slice across 2 experiments; scripts written, scores produced later."
+notes: ""
