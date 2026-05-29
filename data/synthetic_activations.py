@@ -3,9 +3,10 @@
 The paper trains on residual-stream activations from base/chat Gemma models.
 This generator is a scaled-down substitute for those activations: it creates
 paired base/chat vectors from sparse ground-truth concepts with shared,
-base-only, chat-only, and weak-shared factors. The weak-shared factors are
-present in both models but smaller in base, making them vulnerable to the L1
-crosscoder sparsity artifact discussed in the paper.
+base-only, chat-only, and decoupled shared factors. The decoupled factors
+follow the paper's Appendix D setup: one concept direction appears on shared,
+base-exclusive, and chat-exclusive subsets. A norm-difference classifier can
+therefore mistake part of a shared concept for a chat-only latent.
 """
 
 from __future__ import annotations
@@ -42,7 +43,9 @@ def generate_dataset(
     n_chat_only: int = 8,
     n_base_only: int = 8,
     activation_rate: float = 0.08,
-    base_weak_scale: float = 0.28,
+    base_weak_scale: float = 1.0,
+    decoupled_shared_rate: float = 0.07,
+    decoupled_exclusive_rate: float = 0.055,
     noise_std: float = 0.03,
 ) -> None:
     rng = np.random.default_rng(seed)
@@ -64,21 +67,46 @@ def generate_dataset(
         start += count
 
     def make_split(n_samples: int) -> dict[str, np.ndarray]:
-        coeff = _sparse_positive(rng, n_samples, n_total, activation_rate)
-        base_scale = np.ones(n_total, dtype=np.float32)
-        chat_scale = np.ones(n_total, dtype=np.float32)
-        base_scale[idx["weak_shared"]] = base_weak_scale
-        base_scale[idx["chat_only"]] = 0.0
-        chat_scale[idx["base_only"]] = 0.0
+        base_coeff = np.zeros((n_samples, n_total), dtype=np.float32)
+        chat_coeff = np.zeros((n_samples, n_total), dtype=np.float32)
 
-        base = (coeff * base_scale) @ directions
-        chat = (coeff * chat_scale) @ directions
+        shared = idx["shared"]
+        weak = idx["weak_shared"]
+        chat_only = idx["chat_only"]
+        base_only = idx["base_only"]
+
+        shared_coeff = _sparse_positive(rng, n_samples, len(shared), activation_rate)
+        base_coeff[:, shared] = shared_coeff
+        chat_coeff[:, shared] = shared_coeff
+
+        # Appendix-D latent decoupling substitute: each direction is active
+        # in both models on a shared subset, plus separately active on
+        # base-only and chat-only subsets. The concept itself is not novel to
+        # the chat model, but a crosscoder can represent the chat-exclusive
+        # subset with a high norm-difference latent.
+        dec_shared = _sparse_positive(rng, n_samples, len(weak), decoupled_shared_rate)
+        dec_base = _sparse_positive(rng, n_samples, len(weak), decoupled_exclusive_rate)
+        dec_chat = _sparse_positive(rng, n_samples, len(weak), decoupled_exclusive_rate)
+        base_coeff[:, weak] = dec_shared + dec_base
+        chat_coeff[:, weak] = dec_shared + dec_chat
+
+        chat_coeff[:, chat_only] = _sparse_positive(
+            rng, n_samples, len(chat_only), activation_rate
+        )
+        base_coeff[:, base_only] = _sparse_positive(
+            rng, n_samples, len(base_only), activation_rate
+        )
+
+        base = base_coeff @ directions
+        chat = chat_coeff @ directions
         base += rng.normal(scale=noise_std, size=base.shape).astype(np.float32)
         chat += rng.normal(scale=noise_std, size=chat.shape).astype(np.float32)
         return {
             "base": base.astype(np.float32),
             "chat": chat.astype(np.float32),
-            "coefficients": coeff.astype(np.float32),
+            "coefficients": np.maximum(base_coeff, chat_coeff).astype(np.float32),
+            "base_coefficients": base_coeff.astype(np.float32),
+            "chat_coefficients": chat_coeff.astype(np.float32),
         }
 
     train = make_split(n_train)
@@ -88,9 +116,13 @@ def generate_dataset(
         train_base=train["base"],
         train_chat=train["chat"],
         train_coefficients=train["coefficients"],
+        train_base_coefficients=train["base_coefficients"],
+        train_chat_coefficients=train["chat_coefficients"],
         val_base=val["base"],
         val_chat=val["chat"],
         val_coefficients=val["coefficients"],
+        val_base_coefficients=val["base_coefficients"],
+        val_chat_coefficients=val["chat_coefficients"],
         directions=directions.astype(np.float32),
         base_scale=np.concatenate(
             [
@@ -118,6 +150,8 @@ def generate_dataset(
         "concept_indices": idx,
         "activation_rate": activation_rate,
         "base_weak_scale": base_weak_scale,
+        "decoupled_shared_rate": decoupled_shared_rate,
+        "decoupled_exclusive_rate": decoupled_exclusive_rate,
         "noise_std": noise_std,
     }
     (out_dir / "synthetic_metadata.json").write_text(

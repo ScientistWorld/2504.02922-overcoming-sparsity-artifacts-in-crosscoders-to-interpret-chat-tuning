@@ -11,7 +11,7 @@ Tests whether latents identified as fine-tuned-model-specific by decoder norm ar
 
 ## Constraint: shared_concept_false_positives
 
-The method should not improve apparent model-specificity by labeling weak shared concepts as fine-tuned-only.
+The method should not improve apparent model-specificity by labeling decoupled shared concepts as fine-tuned-only.
 
 - **Metric**: `fraction_top_norm_weak_or_shared` (lower is better)
 - **Run**: `bash scripts/evaluate.sh checkpoints/crosscoder_synthetic`

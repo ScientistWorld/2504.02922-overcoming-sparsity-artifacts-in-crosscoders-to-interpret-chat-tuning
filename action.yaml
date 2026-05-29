@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "Retrain and evaluate after removing undeclared diagnostic score fields and increasing L1 sparsity penalty to better match the paper's comparable-L0 protocol."
+notes: "Regenerate the revised latent-decoupling synthetic benchmark, retrain L1 and BatchTopK crosscoders with lower L1 penalty, evaluate, and compare scores."

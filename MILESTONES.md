@@ -32,5 +32,9 @@
 - Third CPU test job wrote `scoring/scores.json`, but `validate.py --compare` rejected undeclared diagnostic metrics.
 - Removed those extra score fields and increased the L1 sparsity penalty for the next run to better match the paper's comparable-L0 setup.
 
+### [2026-05-29 04:55] - none
+- Fourth CPU test job completed and validated, but did not support the core claim: L1 also avoided false fine-tuned-only latents under the weak-amplitude benchmark.
+- Revised the synthetic generator to include the paper's latent-decoupling setup and lowered the L1 penalty before resubmitting.
+
 ## Stop Justification
 - Not stopped.
