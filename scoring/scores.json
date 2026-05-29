@@ -4,12 +4,12 @@
       "results": {
         "l1": {
           "fraction_top_norm_true_chat": 1.0,
-          "fraction_top_norm_weak_or_shared": 0.5384615384615384,
-          "fraction_top_norm_scaling_specific": 0.9230769230769231,
-          "chat_only_latent_count": 20,
-          "false_ft_only_rate_pi06": 0.050000000000000044,
-          "reconstruction_fve": 0.9886914484188476,
-          "mean_l0": 19.232421875
+          "fraction_top_norm_weak_or_shared": 0.15384615384615385,
+          "fraction_top_norm_scaling_specific": 1.0,
+          "chat_only_latent_count": 27,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": 0.9173543251722633,
+          "mean_l0": 5.84765625
         },
         "batchtopk": {
           "fraction_top_norm_true_chat": 0.5384615384615384,
