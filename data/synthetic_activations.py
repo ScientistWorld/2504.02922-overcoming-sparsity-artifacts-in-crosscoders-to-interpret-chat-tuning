@@ -35,6 +35,7 @@ def _sparse_positive(
 def generate_dataset(
     out_dir: Path,
     seed: int = 0,
+    scenario: str = "decoupling",
     n_train: int = 4096,
     n_val: int = 1024,
     d_model: int = 32,
@@ -48,6 +49,8 @@ def generate_dataset(
     decoupled_exclusive_rate: float = 0.055,
     noise_std: float = 0.03,
 ) -> None:
+    if scenario not in {"decoupling", "complete_shrinkage"}:
+        raise ValueError(f"unknown scenario: {scenario}")
     rng = np.random.default_rng(seed)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -79,16 +82,31 @@ def generate_dataset(
         base_coeff[:, shared] = shared_coeff
         chat_coeff[:, shared] = shared_coeff
 
-        # Appendix-D latent decoupling substitute: each direction is active
-        # in both models on a shared subset, plus separately active on
-        # base-only and chat-only subsets. The concept itself is not novel to
-        # the chat model, but a crosscoder can represent the chat-exclusive
-        # subset with a high norm-difference latent.
-        dec_shared = _sparse_positive(rng, n_samples, len(weak), decoupled_shared_rate)
-        dec_base = _sparse_positive(rng, n_samples, len(weak), decoupled_exclusive_rate)
-        dec_chat = _sparse_positive(rng, n_samples, len(weak), decoupled_exclusive_rate)
-        base_coeff[:, weak] = dec_shared + dec_base
-        chat_coeff[:, weak] = dec_shared + dec_chat
+        if scenario == "decoupling":
+            # Appendix-D latent decoupling substitute: each direction is active
+            # in both models on a shared subset, plus separately active on
+            # base-only and chat-only subsets. The concept itself is not novel
+            # to the chat model, but a crosscoder can represent the
+            # chat-exclusive subset with a high norm-difference latent.
+            dec_shared = _sparse_positive(
+                rng, n_samples, len(weak), decoupled_shared_rate
+            )
+            dec_base = _sparse_positive(
+                rng, n_samples, len(weak), decoupled_exclusive_rate
+            )
+            dec_chat = _sparse_positive(
+                rng, n_samples, len(weak), decoupled_exclusive_rate
+            )
+            base_coeff[:, weak] = dec_shared + dec_base
+            chat_coeff[:, weak] = dec_shared + dec_chat
+        else:
+            # Complete-shrinkage substitute: the same weak-shared directions
+            # appear in both streams, but are lower-amplitude in the base
+            # stream. L1 pressure can zero the base decoder for these latents
+            # even though they still explain base residual error.
+            weak_coeff = _sparse_positive(rng, n_samples, len(weak), activation_rate)
+            base_coeff[:, weak] = base_weak_scale * weak_coeff
+            chat_coeff[:, weak] = weak_coeff
 
         chat_coeff[:, chat_only] = _sparse_positive(
             rng, n_samples, len(chat_only), activation_rate
@@ -143,6 +161,7 @@ def generate_dataset(
     )
     metadata = {
         "seed": seed,
+        "scenario": scenario,
         "n_train": n_train,
         "n_val": n_val,
         "d_model": d_model,
@@ -163,10 +182,28 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", type=Path, default=Path("data"))
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--scenario",
+        choices=("decoupling", "complete_shrinkage"),
+        default="decoupling",
+    )
     parser.add_argument("--n-train", type=int, default=4096)
     parser.add_argument("--n-val", type=int, default=1024)
+    parser.add_argument("--base-weak-scale", type=float, default=None)
     args = parser.parse_args()
-    generate_dataset(args.out_dir, args.seed, args.n_train, args.n_val)
+    base_weak_scale = (
+        args.base_weak_scale
+        if args.base_weak_scale is not None
+        else (0.25 if args.scenario == "complete_shrinkage" else 1.0)
+    )
+    generate_dataset(
+        args.out_dir,
+        seed=args.seed,
+        scenario=args.scenario,
+        n_train=args.n_train,
+        n_val=args.n_val,
+        base_weak_scale=base_weak_scale,
+    )
 
 
 if __name__ == "__main__":

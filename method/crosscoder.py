@@ -29,13 +29,14 @@ class Crosscoder(nn.Module):
         self.reset_parameters(init_decoder_norm)
 
     def reset_parameters(self, init_decoder_norm: float) -> None:
-        nn.init.kaiming_uniform_(self.encoder.weight, a=5**0.5)
         nn.init.zeros_(self.encoder.bias)
         with torch.no_grad():
-            nn.init.normal_(self.base_decoder)
-            nn.init.normal_(self.chat_decoder)
-            self.base_decoder[:] = F.normalize(self.base_decoder, dim=1) * init_decoder_norm
-            self.chat_decoder[:] = F.normalize(self.chat_decoder, dim=1) * init_decoder_norm
+            paired = torch.randn_like(self.base_decoder)
+            paired = F.normalize(paired, dim=1) * init_decoder_norm
+            self.base_decoder[:] = paired
+            self.chat_decoder[:] = paired
+            self.encoder.weight[:, : paired.shape[1]] = paired
+            self.encoder.weight[:, paired.shape[1] :] = paired
 
     def raw_features(self, base: torch.Tensor, chat: torch.Tensor) -> torch.Tensor:
         return F.relu(self.encoder(torch.cat([base, chat], dim=-1)))
@@ -57,17 +58,13 @@ class Crosscoder(nn.Module):
         threshold = torch.topk(scaled.flatten(), keep, sorted=False).values.min()
         return features * (scaled >= threshold).to(features.dtype)
 
-    def infer_topk_features(
-        self, base: torch.Tensor, chat: torch.Tensor, k: int
+    def threshold_features(
+        self, base: torch.Tensor, chat: torch.Tensor, threshold: float
     ) -> torch.Tensor:
         features = self.raw_features(base, chat)
         _, _, total_norm = self.decoder_norms()
         scaled = features * total_norm.unsqueeze(0)
-        keep = min(k, features.shape[1])
-        values, indices = torch.topk(scaled, keep, dim=1)
-        mask = torch.zeros_like(features)
-        mask.scatter_(1, indices, (values > 0).to(features.dtype))
-        return features * mask
+        return features * (scaled > threshold).to(features.dtype)
 
     def decode(self, features: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         base_recon = features @ self.base_decoder + self.base_bias
@@ -75,7 +72,12 @@ class Crosscoder(nn.Module):
         return base_recon, chat_recon
 
     def forward(
-        self, base: torch.Tensor, chat: torch.Tensor, mode: str, k: int | None = None
+        self,
+        base: torch.Tensor,
+        chat: torch.Tensor,
+        mode: str,
+        k: int | None = None,
+        threshold: float | None = None,
     ) -> ForwardOutput:
         if mode == "l1":
             features = self.raw_features(base, chat)
@@ -84,9 +86,9 @@ class Crosscoder(nn.Module):
                 raise ValueError("k is required for BatchTopK training")
             features = self.batch_topk_features(base, chat, k)
         elif mode == "batchtopk_infer":
-            if k is None:
-                raise ValueError("k is required for BatchTopK inference")
-            features = self.infer_topk_features(base, chat, k)
+            if threshold is None:
+                raise ValueError("threshold is required for BatchTopK inference")
+            features = self.threshold_features(base, chat, threshold)
         else:
             raise ValueError(f"unknown mode: {mode}")
         base_recon, chat_recon = self.decode(features)

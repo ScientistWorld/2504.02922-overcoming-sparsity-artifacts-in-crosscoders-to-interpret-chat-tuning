@@ -1,9 +1,45 @@
 {
   "experiments": {
     "synthetic_chat_specificity": {
-      "description": "Scaled artifact-diagnosis reproduction of the paper's Gemma 2 2B crosscoder comparison. Paper-reported anchors: Table 1 false FT-only rates and Table 4 FT-only counts; remaining alignment fields are benchmark analogues used to score the scaled synthetic setting.",
-      "weight": 1.0,
-      "primary_metric": "reconstruction_fve",
+      "description": "Scaled latent-decoupling reproduction of the paper's Gemma 2 2B crosscoder comparison. Paper-reported anchors: Table 1 false FT-only rates and Table 4 FT-only counts; remaining alignment fields are benchmark analogues used to score the scaled synthetic setting.",
+      "weight": 0.5,
+      "primary_metric": "false_ft_only_rate_pi06",
+      "metrics": {
+        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0},
+        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7},
+        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7},
+        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1},
+        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0},
+        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.2},
+        "mean_l0": {"higher_is_better": false, "coefficient": -0.1}
+      },
+      "results": {
+        "l1": {
+          "type": "baseline",
+          "fraction_top_norm_scaling_specific": 0.329,
+          "fraction_top_norm_true_chat": 0.329,
+          "fraction_top_norm_weak_or_shared": 0.671,
+          "chat_only_latent_count": 3176,
+          "false_ft_only_rate_pi06": 0.671,
+          "reconstruction_fve": 0.844,
+          "mean_l0": 101.0
+        },
+        "batchtopk": {
+          "type": "proposed",
+          "fraction_top_norm_scaling_specific": 0.993,
+          "fraction_top_norm_true_chat": 0.993,
+          "fraction_top_norm_weak_or_shared": 0.007,
+          "chat_only_latent_count": 134,
+          "false_ft_only_rate_pi06": 0.007,
+          "reconstruction_fve": 0.876,
+          "mean_l0": 99.48
+        }
+      }
+    },
+    "synthetic_complete_shrinkage": {
+      "description": "Scaled complete-shrinkage reproduction of the same paper claim: weak concepts present in both streams can be misidentified as fine-tuned-only by L1 norm differences, while BatchTopK should reduce that artifact.",
+      "weight": 0.5,
+      "primary_metric": "false_ft_only_rate_pi06",
       "metrics": {
         "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0},
         "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7},

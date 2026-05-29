@@ -26,10 +26,20 @@ cd /home/user
 
 mkdir -p scoring
 
-ARTIFACTS="${1:-checkpoints/crosscoder_synthetic}"
-
-python3 -m eval.evaluate_crosscoders \
-  --artifacts "$ARTIFACTS" \
-  --data data/synthetic_activations.npz \
-  --metadata data/synthetic_metadata.json \
-  --out scoring/scores.json
+if [ "${1:-}" = "--suite" ]; then
+  ARTIFACTS_ROOT="${2:-checkpoints/crosscoder_suite}"
+  DATA_ROOT="${3:-data/benchmarks}"
+  python3 -m eval.evaluate_suite \
+    --artifacts-root "$ARTIFACTS_ROOT" \
+    --data-root "$DATA_ROOT" \
+    --out scoring/scores.json
+else
+  ARTIFACTS="${1:-checkpoints/crosscoder_synthetic}"
+  EXPERIMENT_NAME="${EXPERIMENT_NAME:-synthetic_chat_specificity}"
+  python3 -m eval.evaluate_crosscoders \
+    --artifacts "$ARTIFACTS" \
+    --data data/synthetic_activations.npz \
+    --metadata data/synthetic_metadata.json \
+    --experiment-name "$EXPERIMENT_NAME" \
+    --out scoring/scores.json
+fi

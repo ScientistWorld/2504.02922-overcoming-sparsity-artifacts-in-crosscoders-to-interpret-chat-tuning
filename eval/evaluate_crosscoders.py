@@ -35,15 +35,8 @@ def _latent_scaling_metrics(
     beta_r_base = _beta(features, chat_decoder, base_recon)
     beta_r_chat = _beta(features, chat_decoder, chat_recon)
 
-    base_without_j = base[:, None, :] - (base_recon[:, None, :] - features[:, :, None] * base_decoder[None, :, :])
-    chat_without_j = chat[:, None, :] - (chat_recon[:, None, :] - features[:, :, None] * chat_decoder[None, :, :])
-    projected_base = np.einsum("nld,ld->nl", base_without_j, chat_decoder)
-    projected_chat = np.einsum("nld,ld->nl", chat_without_j, chat_decoder)
-    numerator_base = (projected_base * features).sum(axis=0)
-    numerator_chat = (projected_chat * features).sum(axis=0)
-    denominator = (features * features).sum(axis=0) * (chat_decoder * chat_decoder).sum(axis=1)
-    beta_e_base = numerator_base / np.maximum(denominator, 1e-12)
-    beta_e_chat = numerator_chat / np.maximum(denominator, 1e-12)
+    beta_e_base = _beta(features, chat_decoder, base - base_recon)
+    beta_e_chat = _beta(features, chat_decoder, chat - chat_recon)
 
     nu_r = beta_r_base / np.maximum(np.abs(beta_r_chat), 1e-8)
     nu_e = beta_e_base / np.maximum(np.abs(beta_e_chat), 1e-8)
@@ -112,6 +105,7 @@ def main() -> None:
     parser.add_argument("--data", type=Path, default=Path("data/synthetic_activations.npz"))
     parser.add_argument("--metadata", type=Path, default=Path("data/synthetic_metadata.json"))
     parser.add_argument("--out", type=Path, default=Path("scoring/scores.json"))
+    parser.add_argument("--experiment-name", default="synthetic_chat_specificity")
     args = parser.parse_args()
 
     data = np.load(args.data)
@@ -122,7 +116,7 @@ def main() -> None:
         if (run_dir / "val_outputs.npz").exists():
             results[name] = evaluate_one(run_dir, data, meta)
 
-    scores = {"experiments": {"synthetic_chat_specificity": {"results": results}}}
+    scores = {"experiments": {args.experiment_name: {"results": results}}}
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(scores, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(scores, indent=2))

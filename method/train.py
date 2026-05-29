@@ -28,6 +28,34 @@ def _loss_batchtopk(model: Crosscoder, base: torch.Tensor, chat: torch.Tensor, k
     return recon, out, recon, torch.tensor(0.0, device=base.device)
 
 
+def _estimate_batchtopk_threshold(
+    model: Crosscoder,
+    train_base: np.ndarray,
+    train_chat: np.ndarray,
+    batch_size: int,
+    k: int,
+    device: str,
+) -> float:
+    """Estimate the paper's inference threshold theta from training batches."""
+
+    ds = TensorDataset(torch.from_numpy(train_base), torch.from_numpy(train_chat))
+    loader = DataLoader(ds, batch_size=batch_size, shuffle=False, drop_last=False)
+    thresholds = []
+    with torch.no_grad():
+        _, _, total_norm = model.decoder_norms()
+        for base, chat in loader:
+            base = base.to(device)
+            chat = chat.to(device)
+            features = model.raw_features(base, chat)
+            scaled = features * total_norm.unsqueeze(0)
+            keep = min(features.shape[0] * k, scaled.numel())
+            if keep > 0:
+                thresholds.append(torch.topk(scaled.flatten(), keep, sorted=False).values.min())
+    if not thresholds:
+        return float("inf")
+    return float(torch.stack(thresholds).mean().item())
+
+
 def train_one(
     name: str,
     train_base: np.ndarray,
@@ -72,8 +100,12 @@ def train_one(
         vc = torch.from_numpy(val_chat).to(device)
         if mode == "l1":
             out = model(vb, vc, mode="l1")
+            threshold = None
         else:
-            out = model(vb, vc, mode="batchtopk_infer", k=k)
+            threshold = _estimate_batchtopk_threshold(
+                model, train_base, train_chat, batch_size, k, device
+            )
+            out = model(vb, vc, mode="batchtopk_infer", threshold=threshold)
         mse_base = F.mse_loss(out.base_recon, vb).item()
         mse_chat = F.mse_loss(out.chat_recon, vc).item()
         l0 = (out.features > 0).float().sum(dim=1).mean().item()
@@ -88,6 +120,7 @@ def train_one(
             "mode": mode,
             "k": k,
             "mu": mu,
+            "threshold": threshold,
         },
         path / "model.pt",
     )
@@ -101,7 +134,12 @@ def train_one(
         base_bias=model.base_bias.detach().cpu().numpy(),
         chat_bias=model.chat_bias.detach().cpu().numpy(),
     )
-    metrics = {"val_mse_base": mse_base, "val_mse_chat": mse_chat, "val_l0": l0}
+    metrics = {
+        "val_mse_base": mse_base,
+        "val_mse_chat": mse_chat,
+        "val_l0": l0,
+        "threshold": threshold,
+    }
     (path / "train_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
     return metrics
 

@@ -1,10 +1,15 @@
 # Evaluation
 
-Evaluation reads saved method artifacts from `checkpoints/crosscoder_synthetic/<method>/val_outputs.npz` and writes `scoring/scores.json`.
+Evaluation reads saved method artifacts from `checkpoints/crosscoder_suite/<case>/<method>/val_outputs.npz` and writes `scoring/scores.json`. The legacy single-case evaluator still accepts `checkpoints/crosscoder_synthetic/<method>/val_outputs.npz`.
 
-The validator-facing `primary_metric` is `reconstruction_fve` because it is on the same absolute scale as the paper's reported reconstruction scores. The central artifact-control target remains `false_ft_only_rate_pi06`, which is the highest-weight false-positive metric in `reference.json` and `TARGETS.md`; its absolute value is benchmark-scale dependent in this synthetic reproduction.
+The validator-facing `primary_metric` is `false_ft_only_rate_pi06`, matching the paper's central artifact-control claim. Reconstruction FVE and mean L0 are constraint metrics so a method cannot improve apparent specificity by failing to reconstruct or by using much denser activations.
 
-The primary experiment is `synthetic_chat_specificity`. It ranks latents by relative decoder norm difference and measures whether the top chat-specific candidates align with ground-truth chat-only factors rather than decoupled shared or shared factors. It also computes Latent Scaling ratios to test whether top candidates behave like genuinely chat-specific latents.
+The suite contains two experiments:
+
+- `synthetic_chat_specificity`: latent-decoupling setting where a shared concept has shared and model-exclusive activation subsets.
+- `synthetic_complete_shrinkage`: complete-shrinkage setting where a concept is present in both streams but lower-amplitude in the base stream.
+
+Both experiments rank latents by relative decoder norm difference and measure whether the top chat-specific candidates align with ground-truth chat-only factors rather than weak/shared factors. They also compute Latent Scaling ratios to test whether top candidates behave like genuinely chat-specific latents.
 
 Metrics include:
 

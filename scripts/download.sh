@@ -13,10 +13,15 @@
 # Estimated disk usage after extraction: < 10 MB
 #
 # This benchmark uses generated paired activations and has no external
-# dataset or model downloads.
+# dataset or model downloads. The compute scripts regenerate the small
+# activation files inside the container.
 
 set -e
 
 cd /home/user
 
-python3 data/synthetic_activations.py --out-dir data --seed 0
+if python3 -c "import numpy" >/dev/null 2>&1; then
+  python3 data/synthetic_activations.py --out-dir data --seed 0
+else
+  echo "No external downloads required; NumPy is only needed in the compute container."
+fi
