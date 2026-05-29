@@ -97,7 +97,7 @@ print(json.dumps({"selected": best, "all": rows}, indent=2))
 Path("tmp/sweep_selection.json").write_text(json.dumps({"selected": best, "all": rows}, indent=2) + "\n")
 
 candidate = best["candidate"]
-_, k_part, seed_part = candidate.split("_")
+k_part, seed_part = candidate.split("_")
 src = sweep_root / f"eval_{k_part}_{seed_part}"
 if final_dir.exists():
     shutil.rmtree(final_dir)

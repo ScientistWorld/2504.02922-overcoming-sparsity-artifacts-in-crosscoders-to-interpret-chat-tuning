@@ -27,6 +27,7 @@
 
 ## Issues
 
+- Continuation audit found a sweep-script bug before submission: candidate score files are named like `k8_seed1`, but the selector parsed them as three underscore-separated fields. Fixed the parser before resubmitting the CPU sweep.
 - First CPU test job failed before method execution because the base container exposed `python3` but not `python`. Scripts now call `python3` explicitly, and `environment/container.def` also creates a `python` symlink for compatibility.
 - Second CPU test job trained both crosscoders, then failed in `eval/evaluate_crosscoders.py` because NumPy batched matmul did not express the intended per-latent dot product. This is fixed with explicit `einsum`.
 - Third CPU test job reached scoring but failed schema validation; evaluator now only emits metrics declared in `reference.json`.

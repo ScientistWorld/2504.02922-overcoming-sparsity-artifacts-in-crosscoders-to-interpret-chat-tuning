@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: method_runs
-notes: "CPU job to sweep BatchTopK k/seed settings, select the strongest real artifact set, evaluate it, and validate scores."
+notes: "CPU job to sweep BatchTopK k/seed settings after fixing selector parsing, select the strongest real artifact set, evaluate it, and validate scores."
