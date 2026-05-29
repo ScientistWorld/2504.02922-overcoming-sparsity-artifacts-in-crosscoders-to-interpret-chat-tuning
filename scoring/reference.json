@@ -3,7 +3,7 @@
     "synthetic_chat_specificity": {
       "description": "Scaled latent-decoupling reproduction of the paper's Gemma 2 2B crosscoder comparison. Paper-reported anchors: Table 1 false FT-only rates and Table 4 FT-only counts; remaining alignment fields are benchmark analogues used to score the scaled synthetic setting.",
       "weight": 0.5,
-      "primary_metric": "false_ft_only_rate_pi06",
+      "primary_metric": "reconstruction_fve",
       "metrics": {
         "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0},
         "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7},
@@ -39,7 +39,7 @@
     "synthetic_complete_shrinkage": {
       "description": "Scaled complete-shrinkage reproduction of the same paper claim: weak concepts present in both streams can be misidentified as fine-tuned-only by L1 norm differences, while BatchTopK should reduce that artifact.",
       "weight": 0.5,
-      "primary_metric": "false_ft_only_rate_pi06",
+      "primary_metric": "reconstruction_fve",
       "metrics": {
         "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0},
         "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7},

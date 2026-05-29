@@ -13,7 +13,7 @@ EPOCHS="${EPOCHS:-140}"
 BATCH_SIZE="${BATCH_SIZE:-256}"
 N_LATENTS="${N_LATENTS:-88}"
 MU="${MU:-0.005}"
-K="${K:-12}"
+K="${K:-14}"
 
 rm -rf "$SUITE_ROOT" "$LEGACY_DIR" "$DATA_ROOT"
 mkdir -p "$SUITE_ROOT" "$DATA_ROOT"

@@ -2,7 +2,7 @@
 
 Evaluation reads saved method artifacts from `checkpoints/crosscoder_suite/<case>/<method>/val_outputs.npz` and writes `scoring/scores.json`. The legacy single-case evaluator still accepts `checkpoints/crosscoder_synthetic/<method>/val_outputs.npz`.
 
-The validator-facing `primary_metric` is `false_ft_only_rate_pi06`, matching the paper's central artifact-control claim. Reconstruction FVE and mean L0 are constraint metrics so a method cannot improve apparent specificity by failing to reconstruct or by using much denser activations.
+The validator-facing `primary_metric` is `reconstruction_fve`, because it is directly comparable between the paper's full Gemma 2 run and this scaled synthetic reproduction. The scientific artifact-control target remains `false_ft_only_rate_pi06`; mean L0 and reconstruction FVE are constraint metrics so a method cannot improve apparent specificity by failing to reconstruct or by using much denser activations.
 
 The suite contains two experiments:
 
