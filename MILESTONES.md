@@ -15,7 +15,10 @@
 
 ## Progress Log
 
-<!-- Write your progress here -->
+### [2026-05-29 04:05] - none
+- Read the paper and identified the core method: L1 and BatchTopK crosscoders plus Latent Scaling diagnostics.
+- Implemented the scaled benchmark, method code, evaluation code, scripts, and scoring reference.
+- Submitting first compute job; no milestone above `none` is claimed until the method runs successfully.
 
 ## Stop Justification
-- Completed at milestone `none`.
+- Not stopped.

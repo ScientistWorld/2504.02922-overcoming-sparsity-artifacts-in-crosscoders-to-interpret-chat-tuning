@@ -26,5 +26,10 @@ cd /home/user
 
 mkdir -p scoring
 
-# TODO: implement evaluation using code in eval/
-# Must write scoring/scores.json at the end
+ARTIFACTS="${1:-checkpoints/crosscoder_synthetic}"
+
+python -m eval.evaluate_crosscoders \
+  --artifacts "$ARTIFACTS" \
+  --data data/synthetic_activations.npz \
+  --metadata data/synthetic_metadata.json \
+  --out scoring/scores.json

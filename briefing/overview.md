@@ -1,14 +1,5 @@
 # Overview
 
-- **Paper ID:** <!-- e.g. 1706.03762 -->
-- **Title:** <!-- e.g. Attention Is All You Need -->
-- **Domain:** <!-- e.g. Computer Vision / Object Detection -->
-- **TL;DR:** <!-- One sentence: what this paper does and why it matters -->
+This paper shows that standard L1 crosscoders can misidentify shared concepts as chat-model-only latents when comparing base and chat-tuned language models. It introduces Latent Scaling to diagnose those artifacts and shows that BatchTopK sparsity substantially reduces them.
 
-## Short Summary
-
-<!-- 3-5 sentences covering the problem, approach, and main findings -->
-
-## Key Results
-
-<!-- 2-3 bullet points: main findings or numbers in bullet points -->
+The reproduction implements the actual crosscoder architecture, L1 and BatchTopK training objectives, decoder norm ranking, and Latent Scaling diagnostics on a scaled paired-activation benchmark.

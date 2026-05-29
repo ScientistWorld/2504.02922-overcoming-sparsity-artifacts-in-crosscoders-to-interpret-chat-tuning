@@ -2,36 +2,28 @@
 
 ## What Works
 
-<!-- What has been successfully reproduced so far. -->
+- Implemented a scaled paired-activation benchmark with shared, weak-shared, chat-only, and base-only latent factors.
+- Implemented the paper's shared-encoder/two-decoder crosscoder architecture.
+- Implemented both L1 and BatchTopK sparsity objectives.
+- Implemented method-agnostic evaluation for decoder norm ranking, Latent Scaling specificity, reconstruction FVE, and L0.
+- `python validate.py --reference-only` passes after staging the implementation files.
 
 ## Results
 
-<!-- Reproduced numbers compared to the paper's reported numbers. -->
+- No compute-node results yet. A first job is being submitted to train both crosscoders and write `scoring/scores.json`.
 
 ## Remaining
 
-<!-- What still needs to be done to reach higher milestones. -->
+- Run the method in the compute container.
+- Inspect `scoring/scores.json` and iterate on hyperparameters if BatchTopK does not improve specificity over L1.
+- Update milestone after job results are available.
 
 ## Issues
 
-<!-- Blockers, bugs, or difficulties encountered. -->
+- Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
 
 ## Deviations from Paper
 
-<!-- Do not edit this section unless you deviated from the paper's original setup.
-     For each deviation, document: what the paper used, what you substituted, and why.
-
-     ACCEPTABLE deviations (data/resource/scale substitutions — milestones still valid):
-       - Replaced a proprietary dataset with a public one
-       - Used a smaller model of the same architecture
-       - Scaled down training (fewer epochs, smaller batch)
-       - Used a different library for the same algorithm
-
-     UNACCEPTABLE deviations (algorithm substitutions — milestones above 'none' are void):
-       - Replaced the paper's algorithm with a fundamentally different one
-       - Wrote a generic model trained to approximate the method's outputs
-         instead of implementing the method's computational steps
-
-     The test: could someone reading your code identify which algorithm from
-     the paper you implemented? If not, you replaced the method. -->
-
+- Original paper: Gemma 2 2B base and Gemma 2 2B-it residual-stream activations at layer 13, trained on 100M tokens from web and chat data.
+- Reproduction: synthetic paired activations generated from sparse latent factors with known shared and model-specific structure.
+- Reason: full model activation extraction and 73,728-latent crosscoder training would exceed the practical first-pass budget. The implemented computation remains the paper's crosscoder algorithm and Latent Scaling diagnostic.

@@ -27,8 +27,8 @@
 #   milestone: core_claim
 #   notes: "Reproduced the core claim. Environment packaged."
 
-action: pending
-gpus: 1
-test: false
+action: submit
+gpus: 0
+test: true
 milestone: none
-notes: ""
+notes: "CPU test job to install dependencies, train L1 and BatchTopK crosscoders on the scaled paired-activation benchmark, evaluate artifacts, and run validate.py --compare."

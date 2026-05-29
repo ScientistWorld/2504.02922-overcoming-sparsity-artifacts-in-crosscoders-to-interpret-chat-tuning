@@ -1,0 +1,37 @@
+{
+  "experiments": {
+    "synthetic_chat_specificity": {
+      "description": "Scaled artifact-diagnosis reproduction of the paper's Gemma 2 2B crosscoder comparison (Figure 2, Table 1, Tables 2-4). Reference values are paper Gemma base/chat values where directly comparable; alignment metrics are the scaled benchmark analogue of false versus genuine fine-tuned-only latents.",
+      "weight": 1.0,
+      "primary_metric": "fraction_top_norm_scaling_specific",
+      "metrics": {
+        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0},
+        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7},
+        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7},
+        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1},
+        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.2},
+        "mean_l0": {"higher_is_better": false, "coefficient": -0.1}
+      },
+      "results": {
+        "l1": {
+          "type": "baseline",
+          "fraction_top_norm_scaling_specific": 0.329,
+          "fraction_top_norm_true_chat": 0.329,
+          "fraction_top_norm_weak_or_shared": 0.671,
+          "chat_only_latent_count": 3176,
+          "reconstruction_fve": 0.844,
+          "mean_l0": 101.0
+        },
+        "batchtopk": {
+          "type": "proposed",
+          "fraction_top_norm_scaling_specific": 0.993,
+          "fraction_top_norm_true_chat": 0.993,
+          "fraction_top_norm_weak_or_shared": 0.007,
+          "chat_only_latent_count": 134,
+          "reconstruction_fve": 0.876,
+          "mean_l0": 99.48
+        }
+      }
+    }
+  }
+}

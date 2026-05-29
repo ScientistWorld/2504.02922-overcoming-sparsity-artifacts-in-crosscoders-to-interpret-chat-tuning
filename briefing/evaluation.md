@@ -1,15 +1,14 @@
 # Evaluation
 
-How success is measured. Describe only the metrics, targets, and evaluation procedure — do NOT describe the paper's method or how they achieved these results. Think of this as a general evaluation protocal for other scientists trying to solve the same problem, where they should not see this paper's solution.
+Evaluation reads saved method artifacts from `checkpoints/crosscoder_synthetic/<method>/val_outputs.npz` and writes `scoring/scores.json`.
 
-## Metrics
+The primary experiment is `synthetic_chat_specificity`. It ranks latents by relative decoder norm difference and measures whether the top chat-specific candidates align with ground-truth chat-only factors rather than weak-shared or shared factors. It also computes Latent Scaling ratios to test whether top candidates behave like genuinely chat-specific latents.
 
-<!-- What metrics are used? How are they computed? What does higher/lower mean? -->
+Metrics include:
 
-## Baselines and Targets
-
-<!-- What performance levels exist as reference points? Include the paper's reported numbers as targets, and any standard baselines. A scientist agent should know what "good" looks like. -->
-
-## Evaluation Protocol
-
-<!-- How should evaluation be run? What data split, what conditions? Any important details about how to compare fairly (e.g., fixed seeds, specific test sets, averaging over runs). -->
+- `fraction_top_norm_scaling_specific`: fraction of top norm-ranked candidates passing Latent Scaling specificity thresholds.
+- `fraction_top_norm_true_chat`: fraction of top candidates aligned to true chat-only factors.
+- `fraction_top_norm_weak_or_shared`: false-positive fraction aligned to shared or weak-shared factors.
+- `chat_only_latent_count`: number of latents classified chat-only by decoder norm.
+- `reconstruction_fve`: fraction of activation variance explained by reconstructions.
+- `mean_l0`: average number of active latents per validation sample.
