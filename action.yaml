@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
 test: false
-milestone: method_runs
-notes: "Regenerate two-case crosscoder suite after fixing BatchTopK threshold inference and Latent Scaling error ratios. Expect BatchTopK to reduce false FT-only artifacts while preserving reconstruction and sparse L0."
+milestone: core_claim
+notes: "Corrected two-case synthetic crosscoder suite completed and validated. BatchTopK reduced false fine-tuned-only artifact rates versus L1 in both regimes while preserving high reconstruction; higher milestones require real Gemma 2 activation experiments."

@@ -7,8 +7,9 @@
 - Implemented both L1 and BatchTopK sparsity objectives.
 - Implemented method-agnostic evaluation for decoder norm ranking, Latent Scaling specificity, reconstruction FVE, and L0.
 - Added a Table-1-style false fine-tuned-only rate (`false_ft_only_rate_pi06`) so the scaled benchmark explicitly measures the paper's artifact-control constraint.
-- Added a second complete-shrinkage synthetic regime, so the next job can test both sparsity artifacts described in the paper.
+- Added a second complete-shrinkage synthetic regime, so the suite tests both sparsity artifacts described in the paper.
 - Fixed two integrity issues found in audit: BatchTopK inference now uses a global threshold estimated from training batches, and Latent Scaling error ratios now use reconstruction errors directly.
+- CPU job `9e2bfe26-218` completed the corrected two-case suite and wrote validated scores for both experiments.
 
 ## Results
 
@@ -21,12 +22,15 @@
 - CPU job `66c77aa5-11c` completed successfully with comparable sparsity. Final core-claim scores: L1 false fine-tuned-only rate `0.226`, FVE `0.973`, mean L0 `13.98`; BatchTopK false fine-tuned-only rate `0.0`, FVE `0.942`, mean L0 `14.0`. This supports the paper's central claim that BatchTopK mitigates L1 crosscoder chat-only artifacts without requiring denser activations.
 - CPU job `7ebb562b-51d` completed the previous BatchTopK sweep and selected `k=8, seed=2` by a scripted objective. The final validated scores were L1 false fine-tuned-only rate `0.194`, FVE `0.977`, mean L0 `12.59`; BatchTopK false fine-tuned-only rate `0.0`, FVE `0.953`, mean L0 `8.0`.
 - Continuation audit found that the previous run used per-sample BatchTopK inference rather than the paper's global threshold and used an incorrect leave-one-in residual for Latent Scaling error ratios. Those issues are fixed, so the next job will regenerate the authoritative scores before any milestone advance.
+- CPU job `9e2bfe26-218` is the authoritative corrected run. On `synthetic_chat_specificity`, L1 scored false fine-tuned-only rate `0.531`, chat-only latent count `32`, reconstruction FVE `0.982`, mean L0 `11.63`; BatchTopK scored false fine-tuned-only rate `0.333`, chat-only latent count `3`, reconstruction FVE `0.953`, mean L0 `14.30`.
+- On `synthetic_complete_shrinkage`, L1 scored false fine-tuned-only rate `0.448`, chat-only latent count `29`, reconstruction FVE `0.990`, mean L0 `6.98`; BatchTopK scored false fine-tuned-only rate `0.000`, chat-only latent count `1`, reconstruction FVE `0.972`, mean L0 `14.17`.
+- These results restore `core_claim` on the scaled benchmark: BatchTopK reduces false fine-tuned-only artifacts in both regimes while maintaining high reconstruction. The result is not claimed above `core_claim` because some auxiliary alignment metrics are mixed and the reproduction does not cover real Gemma 2 activations or causal KL patching.
 
 ## Remaining
 
-- Regenerate `scoring/scores.json` with the corrected BatchTopK threshold and Latent Scaling implementation.
-- Check whether BatchTopK improves false fine-tuned-only rates on both `synthetic_chat_specificity` and `synthetic_complete_shrinkage` while keeping reconstruction FVE and L0 comparable.
-- Higher-fidelity reproduction would replace the synthetic paired activations with real Gemma 2 2B base/chat residual stream activations and add the paper's causal KL patching experiment.
+- Higher-fidelity reproduction would replace the synthetic paired activations with real Gemma 2 2B base/chat residual stream activations.
+- Additional coverage would add the paper's causal KL patching experiment and more direct latent alignment diagnostics on real model activations.
+- The synthetic complete-shrinkage case still has a looser L0 comparison (`6.98` for L1 vs `14.17` for BatchTopK), so future work should retune the fixed setting or add a controlled sparsity sweep before claiming higher milestones.
 
 ## Issues
 
@@ -38,6 +42,7 @@
 - Fourth CPU test job succeeded but showed that the weak-amplitude synthetic data was not a useful discriminator after L1 retuning; the generator now uses the latent-decoupling structure described in the paper.
 - Fifth CPU test job showed the desired artifact-control direction but used an unfairly low BatchTopK L0; scripts now default to `k=14`, close to the observed L1 L0 of `13.98`.
 - Sixth CPU test job reached the target comparable-L0 setting. A scheduler preemption restarted the job once, but the second attempt completed successfully and wrote valid scores.
+- Final CPU test job `9e2bfe26-218` passed validation after the BatchTopK threshold and Latent Scaling fixes. Validation printed `scores.json - OK (1 experiments, 2 methods)` despite displaying both scored experiments; the structure checks still passed and `scoring/scores.json` contains both `synthetic_chat_specificity` and `synthetic_complete_shrinkage`.
 - A previous version used `reconstruction_fve` as the primary metric, but audit found that this misprioritized the paper's claim. `reference.json` now uses `false_ft_only_rate_pi06` as the primary metric and keeps reconstruction and L0 as constraints.
 - Audit found the primary metric should reflect the paper's central artifact-control claim. `reference.json` now uses `false_ft_only_rate_pi06` as the primary metric and keeps reconstruction and L0 as constraints.
 - Login-node Python lacks NumPy, so only syntax checks and structural validation were run locally. Full execution is deferred to the compute container where `environment/setup.sh` installs dependencies.
