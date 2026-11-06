@@ -15,7 +15,7 @@ This paper shows that standard L1 crosscoders can misidentify shared concepts as
 ## Run it
 
 ```bash
-pip install git+https://github.com/zlab-princeton/scientist_world_cli
+pip install sciworld
 sw research 2504.02922 --mode innovate --agent claude-code
 sw evaluate 2504.02922
 ```
