@@ -1,0 +1,60 @@
+shortcut_empty_features                +2.189292
+shortcut_zero_outputs                  +1.703494
+shortcut_copy_reconstruction           +1.260821
+shortcut_target_replacement            +1.260821
+shortcut_taxonomy_replacement          +1.190160
+shortcut_negative_features             +1.094001
+reference_seed1                        +1.028122
+shortcut_threshold_mask                +0.978338
+l1_baseline                            +0.790050
+brute_force_exemplars                  +0.701329
+reference_seed2                        +0.693636
+shortcut_visible_labels                +0.548643
+reference_seed3                        +0.414755
+shortcut_nan_reconstruction            +0.224919
+pca_baseline                           +0.023460
+reference_saved                        +0.000000
+shortcut_registry_omission             +0.000000
+shortcut_score_write                   +0.000000
+shortcut_unlisted_method               +0.000000
+weaker_short_seed2                     -0.182576
+better_longer_seed1                    -0.350472
+weaker_short_seed1                     -0.369920
+better_longer_seed2                    -0.534476
+weaker_short_seed3                     -0.670289
+better_longer_seed3                    -0.809261
+{
+  "reference_seed": {
+    "values": [
+      1.028121622125326,
+      0.693635581346707,
+      0.4147549374611925
+    ],
+    "mean": 0.7121707136444085,
+    "min": 0.4147549374611925,
+    "max": 1.028121622125326,
+    "range": 0.6133666846641335
+  },
+  "better_longer_seed": {
+    "values": [
+      -0.3504721213950665,
+      -0.5344761651539202,
+      -0.8092605413412723
+    ],
+    "mean": -0.5647362759634197,
+    "min": -0.8092605413412723,
+    "max": -0.3504721213950665,
+    "range": 0.45878841994620584
+  },
+  "weaker_short_seed": {
+    "values": [
+      -0.3699204123782794,
+      -0.18257565236873205,
+      -0.6702893551088155
+    ],
+    "mean": -0.4075951399519423,
+    "min": -0.6702893551088155,
+    "max": -0.18257565236873205,
+    "range": 0.4877137027400834
+  }
+}

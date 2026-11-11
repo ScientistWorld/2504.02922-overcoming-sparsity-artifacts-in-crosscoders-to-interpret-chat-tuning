@@ -1,0 +1,15 @@
+{
+  "train_base": true,
+  "train_chat": true,
+  "train_coefficients": true,
+  "train_base_coefficients": true,
+  "train_chat_coefficients": true,
+  "val_base": true,
+  "val_chat": true,
+  "val_coefficients": true,
+  "val_base_coefficients": true,
+  "val_chat_coefficients": true,
+  "directions": true,
+  "base_scale": true,
+  "chat_scale": true
+}

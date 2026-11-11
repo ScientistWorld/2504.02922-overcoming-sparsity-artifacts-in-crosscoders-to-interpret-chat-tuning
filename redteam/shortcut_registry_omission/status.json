@@ -1,0 +1,10 @@
+{
+  "hidden_command": "bash scripts/evaluate_test.sh",
+  "hidden_arguments": [],
+  "returncode": 0,
+  "fresh_scores_written": true,
+  "methods_on_disk": [
+    "l1"
+  ],
+  "seconds": 5.312515020370483
+}

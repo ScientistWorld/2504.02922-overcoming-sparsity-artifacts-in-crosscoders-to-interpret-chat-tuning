@@ -1,0 +1,12 @@
+{
+  "experiments": {
+    "synthetic_chat_specificity": {
+      "results": {}
+    }
+  },
+  "slice": "test",
+  "split": {
+    "strategy": "held-out complement of train validation-sample and concept-family partition",
+    "seed": 250402922
+  }
+}

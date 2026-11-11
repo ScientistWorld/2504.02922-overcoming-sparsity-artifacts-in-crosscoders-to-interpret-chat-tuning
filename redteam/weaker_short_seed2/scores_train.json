@@ -1,0 +1,35 @@
+{
+  "experiments": {
+    "synthetic_chat_specificity": {
+      "results": {
+        "batchtopk": {
+          "fraction_top_norm_true_chat": 0.0,
+          "fraction_top_norm_weak_or_shared": 0.07692307692307693,
+          "fraction_top_norm_scaling_specific": 0.0,
+          "chat_only_latent_count": 0,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": -0.4748789562993032,
+          "base_reconstruction_fve": -0.5003397191496268,
+          "chat_reconstruction_fve": -0.450547341144498,
+          "mean_l0": 13.859375
+        },
+        "l1": {
+          "fraction_top_norm_true_chat": 0.23076923076923078,
+          "fraction_top_norm_weak_or_shared": 0.46153846153846156,
+          "fraction_top_norm_scaling_specific": 0.5384615384615384,
+          "chat_only_latent_count": 32,
+          "false_ft_only_rate_pi06": 0.5625,
+          "reconstruction_fve": 0.9813681716318574,
+          "base_reconstruction_fve": 0.9814614634925107,
+          "chat_reconstruction_fve": 0.9812790171291492,
+          "mean_l0": 11.525390625
+        }
+      }
+    }
+  },
+  "slice": "train",
+  "split": {
+    "strategy": "fixed 50/50 validation-sample and concept-family partition",
+    "seed": 250402922
+  }
+}
