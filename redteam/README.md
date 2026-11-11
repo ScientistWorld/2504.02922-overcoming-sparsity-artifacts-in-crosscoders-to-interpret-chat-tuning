@@ -8,7 +8,9 @@ process. Nothing patches evaluation code, Python imports, the interpreter, or th
 evaluator process. Each attempt restores its changes even if evaluation fails.
 
 The three reference seeds use `train_one` seeds 1, 2, 3; the reproduction's CLI
-adds one to seed 0 for BatchTopK, so seed 1 corresponds to the saved reference.
+adds one to seed 0 for BatchTopK, so raw seed 1 is the nominal default run.
+It does not reproduce the supplied artifact's reconstruction or threshold;
+the report separates that unresolved mismatch from current-code seed spread.
 The stronger-resource variant trains for 320 epochs instead of 80. The weak
 variant trains for 2. All retain 88 candidates, k=14, AdamW learning rate 0.001,
 and the same 4,096 training and 1,024 validation pairs. Ground-truth factors are

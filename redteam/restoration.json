@@ -1,0 +1,173 @@
+{
+  "start_commit": "b00eb1d0979f2cacbfaed4e951b97dd73adb21ed",
+  "controlled_files": {
+    "scoring/scores_train.json": {
+      "sha256": "7a288cbaf1b799cb7d10718ac0ad5f646b7b4286d35106897df41b4b5f430699",
+      "matches_original": true
+    },
+    "scoring/scores_test.json": {
+      "sha256": "f54c3c721703e359936b5f2dbf0f33e953706ac36d8b99a4979fbf904c198194",
+      "matches_original": true
+    },
+    "data/synthetic_activations.npz": {
+      "sha256": "8075de65353b736e672b7632642ad181a3b22a4705f1bff350481d0f3c207c0d",
+      "matches_original": true
+    },
+    "data/synthetic_metadata.json": {
+      "sha256": "fbec9d244288ad798519f74a8bbc6eb3fec6adb283f978cdff46cfe3a2e56878",
+      "matches_original": true
+    }
+  },
+  "checkpoint_files": {
+    "batchtopk/model.pt": {
+      "sha256": "0e403d9248f7a688e4d1ccc0d4487b15aafa0a6ad586bce5e07316342411b73b",
+      "matches_original": true
+    },
+    "batchtopk/train_metrics.json": {
+      "sha256": "5a1f423bade46e42a5e6e28c4be08d8c76058e71c9d233033aeb7e44ceccd64f",
+      "matches_original": true
+    },
+    "batchtopk/val_outputs.npz": {
+      "sha256": "db27deda9956a9ec4e54bbd14abb209d4028b1790181b6a962bb5c99e4806560",
+      "matches_original": true
+    },
+    "l1/model.pt": {
+      "sha256": "4bc2feff24971ec5d2a02201b6cc46ea929cbc80eccd9eee459d9c1053aac84c",
+      "matches_original": true
+    },
+    "l1/train_metrics.json": {
+      "sha256": "b5c4ab16c84567cb12cf2daf53f01195cc35201a592f383f04dbd34d62532312",
+      "matches_original": true
+    },
+    "l1/val_outputs.npz": {
+      "sha256": "25539c9eb64ddde266f9e556d8c3b12a896d38d25c1af95228712ac1c41a301f",
+      "matches_original": true
+    },
+    "summary.json": {
+      "sha256": "12d0a0fef6c924e12035f31c0a3564d6f5d1a6c3c5a90523870bd5aca676318a",
+      "matches_original": true
+    }
+  },
+  "protected_tracked_paths_changed": [],
+  "attempts": {
+    "better_amplitude_seed1": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "better_amplitude_seed2": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "better_amplitude_seed3": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "better_longer_seed1": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "better_longer_seed2": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "better_longer_seed3": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "brute_force_exemplars": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "l1_baseline": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "pca_baseline": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "reference_saved": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "reference_seed1": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "reference_seed2": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "reference_seed3": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_copy_reconstruction": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_empty_features": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_missing_artifact": {
+      "returncode": 1,
+      "fresh_score_file": false
+    },
+    "shortcut_nan_reconstruction": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_negative_features": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_registry_omission": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_score_write": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_target_replacement": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_taxonomy_replacement": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_threshold_mask": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_unlisted_method": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_visible_labels": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "shortcut_zero_outputs": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "weaker_short_seed1": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "weaker_short_seed2": {
+      "returncode": 0,
+      "fresh_score_file": true
+    },
+    "weaker_short_seed3": {
+      "returncode": 0,
+      "fresh_score_file": true
+    }
+  },
+  "verification": "29 executable attempts; 28 fresh test score files; all hidden commands no-argument; intended missing-artifact failure; forged scores overwritten; registry omission writes empty results; zero outputs outrank frozen reference.",
+  "preexisting_system_changes": "README.md and manifest.json modified; tracked trajectory files deleted. See initial_status.txt. Preserved unchanged.",
+  "workflow_exception": "action.yaml is updated to done for the required end-of-turn protocol."
+}

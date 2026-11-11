@@ -1,4 +1,2 @@
-action: submit
-gpus: 0
-test: false
-notes: "Follow-up audit: fit sparse nonnegative amplitudes for three trained dictionaries; rerun direct score forgery without deleting the forged file; summarize against frozen and replayed references."
+action: done
+notes: "Audit complete: 29 variants, three-seed spread, reproduction failures, and high-scoring shortcuts documented in REDTEAM.md; original gym files restored."

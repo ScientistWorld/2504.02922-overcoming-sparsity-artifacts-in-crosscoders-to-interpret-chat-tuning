@@ -1,0 +1,98 @@
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 67758a25
+[hive] host: node
+[hive] node_id: 5b56c1bb00c851f2c3f93b346fd15ddec87104a85e26c62af4985535
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-10 19:20:09 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2504.02922:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2504.02922/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2504.02922/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+reference_saved: hidden_exit=0; elapsed=3.87s
+l1_baseline: hidden_exit=0; elapsed=7.94s
+reference_seed1: hidden_exit=0; elapsed=80.01s
+reference_seed2: hidden_exit=0; elapsed=10.93s
+reference_seed3: hidden_exit=0; elapsed=15.32s
+better_longer_seed1: hidden_exit=0; elapsed=38.85s
+better_longer_seed2: hidden_exit=0; elapsed=34.00s
+better_longer_seed3: hidden_exit=0; elapsed=24.59s
+weaker_short_seed1: hidden_exit=0; elapsed=8.29s
+weaker_short_seed2: hidden_exit=0; elapsed=5.21s
+weaker_short_seed3: hidden_exit=0; elapsed=4.90s
+pca_baseline: hidden_exit=0; elapsed=5.23s
+brute_force_exemplars: hidden_exit=0; elapsed=10.01s
+shortcut_visible_labels: hidden_exit=0; elapsed=6.28s
+shortcut_zero_outputs: hidden_exit=0; elapsed=2.38s
+shortcut_empty_features: hidden_exit=0; elapsed=1.74s
+shortcut_copy_reconstruction: hidden_exit=0; elapsed=1.86s
+shortcut_threshold_mask: hidden_exit=0; elapsed=2.57s
+shortcut_negative_features: hidden_exit=0; elapsed=2.31s
+shortcut_nan_reconstruction: hidden_exit=0; elapsed=2.10s
+shortcut_taxonomy_replacement: hidden_exit=0; elapsed=2.44s
+shortcut_target_replacement: hidden_exit=0; elapsed=2.18s
+shortcut_score_write: hidden_exit=0; elapsed=2.82s
+shortcut_registry_omission: hidden_exit=0; elapsed=5.32s
+shortcut_unlisted_method: hidden_exit=0; elapsed=2.50s
+shortcut_missing_artifact: hidden_exit=1; elapsed=1.88s
+shortcut_empty_features                +2.189292
+shortcut_zero_outputs                  +1.703494
+shortcut_copy_reconstruction           +1.260821
+shortcut_target_replacement            +1.260821
+shortcut_taxonomy_replacement          +1.190160
+shortcut_negative_features             +1.094001
+reference_seed1                        +1.028122
+shortcut_threshold_mask                +0.978338
+l1_baseline                            +0.790050
+brute_force_exemplars                  +0.701329
+reference_seed2                        +0.693636
+shortcut_visible_labels                +0.548643
+reference_seed3                        +0.414755
+shortcut_nan_reconstruction            +0.224919
+pca_baseline                           +0.023460
+reference_saved                        +0.000000
+shortcut_registry_omission             +0.000000
+shortcut_score_write                   +0.000000
+shortcut_unlisted_method               +0.000000
+weaker_short_seed2                     -0.182576
+better_longer_seed1                    -0.350472
+weaker_short_seed1                     -0.369920
+better_longer_seed2                    -0.534476
+weaker_short_seed3                     -0.670289
+better_longer_seed3                    -0.809261
+{
+  "reference_seed": {
+    "values": [
+      1.028121622125326,
+      0.693635581346707,
+      0.4147549374611925
+    ],
+    "mean": 0.7121707136444085,
+    "min": 0.4147549374611925,
+    "max": 1.028121622125326,
+    "range": 0.6133666846641335
+  },
+  "better_longer_seed": {
+    "values": [
+      -0.3504721213950665,
+      -0.5344761651539202,
+      -0.8092605413412723
+    ],
+    "mean": -0.5647362759634197,
+    "min": -0.8092605413412723,
+    "max": -0.3504721213950665,
+    "range": 0.45878841994620584
+  },
+  "weaker_short_seed": {
+    "values": [
+      -0.3699204123782794,
+      -0.18257565236873205,
+      -0.6702893551088155
+    ],
+    "mean": -0.4075951399519423,
+    "min": -0.6702893551088155,
+    "max": -0.18257565236873205,
+    "range": 0.4877137027400834
+  }
+}
