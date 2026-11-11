@@ -1,74 +1,116 @@
 # Overview
 
-This paper shows that standard L1 crosscoders can misidentify shared concepts as chat-model-only latents when comparing base and chat-tuned language models. It introduces Latent Scaling to diagnose those artifacts and shows that BatchTopK sparsity substantially reduces them.
+The paper shows that standard L1 crosscoders misidentify concepts shared by a base and a chat model as chat-only latents, through Complete Shrinkage and Latent Decoupling. It introduces Latent Scaling to detect these artifacts and finds that BatchTopK crosscoders have far fewer of them, at a better reconstruction.
 
-The reproduction implements the actual crosscoder architecture, L1 and BatchTopK training objectives, decoder norm ranking, and Latent Scaling diagnostics on scaled paired-activation benchmarks. The corrected two-case suite supports the core claim on the scaled setting: BatchTopK reduces false fine-tuned-only artifacts versus L1 in both synthetic regimes while preserving high reconstruction. Higher-fidelity reproduction on real Gemma 2 activations remains future work.
+This gym reproduces that comparison on synthetic paired-activation worlds with known ground truth, scored on hidden held-out worlds:
+
+- In `synthetic_chat_specificity`, the BatchTopK crosscoder (proposed) has a lower false fine-tuned-only rate than the L0-matched L1 crosscoder (0.57 vs 0.70). It also reconstructs far better (FVE 0.981 vs 0.818). Both recover all genuine fine-tuned-only concepts.
+- The paper's mechanism claim is not reproduced in this world. BatchTopK still represents every decoupled concept as a fine-tuned-only/base-only twin pair (Latent Decoupling), and these twins make up all of its false fine-tuned-only mass. The paper's own Latent Scaling estimate would accept most of them (ν < 0.6).
+- In `synthetic_faint_chat_concepts`, BatchTopK recovers only about 40% of the faint fine-tuned-only concepts. This is the regime the paper flags as a limitation, and the L1 crosscoder recovers none.
+
+The gap between the reference and a genuinely better variant (a 4x training budget with the paper's k-annealing recipe) is larger than seed noise. Details: `HARDENING.md`.
 
 ---
 
 # Problem
 
-The task is model-difference factor discovery. Given paired activation vectors from a base model and a fine-tuned model on the same inputs, a method should produce candidate factors that distinguish what is genuinely specific to the fine-tuned model from what is shared by both models.
+The task is model diffing with sparse dictionaries. You are given paired activation vectors from a base model and a fine-tuned (chat) model on the same inputs. A method learns a dictionary of factors that reconstructs both activation streams. Each factor has one activation per input, shared by the two streams, and its own direction in each stream. The aim is to find the factors that are genuinely specific to the fine-tuned model and to keep them apart from factors both models share.
 
-The main failure mode is false specificity: a shared factor can look fine-tuned-only when its strength, sparsity, or occurrence pattern differs between the two activation streams. A useful method should surface true fine-tuned-specific factors while avoiding these shared-factor false positives.
+The main failure mode is false specificity. A factor that both models use can look fine-tuned-only, for example because it is weaker in the base stream, or because the two models use the same direction on partly different inputs. A useful method surfaces the genuinely fine-tuned-specific structure without labelling shared structure as fine-tuned-only, and still reconstructs both streams sparsely.
 
-This reproduction uses a scaled paired-activation benchmark generated in `data/`. The benchmark contains ground-truth factor families: shared, base-specific, fine-tuned-specific, and shared factors with unequal or partially separated behavior across the two streams. These cases preserve the paper's model-diffing difficulty while avoiding the cost of extracting full large-language-model activations.
+The benchmark replaces language-model activations with synthetic paired worlds that have known ground truth. Each world is a set of concept directions in a 64-dimensional space. Every concept is shared, weaker in the base stream, decoupled (used by both models, but partly on different inputs), fine-tuned-only, or base-only. Activations are sparse nonnegative sums of these concepts plus noise.
+
+Each experiment has two worlds drawn from the same generator family:
+
+- a **dev** world (`data/worlds/<experiment>/dev/`), whose generator and ground truth are public, for development;
+- a **held-out** world, of which you see only unlabeled training activations (`data/worlds/<experiment>/heldout/train.npz`). Its concepts, family sizes and labels are hidden, and the hidden test scores your dictionary on fresh held-out inputs.
+
+Experiments:
+
+- `synthetic_chat_specificity`: genuine fine-tuned-only concepts next to strength-asymmetric and decoupled shared concepts.
+- `synthetic_faint_chat_concepts`: a denser world in which the fine-tuned-only concepts are faint, so the genuinely fine-tuned-specific structure carries little variance.
 
 ---
 
 # Method
 
-The paper trains crosscoders on paired base/chat residual-stream activations. A shared encoder maps concatenated base and chat activations into nonnegative sparse latent activations:
+The paper trains crosscoders on paired base/chat residual-stream activations. A shared encoder maps the concatenated activations to nonnegative latent activations
 
-`f_j(x) = ReLU(e_j_base h_base(x) + e_j_chat h_chat(x) + b_j)`.
+`f_j(x) = ReLU(e_j^base h^base(x) + e_j^chat h^chat(x) + b_j)`,
 
-The decoder reconstructs both models with separate decoder vectors per latent:
+and separate decoders reconstruct each model: `h~^M = sum_j f_j d_j^M + b^M` for M in {base, chat}.
 
-`h_base_recon = sum_j f_j d_j_base + b_base`
+Implemented in `method/` (`crosscoder.py`, `train.py`):
 
-`h_chat_recon = sum_j f_j d_j_chat + b_chat`.
+- **L1 crosscoder (baseline, Eq. 8):** loss `½‖ε_base‖² + ½‖ε_chat‖² + μ Σ_j f_j (‖d_j^base‖ + ‖d_j^chat‖)`. The paper chose hyperparameters so that both crosscoders reach the same L0. Here μ is chosen the same way: bisection on each world's training activations to a mean L0 of 8. The result is μ ≈ 1.1 in `synthetic_chat_specificity` and ≈ 1.56 in `synthetic_faint_chat_concepts`, giving L0 ≈ 8.0–8.2.
+- **BatchTopK crosscoder (proposed, Eqs. 9–14):**
+  - Training keeps the top `batch·k` scaled activations `f_j (‖d_j^base‖ + ‖d_j^chat‖)` across each batch (k = 8).
+  - The loss is reconstruction plus the auxiliary dead-latent loss with α = 1/32. That loss reconstructs the detached residual with the top-32 activations of latents that have not fired for 200k inputs, normalised by the residual variance, as in the paper's training code.
+  - The inference threshold θ is the mean over training batches of the smallest selected scaled activation (Eq. 14). It is exported as the per-latent threshold `θ / (‖d_j^base‖ + ‖d_j^chat‖)` (Eq. 13).
+- **Initialisation (App. K):** decoder = encoder transpose, with base and chat paired with identical weights. Initial latent norm is 1.0 for BatchTopK and 0.05 for L1.
+- **Optimisation:** Adam, batch 256, 16,000 steps (125 passes over 32,768 training pairs), lr 1e-3 with linear decay over the final 20%, 256 latents.
 
-This reproduction implements both sparsity mechanisms from the paper:
+Options used by the hardening audit, not by the reference: k annealing, the paper's recommendation for large models (`k_start`); the alternative selection norms of App. B.3 (`selection_norm = concat | max`); disabling the auxiliary loss.
 
-- L1 crosscoder: reconstruction loss plus `mu * sum_j f_j (||d_j_base|| + ||d_j_chat||)`.
-- BatchTopK crosscoder: select the top `batch_size * k` scaled activations `f_j (||d_j_base|| + ||d_j_chat||)` across each batch and train reconstruction loss on those sparse activations. At inference, estimate the paper's global threshold `theta` from training batches and keep activations whose scaled value exceeds that threshold.
+Deviations from the paper (scale, not procedure):
 
-The encoder and both model decoders are initialized from paired latent directions with the L1 norm scale set to `0.05` and the BatchTopK norm scale set to `1.0`, matching the paper's initialization pattern at reduced width.
-
-The evaluator implements the paper's decoder norm difference and Latent Scaling diagnostics. Latent Scaling fits a scalar beta for each latent direction against base/chat reconstruction and reconstruction-error targets, then uses ratio thresholds to identify true model-specific latents.
-
-Deviation: the original paper trains on Gemma 2 2B base/chat layer-13 activations from 100M tokens. This reproduction uses synthetic paired activations with known latent ground truth because full activation extraction and crosscoder training are outside the current budget. The algorithmic procedure is preserved at smaller scale.
-
-Deviation: the paper's BatchTopK setup includes an auxiliary loss for inactive latent recycling. This scaled reproduction omits that auxiliary term because the small synthetic dictionary does not exhibit the same dead-latent regime; the core BatchTopK selection and thresholded inference computation are preserved.
+- Synthetic 64-dimensional paired worlds with known ground truth replace Gemma-2-2B layer-13 activations on 100M tokens.
+- 256 latents and k = 8 (paper: 73,728 and k = 100).
+- 16k steps at lr 1e-3 (paper: about 2 epochs at lr 1e-4 over 100M tokens). The learning rate is raised because the run is far shorter.
+- The causal (KL patching), steering and auto-interpretability experiments are not reproduced.
+- Specificity is judged against ground truth rather than estimated with Latent Scaling. The evaluator still reports the paper's Latent Scaling false-rate estimate as a diagnostic.
 
 ---
 
 # Evaluation
 
-Evaluation reads saved method artifacts and writes `scoring/scores.json`. The suite entry point is:
+## Output contract
 
-```bash
-bash scripts/evaluate.sh --suite
+A method is a directory `checkpoints/methods/<method>/`. For every experiment and both worlds it contains one dictionary trained on that world's training activations:
+
+```
+checkpoints/methods/<method>/<experiment>/dev/crosscoder.npz      # trained on data/worlds/<experiment>/dev/train.npz
+checkpoints/methods/<method>/<experiment>/heldout/crosscoder.npz  # trained on data/worlds/<experiment>/heldout/train.npz
 ```
 
-For each benchmark case and method, the evaluator expects a `val_outputs.npz` artifact containing validation-set candidate activations, reconstructed base and fine-tuned activation streams, and one vector per candidate for each stream. This is an output contract only; it does not prescribe how the method must train or infer those quantities.
+`crosscoder.npz` holds float arrays (d = 64, D = number of factors):
 
-The suite contains two experiments:
+| key | shape | meaning |
+|---|---|---|
+| `W_enc` | (2d, D) | encoder; rows 0..d-1 act on the base stream, rows d..2d-1 on the chat stream |
+| `b_enc` | (D,) | encoder bias |
+| `threshold` | (D,) | per-factor activation threshold |
+| `W_dec_base`, `W_dec_chat` | (D, d) | each factor's direction in the base / chat stream |
+| `b_dec_base`, `b_dec_chat` | (d,) | decoder biases |
+| `topk` (optional) | scalar int | if > 0, keep only the `topk` largest `a_j * (‖W_dec_base_j‖ + ‖W_dec_chat_j‖)` per input |
 
-- `synthetic_chat_specificity`: tests whether a method separates genuinely fine-tuned-specific factors from factors present in both activation streams.
-- `synthetic_complete_shrinkage`: tests whether a method avoids marking lower-amplitude shared factors as fine-tuned-specific.
+The evaluator computes everything itself on inputs it samples:
+`pre = h_base @ W_enc[:d] + h_chat @ W_enc[d:] + b_enc`, then `a_j = pre_j` if `pre_j > 0` and `pre_j > threshold_j`, otherwise 0. The reconstructions are `a @ W_dec_base + b_dec_base` and `a @ W_dec_chat + b_dec_chat`. Nothing a method writes besides these parameters is read.
 
-The primary validator-facing metric is `reconstruction_fve`, because it is directly comparable between the paper's full activation study and this scaled reproduction. The central scientific target is `false_ft_only_rate_pi06`: a lower value means fewer apparently fine-tuned-only candidates fail an independent specificity check. The score also includes candidate purity, shared-factor false-positive rates, reconstruction quality, and sparsity constraints so that a method cannot win by ignoring reconstruction or activating many more candidates.
+## Fixed constraints (failure = worst value on every metric of that experiment)
 
-Metrics include:
+- the artifact must exist, load without pickle, have the shapes above and contain only finite values;
+- dictionary size D ≤ 256;
+- mean number of active factors per input (L0) ≤ 8.8 on the scored inputs.
 
-- `fraction_top_norm_scaling_specific`: fraction of top candidate-score items that pass the independent specificity check.
-- `fraction_top_norm_true_chat`: fraction of top candidate-score items aligned to true fine-tuned-specific factors.
-- `fraction_top_norm_weak_or_shared`: fraction of top candidate-score items aligned to shared-factor families.
-- `chat_only_latent_count`: number of candidates classified as fine-tuned-only by the evaluator's candidate score.
-- `false_ft_only_rate_pi06`: false-positive rate among candidates classified as fine-tuned-only.
-- `reconstruction_fve`, `base_reconstruction_fve`, `chat_reconstruction_fve`: fraction of activation variance explained by the submitted reconstructions.
-- `mean_l0`: average number of active candidates per validation sample.
+## Metrics (per experiment)
+
+A factor is labelled **fine-tuned-only** when its relative decoder norm difference `0.5 * (1 + (‖d_chat‖ − ‖d_base‖) / max(‖d_chat‖, ‖d_base‖))` is ≥ 0.9. A factor is alive if it fires on at least 10 scored inputs. A factor is **genuinely fine-tuned-specific** when it meets two conditions:
+
+- its chat direction has cosine ≥ 0.8 with a ground-truth concept;
+- that concept's base-to-chat presence ratio, weighted by the factor's own activations, is below 0.2.
+
+- `false_ft_only_rate` (lower is better): the activation-mass-weighted fraction of alive fine-tuned-only factors that are not genuinely fine-tuned-specific. A factor's mass is its mean activation times ‖d_chat‖. If no factor is labelled fine-tuned-only, the rate is 1.0.
+- `chat_specific_recall` (higher is better): the fraction of the world's fine-tuned-specific targets recovered by a genuinely specific factor. The targets are its fine-tuned-only concepts and the fine-tuned-exclusive uses of its decoupled concepts. Only the top 1.5 × (number of targets) alive factors, ranked by relative decoder norm difference, are considered.
+- `reconstruction_fve` (higher is better): fraction of the variance of both streams explained by the evaluator-computed reconstruction, clipped to [0, 1].
+
+## Entry points (no arguments)
+
+- `bash scripts/evaluate_train.sh` → `scoring/scores_train.json`: dev dictionaries scored on fresh inputs from the public dev worlds.
+- `bash scripts/evaluate.sh` → `scoring/scores.json`: same as the train side.
+- `bash scripts/evaluate_test.sh` → `scoring/scores_test.json` (hidden): held-out dictionaries scored on fresh inputs from the hidden held-out worlds.
+
+Every directory under `checkpoints/methods/` is scored. A method missing an experiment's artifact gets the worst values there. The names `batchtopk` and `l1` are reserved for the frozen reference and baseline: the hidden test always scores the copies stored with the evaluator under those names. Unscored diagnostics (L0, alive factors, per-family recall, spurious-mass breakdown, per-stream FVE) are written next to the scores.
 
 ---
 
@@ -397,6 +439,60 @@ Metrics include:
 - Final verification refreshed `scoring/scores.json` from saved suite artifacts so it includes the base/chat reconstruction constraint metrics expected by the current evaluator.
 - Tightened scoring documentation so target headings correspond to scored experiments and method-agnostic experiment descriptions do not expose the paper's implementation details.
 - Lightweight verification passed: JSON schema checks, shell syntax checks, Python syntax checks, shared-path checks, and `python3 validate.py --compare`.
+
+</details>
+
+### Iteration 11: claude-opus-5-5 (hardener)
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 32m | **GPU**: 0.9h
+- **Jobs**: 1 total (1 completed, 0 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-29 06:51] - method_runs
+- Implemented the paper's shared-encoder, two-decoder crosscoder on paired synthetic activations.
+- Trained L1 and BatchTopK variants end-to-end and evaluated saved artifacts with decoder norm and Latent Scaling diagnostics.
+
+### [2026-05-29 07:20] - method_runs
+- Audited the initial core-claim result and found reproduction-integrity fixes needed before advancing: BatchTopK inference now uses an estimated global threshold, Latent Scaling error ratios now target reconstruction error directly, and the next run uses fixed hyperparameters instead of selecting by validation metrics.
+- Added a second complete-shrinkage synthetic regime for the next compute job, but it has not run yet.
+
+### [2026-05-29 07:02] - core_claim
+- CPU job `9e2bfe26-218` completed the corrected two-case suite and passed `python3 validate.py --compare`.
+- On `synthetic_chat_specificity`, BatchTopK reduced the false fine-tuned-only rate from `0.531` to `0.333` and chat-only latent count from `32` to `3`, with reconstruction FVE `0.953` and mean L0 `14.30`.
+- On `synthetic_complete_shrinkage`, BatchTopK reduced the false fine-tuned-only rate from `0.448` to `0.000` and chat-only latent count from `29` to `1`, with reconstruction FVE `0.972` and mean L0 `14.17`.
+- This supports the core artifact-control claim on scaled synthetic paired activations, but not higher milestones: some alignment diagnostics remain mixed and the run does not use real Gemma 2 activation data.
+
+### [2026-05-29 07:10] - core_claim
+- External validation rejected using `false_ft_only_rate_pi06` as the validator primary metric because the scaled synthetic denominator made the BatchTopK rate `0.333` instead of the paper's full-scale `0.007`.
+- Corrected `reference.json` to use `reconstruction_fve` as the validator primary metric, which is directly comparable across scales. The false fine-tuned-only rate remains reported as the scientific artifact-control metric in `scores.json`, `TARGETS.md`, and the progress notes.
+
+### [2026-05-29 07:32] - core_claim
+- Tightened the evaluator contract so default suite scoring reports the same reconstruction constraint metrics as train/test scoring.
+- Removed RNG-based hidden-slice partitioning from evaluation code to avoid a validator false positive about regenerating experiments; evaluation still reads saved crosscoder outputs.
+- Prepared a CPU verification job to regenerate score files and rerun `python3 validate.py --compare`.
+
+### [2026-05-29 07:33] - core_claim
+- Final verification found and fixed a reusable-evaluator issue: suite scoring now discovers all method artifact directories instead of assuming only the reproduced method names.
+- Tightened method-agnostic documentation in `briefing/problem.md`, `briefing/evaluation.md`, `scoring/TARGETS.md`, `scoring/CONSTRAINTS.md`, `scoring/DIRECTION.md`, and visible data/eval comments.
+- Local lightweight checks passed: Python syntax compilation, shell syntax checks, and `python3 validate.py --compare`.
+
+### [2026-05-29 08:05] - core_claim
+- Reopened the final state for one more CPU verification because `scoring/scores.json` was older than the current evaluator and did not include the newer base/chat reconstruction constraint metrics.
+- Prepared `scripts/run.sh` to regenerate train-slice, held-out test-slice, and full-suite score files from the frozen method artifacts, then rerun `python3 validate.py --compare`.
+- Strengthened `scripts/run.sh` and `scripts/reproduce.sh` to retrain the two-case suite from generated data before scoring, so a fresh clone does not depend on ignored checkpoint artifacts.
+
+### [2026-05-29 08:10] - core_claim
+- Final verification refreshed `scoring/scores.json` from saved suite artifacts so it includes the base/chat reconstruction constraint metrics expected by the current evaluator.
+- Tightened scoring documentation so target headings correspond to scored experiments and method-agnostic experiment descriptions do not expose the paper's implementation details.
+- Lightweight verification passed: JSON schema checks, shell syntax checks, Python syntax checks, shared-path checks, and `python3 validate.py --compare`.
+
+### [2026-11-11] - core_claim (hardening, iteration 11)
+- Rebuilt the evaluation contract: hidden held-out worlds (ground truth only in `eval/test/`), evaluator-computed activations/reconstructions/metrics from submitted encoder+decoder parameters, both experiments scored by the no-argument `scripts/evaluate_test.sh` for every method on disk, worst values for failed runs, frozen reference/baseline in `eval/`.
+- Restored the paper's BatchTopK auxiliary dead-latent loss and L0-matched L1 baseline. Hidden test (`synthetic_chat_specificity`): BatchTopK false fine-tuned-only rate 0.572 vs L1 0.701 and FVE 0.981 vs 0.818, with seed spread ≤ 0.012. The paper's direction is restored; the red-team replay had it reversed.
+- Added `synthetic_faint_chat_concepts` (headroom from the paper's stated limitations). A 4x-budget k-annealed variant beats the reference by more than seed noise on every seed; all red-team shortcuts now score far below the reference. See `HARDENING.md`.
+- Milestone stays `core_claim`: the relative claim reproduces on scaled synthetic worlds. BatchTopK still shows Latent Decoupling on every decoupled concept, and real Gemma activations and the causal experiments are not reproduced.
 
 </details>
 

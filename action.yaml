@@ -1,5 +1,3 @@
-action: submit
-gpus: 1
-test: false
+action: done
 milestone: core_claim
-notes: "Hardening: build dev/held-out worlds, train BatchTopK reference + L0-matched L1 baseline, freeze into eval/, score train/test, run audit (3 seeds, better/weaker variants, PCA/exemplar baselines, shortcuts, entry-point attacks)."
+notes: "Hardened gym: hidden held-out worlds, evaluator-computed metrics from submitted parameters, both experiments scored with worst-value failures, frozen reference; BatchTopK beats L0-matched L1 in paper direction beyond seed noise; better variant beats reference beyond seed noise; all red-team shortcuts now score far below reference. See HARDENING.md."
