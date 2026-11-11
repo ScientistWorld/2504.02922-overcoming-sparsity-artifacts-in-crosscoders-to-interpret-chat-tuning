@@ -1,0 +1,8 @@
+_state/
+**/artifacts/
+**/prepared/
+**/outputs/
+**/test.log
+**/train.log
+**/build.log
+__pycache__/
