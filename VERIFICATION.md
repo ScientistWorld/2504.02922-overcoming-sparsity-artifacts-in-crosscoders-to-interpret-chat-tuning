@@ -1,3 +1,5 @@
+> **Superseded (iteration 11):** this report verified the earlier `val_outputs.npz` evaluation contract. The red-team audit (`REDTEAM.md`) found that contract unsound, and it was replaced. See `HARDENING.md` for the current verification evidence.
+
 # Verification Report
 
 ## Initial Assessment

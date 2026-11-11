@@ -1,53 +1,19 @@
 # Evaluation Targets
 
-Future scientist agents are scored on the experiments present in `scoring/scores.json`.
-Each experiment combines benefit metrics with constraint metrics so improvements must
-separate model-specific factors while preserving reconstruction and sparsity.
+Scored by `bash scripts/evaluate_test.sh` (hidden held-out worlds) and, for development, `bash scripts/evaluate_train.sh` (public dev worlds). Both scripts take no arguments and score every directory under `checkpoints/methods/`.
+
+Fixed constraints in every experiment: at most 256 factors, mean L0 ≤ 8.8 on the scored inputs, and a valid finite artifact. Breaking a constraint, or a missing artifact, gives every metric of that experiment its worst value (false rate 1, recall 0, FVE 0).
 
 ## synthetic_chat_specificity
 
-Tests whether submitted candidate factors distinguish genuinely fine-tuned-model-specific
-activation structure from factors present in both paired activation streams.
+- Benefit: `chat_specific_recall`, higher is better (coefficient 1.0).
+- Benefit / specificity constraint: `false_ft_only_rate`, lower is better (coefficient 1.0). The rate is 1.0 when nothing is labelled fine-tuned-only.
+- Constraint: `reconstruction_fve`, higher is better (coefficient 0.5).
 
-Primary scientific targets:
+## synthetic_faint_chat_concepts
 
-- `false_ft_only_rate_pi06` lower is better: fewer reported fine-tuned-specific candidates fail the independent specificity check.
-- `fraction_top_norm_scaling_specific` higher is better: more top-ranked candidates pass the independent specificity check.
-- `fraction_top_norm_true_chat` higher is better: more top-ranked candidates align to held-out fine-tuned-specific ground truth.
+- Benefit: `chat_specific_recall`, higher is better (coefficient 1.0).
+- Specificity constraint: `false_ft_only_rate`, lower is better (coefficient 0.5).
+- Constraint: `reconstruction_fve`, higher is better (coefficient 0.5).
 
-Constraint targets:
-
-- `fraction_top_norm_weak_or_shared` lower is better: top-ranked candidates should not align to shared-factor families.
-- `reconstruction_fve`, `base_reconstruction_fve`, and `chat_reconstruction_fve` higher are better: the submitted artifacts should reconstruct both streams.
-- `mean_l0` lower is better: gains should not come from activating many more candidates per sample.
-- `chat_only_latent_count` lower is better: gains should not come from over-labeling candidates as fine-tuned-specific.
-
-Run:
-
-```bash
-bash scripts/evaluate.sh --suite
-```
-
-## synthetic_complete_shrinkage
-
-Tests whether submitted candidate factors avoid marking lower-amplitude shared
-activation structure as fine-tuned-model-specific.
-
-Primary scientific targets:
-
-- `false_ft_only_rate_pi06` lower is better.
-- `fraction_top_norm_scaling_specific` higher is better.
-- `fraction_top_norm_true_chat` higher is better.
-
-Constraint targets:
-
-- `fraction_top_norm_weak_or_shared` lower is better.
-- `reconstruction_fve`, `base_reconstruction_fve`, and `chat_reconstruction_fve` higher are better.
-- `mean_l0` lower is better.
-- `chat_only_latent_count` lower is better.
-
-Run:
-
-```bash
-bash scripts/evaluate.sh --suite
-```
+Reference (hidden test, BatchTopK crosscoder): 0.572 / 0.50 / 0.981 and 0.912 / 0.25 / 0.979 (false rate / recall / FVE). L1 baseline: 0.701 / 0.50 / 0.818 and 1.000 / 0.00 / 0.699.

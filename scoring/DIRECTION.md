@@ -2,16 +2,27 @@
 
 ## Research Problem
 
-This benchmark studies model diffing: identifying which activation factors are genuinely specific to a fine-tuned model rather than shared with its base model.
+Model diffing: learn a sparse paired dictionary of base/fine-tuned activations whose fine-tuned-only factors are genuinely specific to the fine-tuned model.
 
 ## Core Direction
 
-Improve paired sparse factor discovery so that shared activation factors are not mistaken for fine-tuned-specific factors.
+Improve sparse paired dictionary learning so that:
+
+- shared concepts are not labelled fine-tuned-only, whether they are weaker in one model or used on partly different inputs;
+- genuinely fine-tuned-specific structure, including faint structure, is recovered;
+- reconstruction stays high at a fixed sparsity and dictionary size.
 
 ## Approach Scope
 
-Future work should remain within sparse dictionary learning over paired base/fine-tuned activations. Valid changes include better sparsity controls, initialization, optimization, candidate ranking, and artifact diagnostics.
+Anything that produces a paired encoder/decoder dictionary in the documented format is in scope. This includes:
+
+- sparsity mechanisms, selection rules, auxiliary losses, initialisation, schedules and training budgets;
+- dictionary partitioning (shared vs model-specific factors);
+- diagnostics that correct the dictionary using the training activations.
 
 ## Out of Bounds
 
-Do not replace the task with supervised classification over ground-truth concept labels. A valid method must produce candidate factors with per-stream reconstruction artifacts in the documented output format, so the evaluator can test both specificity and reconstruction. Do not change the data-generating process and claim direct improvement on the same experiment.
+- Supervision from ground-truth concept labels.
+- Dictionaries derived from the public dev worlds' ground truth and submitted for the held-out worlds.
+- Editing the provided data or the evaluator.
+- Exceeding the fixed sparsity or dictionary-size budgets.

@@ -58,3 +58,8 @@
 - Original paper: Gemma 2 2B base and Gemma 2 2B-it residual-stream activations at layer 13, trained on 100M tokens from web and chat data.
 - Reproduction: synthetic paired activations generated from sparse latent factors with known shared and model-specific structure.
 - Reason: full model activation extraction and 73,728-latent crosscoder training would exceed the practical first-pass budget. The implemented computation remains the paper's crosscoder algorithm and Latent Scaling diagnostic.
+
+## 2026-11-11 Hardening (iteration 11)
+
+- New contract and worlds: see `briefing/evaluation.md`, `scoring/EXPERIMENTS.md`, `HARDENING.md`.
+- Job `163fab30-025` (1 GPU, ~55 min) did the following: built the data, trained the reference and the L0-matched L1 baseline, froze them into `eval/`, wrote the scores, and ran `hardening/audit.py`. The audit covers 3 seeds, better and weaker variants, baselines, 10 shortcut constructions and entry-point attacks. `python validate.py` passed.

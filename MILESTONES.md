@@ -42,5 +42,11 @@
 - Tightened scoring documentation so target headings correspond to scored experiments and method-agnostic experiment descriptions do not expose the paper's implementation details.
 - Lightweight verification passed: JSON schema checks, shell syntax checks, Python syntax checks, shared-path checks, and `python3 validate.py --compare`.
 
+### [2026-11-11] - core_claim (hardening, iteration 11)
+- Rebuilt the evaluation contract: hidden held-out worlds (ground truth only in `eval/test/`), evaluator-computed activations/reconstructions/metrics from submitted encoder+decoder parameters, both experiments scored by the no-argument `scripts/evaluate_test.sh` for every method on disk, worst values for failed runs, frozen reference/baseline in `eval/`.
+- Restored the paper's BatchTopK auxiliary dead-latent loss and L0-matched L1 baseline. Hidden test (`synthetic_chat_specificity`): BatchTopK false fine-tuned-only rate 0.572 vs L1 0.701 and FVE 0.981 vs 0.818, with seed spread ≤ 0.012. The paper's direction is restored; the red-team replay had it reversed.
+- Added `synthetic_faint_chat_concepts` (headroom from the paper's stated limitations). A 4x-budget k-annealed variant beats the reference by more than seed noise on every seed; all red-team shortcuts now score far below the reference. See `HARDENING.md`.
+- Milestone stays `core_claim`: the relative claim reproduces on scaled synthetic worlds. BatchTopK still shows Latent Decoupling on every decoupled concept, and real Gemma activations and the causal experiments are not reproduced.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.
