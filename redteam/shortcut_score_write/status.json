@@ -7,5 +7,6 @@
     "batchtopk",
     "l1"
   ],
-  "seconds": 2.818218469619751
+  "prewritten_test_score": true,
+  "seconds": 5.080086708068848
 }

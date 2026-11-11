@@ -1,0 +1,35 @@
+{
+  "experiments": {
+    "synthetic_chat_specificity": {
+      "results": {
+        "batchtopk": {
+          "fraction_top_norm_true_chat": 0.3076923076923077,
+          "fraction_top_norm_weak_or_shared": 0.38461538461538464,
+          "fraction_top_norm_scaling_specific": 0.5384615384615384,
+          "chat_only_latent_count": 0,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": 0.9123075764133369,
+          "base_reconstruction_fve": 0.9037471536240649,
+          "chat_reconstruction_fve": 0.9196549418986835,
+          "mean_l0": 14.291015625
+        },
+        "l1": {
+          "fraction_top_norm_true_chat": 0.38461538461538464,
+          "fraction_top_norm_weak_or_shared": 0.15384615384615385,
+          "fraction_top_norm_scaling_specific": 0.5384615384615384,
+          "chat_only_latent_count": 32,
+          "false_ft_only_rate_pi06": 0.28125,
+          "reconstruction_fve": 0.9821508450508355,
+          "base_reconstruction_fve": 0.9814723741560338,
+          "chat_reconstruction_fve": 0.9827331739081545,
+          "mean_l0": 11.73046875
+        }
+      }
+    }
+  },
+  "slice": "test",
+  "split": {
+    "strategy": "held-out complement of train validation-sample and concept-family partition",
+    "seed": 250402922
+  }
+}

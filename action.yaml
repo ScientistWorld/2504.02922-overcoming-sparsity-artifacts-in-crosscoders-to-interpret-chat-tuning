@@ -1,4 +1,4 @@
 action: submit
 gpus: 0
 test: false
-notes: "Run bundled redteam audit: three reference seeds, longer/shorter training, simple and brute-force baselines, and scoring shortcuts via exact no-argument hidden test."
+notes: "Follow-up audit: fit sparse nonnegative amplitudes for three trained dictionaries; rerun direct score forgery without deleting the forged file; summarize against frozen and replayed references."

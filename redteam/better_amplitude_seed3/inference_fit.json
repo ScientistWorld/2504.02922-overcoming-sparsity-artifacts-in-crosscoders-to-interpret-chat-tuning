@@ -1,0 +1,8 @@
+{
+  "source": "redteam/reference_seed3/artifacts/batchtopk/val_outputs.npz",
+  "steps": 300,
+  "uses_labels": false,
+  "initial_mse": 0.08513949811458588,
+  "final_mse": 0.06463511288166046,
+  "new_support_entries": 0
+}

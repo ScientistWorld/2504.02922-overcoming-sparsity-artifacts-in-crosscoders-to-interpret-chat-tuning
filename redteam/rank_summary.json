@@ -1,17 +1,23 @@
 {
-  "definition": "Sum weight * abs(coefficient) * directed delta / population std across finite audit attempts. Missing/nonfinite skipped. Baseline is exact no-argument reference_saved.",
-  "warning": "Future ranking cohorts can change metric scales; dominance conclusions do not depend on that choice. The second experiment is omitted by the actual no-argument hidden entry point.",
+  "definition": "Sum experiment weight * abs(coefficient) * directed improvement / population std across finite observed audit values. Missing metrics skipped as specified by user.",
+  "anchors": {
+    "frozen": "Original scoring/scores_test.json, preserved as redteam/reference_scores_original.json",
+    "replayed": "Exact no-argument hidden rerun of the saved reference artifacts"
+  },
+  "nan_policy": "Nonfinite metrics make the rank undefined. finite_metric_subtotal is conditional evidence only; the prompt specifies missing-value skipping, not NaN behavior.",
+  "warning": "No official rank executable is available. This is a transparent audit cohort, not a claim about unknown future cohort scales. The omitted second experiment is not assigned invented penalties.",
+  "cohort_size": 28,
   "scales": {
     "synthetic_chat_specificity": {
-      "fraction_top_norm_scaling_specific": 0.280923008722079,
-      "fraction_top_norm_true_chat": 0.13643482817152666,
-      "fraction_top_norm_weak_or_shared": 0.135029075578741,
-      "chat_only_latent_count": 22.5751830311271,
-      "false_ft_only_rate_pi06": 0.1715219282724429,
-      "reconstruction_fve": 0.5539947806261589,
-      "base_reconstruction_fve": 0.6052744061341345,
-      "chat_reconstruction_fve": 0.510673191430143,
-      "mean_l0": 5.861384400730291
+      "fraction_top_norm_scaling_specific": 0.2735199352577744,
+      "fraction_top_norm_true_chat": 0.13134360247911478,
+      "fraction_top_norm_weak_or_shared": 0.14047039964126293,
+      "chat_only_latent_count": 21.44460436197009,
+      "false_ft_only_rate_pi06": 0.1673131374750935,
+      "reconstruction_fve": 0.5262474372066223,
+      "base_reconstruction_fve": 0.5748425307385988,
+      "chat_reconstruction_fve": 0.48518405103963613,
+      "mean_l0": 5.630287268635847
     },
     "synthetic_complete_shrinkage": {
       "fraction_top_norm_scaling_specific": 1.0,
@@ -26,30 +32,220 @@
     }
   },
   "attempts": {
-    "better_longer_seed1": {
-      "rank_delta": -0.3504721213950665,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.39466575043769725,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1993872564681595,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.011074107335267012,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.2429232640183707,
-        "synthetic_chat_specificity.reconstruction_fve": 0.005415940298265208,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0036618094917942622,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0035536704994842323,
-        "synthetic_chat_specificity.mean_l0": -0.000899691461857196
+    "better_amplitude_seed1": {
+      "metrics": {
+        "synthetic_chat_specificity": {
+          "fraction_top_norm_true_chat": 0.3076923076923077,
+          "fraction_top_norm_weak_or_shared": 0.3076923076923077,
+          "fraction_top_norm_scaling_specific": 0.6153846153846154,
+          "chat_only_latent_count": 0,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": 0.9133496197184282,
+          "base_reconstruction_fve": 0.907539400720283,
+          "chat_reconstruction_fve": 0.9183365020796728,
+          "mean_l0": 14.517578125
+        }
       },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.5890771864504671,
+          "finite_metric_subtotal": 1.5890771864504671,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.4218508434344028,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.005563517076686151,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.003630795349483312,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.0037894881071818707,
+            "synthetic_chat_specificity.mean_l0": -0.0012661709624857652
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.219027733185895,
+          "finite_metric_subtotal": 1.219027733185895,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.4218508434344028,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.005441422305420655,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.0034626244054275874,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.0037905672611774862,
+            "synthetic_chat_specificity.mean_l0": -0.0015957223088861698
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
+      }
+    },
+    "better_amplitude_seed2": {
+      "metrics": {
+        "synthetic_chat_specificity": {
+          "fraction_top_norm_true_chat": 0.3076923076923077,
+          "fraction_top_norm_weak_or_shared": 0.38461538461538464,
+          "fraction_top_norm_scaling_specific": 0.5384615384615384,
+          "chat_only_latent_count": 0,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": 0.9123075764133369,
+          "base_reconstruction_fve": 0.9037471536240649,
+          "chat_reconstruction_fve": 0.9196549418986835,
+          "mean_l0": 14.291015625
+        }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.2584660422373766,
+          "finite_metric_subtotal": 1.2584660422373766,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.005712027534611973,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00396064629939003,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.003653618037237734,
+            "synthetic_chat_specificity.mean_l0": 0.0007458267313272315
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.8884165889728045,
+          "finite_metric_subtotal": 0.8884165889728045,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.005589932763346479,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.0037924753553343054,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.00365469719123335,
+            "synthetic_chat_specificity.mean_l0": 0.000416275384926827
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
+      }
+    },
+    "better_amplitude_seed3": {
+      "metrics": {
+        "synthetic_chat_specificity": {
+          "fraction_top_norm_true_chat": 0.38461538461538464,
+          "fraction_top_norm_weak_or_shared": 0.46153846153846156,
+          "fraction_top_norm_scaling_specific": 0.15384615384615385,
+          "chat_only_latent_count": 0,
+          "false_ft_only_rate_pi06": 0.0,
+          "reconstruction_fve": 0.9041202409675032,
+          "base_reconstruction_fve": 0.8998331794930964,
+          "chat_reconstruction_fve": 0.907799807322227,
+          "mean_l0": 14.28515625
+        }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.5660226537934221,
+          "finite_metric_subtotal": 0.5660226537934221,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.4218508434344028,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.006878874373234072,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.004301085108426963,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.0048753332349089785,
+            "synthetic_chat_specificity.mean_l0": 0.0007978611544430849
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.19597320052885006,
+          "finite_metric_subtotal": 0.19597320052885006,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.4218508434344028,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.0067567796019685775,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.0041329141643712385,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.004876412388904594,
+            "synthetic_chat_specificity.mean_l0": 0.00046830980804268027
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
+      }
+    },
+    "better_longer_seed1": {
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.15384615384615385,
@@ -62,32 +258,65 @@
           "chat_reconstruction_fve": 0.9914142427752543,
           "mean_l0": 14.443359375
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.01815871963012566,
+          "finite_metric_subtotal": 0.01815871963012566,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.6149460593794361,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.011657944151366605,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.24903404057478304,
+            "synthetic_chat_specificity.reconstruction_fve": 0.005579410728406421,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0036874929064849103,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0037414417058440268,
+            "synthetic_chat_specificity.mean_l0": -0.0006070682696849559
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": -0.3518907336344461,
+          "finite_metric_subtotal": -0.3518907336344461,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.40996403958629074,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.011657944151366605,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.24903404057478304,
+            "synthetic_chat_specificity.reconstruction_fve": 0.005701505499671915,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.003855663850540635,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0037403625518484113,
+            "synthetic_chat_specificity.mean_l0": -0.0009366196160853605
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "better_longer_seed2": {
-      "rank_delta": -0.5344761651539202,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.13691131472818943,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.19733287521884862,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1993872564681595,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.013288928802320417,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
-        "synthetic_chat_specificity.reconstruction_fve": 0.005456750388738395,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.003640478733182275,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.003630217142632248,
-        "synthetic_chat_specificity.mean_l0": -0.0002832362009550432
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.23076923076923078,
@@ -100,32 +329,65 @@
           "chat_reconstruction_fve": 0.9921960491462475,
           "mean_l0": 14.37109375
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": -0.16809901001002422,
+          "finite_metric_subtotal": -0.16809901001002422,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.40996403958629074,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.013989532981639928,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": 0.005622372604361647,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0036650329082056035,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0038220097263012122,
+            "synthetic_chat_specificity.mean_l0": 3.468961541056891e-05
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": -0.5381484632745961,
+          "finite_metric_subtotal": -0.5381484632745961,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.013989532981639928,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": 0.005744467375627141,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.003833203852261328,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0038209305723055967,
+            "synthetic_chat_specificity.mean_l0": -0.00029486173098983577
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "better_longer_seed3": {
-      "rank_delta": -0.8092605413412723,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.13691131472818943,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.19733287521884862,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1993872564681595,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.00885928586821361,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.27762658744956636,
-        "synthetic_chat_specificity.reconstruction_fve": 0.005425951541082336,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0035880669395303502,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.003642142834806759,
-        "synthetic_chat_specificity.mean_l0": -0.001799382923714392
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.23076923076923078,
@@ -138,32 +400,65 @@
           "chat_reconstruction_fve": 0.9923178517719029,
           "mean_l0": 14.548828125
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": -0.44969959894787553,
+          "finite_metric_subtotal": -0.44969959894787553,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.40996403958629074,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.009326355321093285,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.2846103320854662,
+            "synthetic_chat_specificity.reconstruction_fve": 0.005589949832022221,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0036098464604729817,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.003834561934622408,
+            "synthetic_chat_specificity.mean_l0": -0.0015436878857703164
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": -0.8197490522124476,
+          "finite_metric_subtotal": -0.8197490522124476,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.009326355321093285,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.2846103320854662,
+            "synthetic_chat_specificity.reconstruction_fve": 0.005712044603287716,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0037780174045287064,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.003833482780626792,
+            "synthetic_chat_specificity.mean_l0": -0.001873239232170721
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "brute_force_exemplars": {
-      "rank_delta": 0.7013294032737242,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.9445542820661408,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.008034726189692514,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.5669872146472417,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.24141553990882086,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.529225682325736,
-        "synthetic_chat_specificity.reconstruction_fve": -0.029912671729514166,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.018698645302984717,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.02117941135883924,
-        "synthetic_chat_specificity.mean_l0": 0.1137776480189406
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.30456026058631924,
@@ -176,32 +471,65 @@
           "chat_reconstruction_fve": 0.7388038058453938,
           "mean_l0": 1.0
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.1201711339286977,
+          "finite_metric_subtotal": 1.1201711339286977,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.9701195292009394,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.21332819323749166,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.02996696329759712,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.254143182499792,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.54253844553792,
+            "synthetic_chat_specificity.reconstruction_fve": -0.03161196596322343,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.019856713155320026,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.022290992417719518,
+            "synthetic_chat_specificity.mean_l0": 0.11877724316578796
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.750121680664126,
+          "finite_metric_subtotal": 0.750121680664126,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.9701195292009394,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.008346173444346289,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.5450241449750454,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.254143182499792,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.54253844553792,
+            "synthetic_chat_specificity.reconstruction_fve": -0.03148987119195793,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.0196885422112643,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.022292071571715137,
+            "synthetic_chat_specificity.mean_l0": 0.11844769181938755
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "l1_baseline": {
-      "rank_delta": 0.7900503693517829,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2738226294563788,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.19733287521884862,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.1993872564681595,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.06422982254454868,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.15182704001148173,
-        "synthetic_chat_specificity.reconstruction_fve": 0.004145449446921261,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.002818861789434728,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0027037072536372784,
-        "synthetic_chat_specificity.mean_l0": 0.022242372251469567
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.38461538461538464,
@@ -214,32 +542,65 @@
           "chat_reconstruction_fve": 0.9827331739081545,
           "mean_l0": 11.73046875
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.1692924521500845,
+          "finite_metric_subtotal": 1.1692924521500845,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.76665481103019,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.06761607607792632,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.15564627535923944,
+            "synthetic_chat_specificity.reconstruction_fve": 0.004241930959927323,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.002799919975351509,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.002846825647412362,
+            "synthetic_chat_specificity.mean_l0": 0.023484869632955152
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.7992429988855125,
+          "finite_metric_subtotal": 0.7992429988855125,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.06761607607792632,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.15564627535923944,
+            "synthetic_chat_specificity.reconstruction_fve": 0.004364025731192818,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0029680909194072336,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.002845746493416746,
+            "synthetic_chat_specificity.mean_l0": 0.023155318286554746
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "pca_baseline": {
-      "rank_delta": 0.02346005422646081,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.6845565736409472,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.7893315008753945,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5981617694044785,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.03515440261266077,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.02122132212609441,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.02565778126610601,
-        "synthetic_chat_specificity.mean_l0": 0.002882344868542498
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.0,
@@ -252,32 +613,65 @@
           "chat_reconstruction_fve": 0.6930641367864212,
           "mean_l0": 14.0
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.34180086117041775,
+          "finite_metric_subtotal": 0.34180086117041775,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -1.0249100989657267,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 1.149982216545285,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.037130076542771964,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.022512939224769303,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.02700463345362777,
+            "synthetic_chat_specificity.mean_l0": 0.003330203079414616
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": -0.02824859209415428,
+          "finite_metric_subtotal": -0.02824859209415428,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.8199280791725815,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.03700798177150647,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.02234476828071358,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.027005712607623387,
+            "synthetic_chat_specificity.mean_l0": 0.0030006517330142105
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "reference_saved": {
-      "rank_delta": 0.0,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
-        "synthetic_chat_specificity.reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.mean_l0": -0.0
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -290,32 +684,65 @@
           "chat_reconstruction_fve": 0.955118957669999,
           "mean_l0": 14.337890625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.37004945326457195,
+          "finite_metric_subtotal": 0.37004945326457195,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": -0.00012209477126549478,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00016817094405572466,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 1.0791539956158167e-06,
+            "synthetic_chat_specificity.mean_l0": 0.00032955134640040465
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.0,
+          "finite_metric_subtotal": 0.0,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.mean_l0": -0.0
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "reference_seed1": {
-      "rank_delta": 1.028121622125326,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2738226294563788,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1993872564681595,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.009251891391438906,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.005805852587559269,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.006527912007024273,
-        "synthetic_chat_specificity.mean_l0": -0.003065615351513409
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -328,32 +755,65 @@
           "chat_reconstruction_fve": 0.8884463645099543,
           "mean_l0": 14.697265625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.4368353489557941,
+          "finite_metric_subtotal": 1.4368353489557941,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.009861808790556391,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.0062813824569931094,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.006869776660120791,
+            "synthetic_chat_specificity.mean_l0": -0.002861893271371935
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.0667858956912224,
+          "finite_metric_subtotal": 1.0667858956912224,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.009739714019290897,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.006113211512937385,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.006870855814116407,
+            "synthetic_chat_specificity.mean_l0": -0.0031914446177723397
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "reference_seed2": {
-      "rank_delta": 0.693635581346707,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.13691131472818943,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.398774512936319,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.009305457695152753,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.006119136958953953,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.006281201461879186,
-        "synthetic_chat_specificity.mean_l0": -0.0011329448038201728
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -366,32 +826,65 @@
           "chat_reconstruction_fve": 0.8909661337389285,
           "mean_l0": 14.470703125
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.1064401073898686,
+          "finite_metric_subtotal": 1.1064401073898686,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.009918199474057728,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.0066112519459527765,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.006610105178383607,
+            "synthetic_chat_specificity.mean_l0": -0.0008498955775589383
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.7363906541252966,
+          "finite_metric_subtotal": 0.7363906541252966,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.009796104702792232,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.006443081001897052,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.006611184332379223,
+            "synthetic_chat_specificity.mean_l0": -0.001179446923959343
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "reference_seed3": {
-      "rank_delta": 0.4147549374611925,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.13691131472818943,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.19733287521884862,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.5981617694044785,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.010667893718186147,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.0065002159125947595,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.0077245901480005605,
-        "synthetic_chat_specificity.mean_l0": -0.0009496743208492625
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.38461538461538464,
@@ -404,32 +897,65 @@
           "chat_reconstruction_fve": 0.8762241356026133,
           "mean_l0": 14.44921875
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.8353605785903832,
+          "finite_metric_subtotal": 0.8353605785903832,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.011352472388913192,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.007012505028355692,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.00812932227803132,
+            "synthetic_chat_specificity.mean_l0": -0.0006591026928008093
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.46531112532581115,
+          "finite_metric_subtotal": 0.46531112532581115,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.1406169478114676,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.011230377617647698,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.006844334084299969,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.008130401432026934,
+            "synthetic_chat_specificity.mean_l0": -0.000988654039201214
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_copy_reconstruction": {
-      "rank_delta": 1.2608212377213082,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2738226294563788,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": 0.006561874055965902,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.004349376350780667,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.004394301784700251,
-        "synthetic_chat_specificity.mean_l0": -0.0
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -442,32 +968,65 @@
           "chat_reconstruction_fve": 1.0,
           "mean_l0": 14.337890625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.6635321584136884,
+          "finite_metric_subtotal": 1.6635321584136884,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": 0.00678576590626593,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0044114592102929935,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.00462623554916477,
+            "synthetic_chat_specificity.mean_l0": 0.00032955134640040465
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.2934827051491165,
+          "finite_metric_subtotal": 1.2934827051491165,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": 0.006907860677531425,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.004579630154348718,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.004625156395169154,
+            "synthetic_chat_specificity.mean_l0": -0.0
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_empty_features": {
-      "rank_delta": 2.1892916298525846,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 1.0952905178255155,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.mean_l0": 0.12230805595358658
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -480,32 +1039,65 @@
           "chat_reconstruction_fve": 0.955118957669999,
           "mean_l0": 0.0
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 2.6184494314199376,
+          "finite_metric_subtotal": 2.6184494314199376,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 1.1249355824917409,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.00012209477126549478,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00016817094405572466,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 1.0791539956158167e-06,
+            "synthetic_chat_specificity.mean_l0": 0.1276577847108936
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 2.2483999781553656,
+          "finite_metric_subtotal": 2.2483999781553656,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 1.1249355824917409,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.mean_l0": 0.12732823336449317
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_nan_reconstruction": {
-      "rank_delta": 0.22491927131636608,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.6845565736409472,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.7893315008753945,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5981617694044785,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.mean_l0": 0.12230805595358658
-      },
-      "missing_or_nonfinite": [
-        "synthetic_chat_specificity.reconstruction_fve",
-        "synthetic_chat_specificity.base_reconstruction_fve",
-        "synthetic_chat_specificity.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.0,
@@ -518,32 +1110,67 @@
           "chat_reconstruction_fve": NaN,
           "mean_l0": 0.0
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": null,
+          "finite_metric_subtotal": 0.5527760920230658,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -1.0249100989657267,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 1.149982216545285,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.mean_l0": 0.1276577847108936
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": [
+            "synthetic_chat_specificity.reconstruction_fve",
+            "synthetic_chat_specificity.base_reconstruction_fve",
+            "synthetic_chat_specificity.chat_reconstruction_fve"
+          ]
+        },
+        "replayed": {
+          "rank_delta": null,
+          "finite_metric_subtotal": 0.18243745219716812,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.8199280791725815,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.mean_l0": 0.12732823336449317
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": [
+            "synthetic_chat_specificity.reconstruction_fve",
+            "synthetic_chat_specificity.base_reconstruction_fve",
+            "synthetic_chat_specificity.chat_reconstruction_fve"
+          ]
+        }
       }
     },
     "shortcut_negative_features": {
-      "rank_delta": 1.094001112027069,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.mean_l0": 0.12230805595358658
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -556,59 +1183,124 @@
           "chat_reconstruction_fve": 0.955118957669999,
           "mean_l0": 0.0
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.493513848928197,
+          "finite_metric_subtotal": 1.493513848928197,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.00012209477126549478,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00016817094405572466,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 1.0791539956158167e-06,
+            "synthetic_chat_specificity.mean_l0": 0.1276577847108936
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.123464395663625,
+          "finite_metric_subtotal": 1.123464395663625,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.mean_l0": 0.12732823336449317
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_registry_omission": {
-      "rank_delta": 0.0,
-      "contributions": {},
-      "missing_or_nonfinite": [
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific",
-        "synthetic_chat_specificity.fraction_top_norm_true_chat",
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared",
-        "synthetic_chat_specificity.chat_only_latent_count",
-        "synthetic_chat_specificity.false_ft_only_rate_pi06",
-        "synthetic_chat_specificity.reconstruction_fve",
-        "synthetic_chat_specificity.base_reconstruction_fve",
-        "synthetic_chat_specificity.chat_reconstruction_fve",
-        "synthetic_chat_specificity.mean_l0",
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {}
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0,
+          "finite_metric_subtotal": 0,
+          "contributions": {},
+          "missing": [
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific",
+            "synthetic_chat_specificity.fraction_top_norm_true_chat",
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared",
+            "synthetic_chat_specificity.chat_only_latent_count",
+            "synthetic_chat_specificity.false_ft_only_rate_pi06",
+            "synthetic_chat_specificity.reconstruction_fve",
+            "synthetic_chat_specificity.base_reconstruction_fve",
+            "synthetic_chat_specificity.chat_reconstruction_fve",
+            "synthetic_chat_specificity.mean_l0",
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0,
+          "finite_metric_subtotal": 0,
+          "contributions": {},
+          "missing": [
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific",
+            "synthetic_chat_specificity.fraction_top_norm_true_chat",
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared",
+            "synthetic_chat_specificity.chat_only_latent_count",
+            "synthetic_chat_specificity.false_ft_only_rate_pi06",
+            "synthetic_chat_specificity.reconstruction_fve",
+            "synthetic_chat_specificity.base_reconstruction_fve",
+            "synthetic_chat_specificity.chat_reconstruction_fve",
+            "synthetic_chat_specificity.mean_l0",
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_score_write": {
-      "rank_delta": 0.0,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
-        "synthetic_chat_specificity.reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.mean_l0": -0.0
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -621,32 +1313,65 @@
           "chat_reconstruction_fve": 0.955118957669999,
           "mean_l0": 14.337890625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.37004945326457195,
+          "finite_metric_subtotal": 0.37004945326457195,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": -0.00012209477126549478,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00016817094405572466,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 1.0791539956158167e-06,
+            "synthetic_chat_specificity.mean_l0": 0.00032955134640040465
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.0,
+          "finite_metric_subtotal": 0.0,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.mean_l0": -0.0
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_target_replacement": {
-      "rank_delta": 1.2608212377213082,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2738226294563788,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": 0.006561874055965902,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.004349376350780667,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.004394301784700251,
-        "synthetic_chat_specificity.mean_l0": -0.0
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -659,32 +1384,65 @@
           "chat_reconstruction_fve": 1.0,
           "mean_l0": 14.337890625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.6635321584136884,
+          "finite_metric_subtotal": 1.6635321584136884,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": 0.00678576590626593,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0044114592102929935,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.00462623554916477,
+            "synthetic_chat_specificity.mean_l0": 0.00032955134640040465
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.2934827051491165,
+          "finite_metric_subtotal": 1.2934827051491165,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.2812338956229351,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": 0.006907860677531425,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.004579630154348718,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.004625156395169154,
+            "synthetic_chat_specificity.mean_l0": -0.0
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_taxonomy_replacement": {
-      "rank_delta": 1.1901603950610242,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.5919986256565457,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5981617694044785,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
-        "synthetic_chat_specificity.reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.mean_l0": -0.0
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.5384615384615384,
@@ -697,32 +1455,65 @@
           "chat_reconstruction_fve": 0.955118957669999,
           "mean_l0": 14.337890625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.5599866209166506,
+          "finite_metric_subtotal": 1.5599866209166506,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.40996403958629063,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 1.149982216545285,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": -0.00012209477126549478,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00016817094405572466,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 1.0791539956158167e-06,
+            "synthetic_chat_specificity.mean_l0": 0.00032955134640040465
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.1899371676520785,
+          "finite_metric_subtotal": 1.1899371676520785,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.6149460593794359,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.mean_l0": -0.0
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_threshold_mask": {
-      "rank_delta": 0.9783375204746426,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.mean_l0": -0.0
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -735,32 +1526,65 @@
           "chat_reconstruction_fve": 0.955118957669999,
           "mean_l0": 14.337890625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 1.3731803820545239,
+          "finite_metric_subtotal": 1.3731803820545239,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.00012209477126549478,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00016817094405572466,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 1.0791539956158167e-06,
+            "synthetic_chat_specificity.mean_l0": 0.00032955134640040465
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.0031309287899517,
+          "finite_metric_subtotal": 1.0031309287899517,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.mean_l0": -0.0
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_unlisted_method": {
-      "rank_delta": 0.0,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.0,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
-        "synthetic_chat_specificity.reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
-        "synthetic_chat_specificity.mean_l0": -0.0
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.3076923076923077,
@@ -773,32 +1597,65 @@
           "chat_reconstruction_fve": 0.955118957669999,
           "mean_l0": 14.337890625
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.37004945326457195,
+          "finite_metric_subtotal": 0.37004945326457195,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": -0.00012209477126549478,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.00016817094405572466,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 1.0791539956158167e-06,
+            "synthetic_chat_specificity.mean_l0": 0.00032955134640040465
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.0,
+          "finite_metric_subtotal": 0.0,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.0,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.0,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.0,
+            "synthetic_chat_specificity.reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.base_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.chat_reconstruction_fve": 0.0,
+            "synthetic_chat_specificity.mean_l0": -0.0
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_visible_labels": {
-      "rank_delta": 0.5486428304237376,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.07823503698753674,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.3100945182010477,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5981617694044785,
-        "synthetic_chat_specificity.chat_only_latent_count": -0.011074107335267012,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.48584652803674105,
-        "synthetic_chat_specificity.reconstruction_fve": -0.010244810468858303,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.0075566302207950254,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.006081303081496942,
-        "synthetic_chat_specificity.mean_l0": 0.08295488497383295
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.42857142857142855,
@@ -811,32 +1668,65 @@
           "chat_reconstruction_fve": 0.8930077886163589,
           "mean_l0": 4.61328125
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.8989990326686282,
+          "finite_metric_subtotal": 0.8989990326686282,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.08035254160655284,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.11713258273894009,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 1.149982216545285,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.011657944151366605,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.49806808114956574,
+            "synthetic_chat_specificity.reconstruction_fve": -0.01090708131367656,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.008124845380427322,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.006399705138125115,
+            "synthetic_chat_specificity.mean_l0": 0.0866893489110117
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 0.5289495794040564,
+          "finite_metric_subtotal": 0.5289495794040564,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 0.08035254160655284,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": 0.32211460253208546,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": -0.011657944151366605,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": -0.49806808114956574,
+            "synthetic_chat_specificity.reconstruction_fve": -0.010784986542411064,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.007956674436371597,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.006400784292120731,
+            "synthetic_chat_specificity.mean_l0": 0.0863597975646113
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "shortcut_zero_outputs": {
-      "rank_delta": 1.703494209841845,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 1.0952905178255155,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.7893315008753945,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5981617694044785,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.12910916475210307,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.07832450272795986,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.09383848546092084,
-        "synthetic_chat_specificity.mean_l0": 0.12230805595358658
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.0,
@@ -849,32 +1739,65 @@
           "chat_reconstruction_fve": -0.0032970193159913563,
           "mean_l0": 0.0
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 2.0633512969294907,
+          "finite_metric_subtotal": 2.0633512969294907,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 1.1249355824917409,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -1.0249100989657267,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 1.149982216545285,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.13603877264305633,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.08263913358056132,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.09876721041903638,
+            "synthetic_chat_specificity.mean_l0": 0.1276577847108936
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": 1.6933018436649185,
+          "finite_metric_subtotal": 1.6933018436649185,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": 1.1249355824917409,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.8199280791725815,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.13591667787179085,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.08247096263650561,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.098768289573032,
+            "synthetic_chat_specificity.mean_l0": 0.12732823336449317
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "weaker_short_seed1": {
-      "rank_delta": -0.3699204123782794,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.6845565736409472,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.19733287521884862,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.1993832863010984,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.13169403179705216,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.13399161156118175,
-        "synthetic_chat_specificity.mean_l0": -0.0012995543337937275
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.23076923076923078,
@@ -887,32 +1810,65 @@
           "chat_reconstruction_fve": -0.4133995203463354,
           "mean_l0": 14.490234375
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": -0.025832108439535505,
+          "finite_metric_subtotal": -0.025832108439535505,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.40996403958629074,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.5749911082726425,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.210018223750475,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.13883401876320048,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.1410297806902139,
+            "synthetic_chat_specificity.mean_l0": -0.0010233436546117829
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": -0.3958815617041076,
+          "finite_metric_subtotal": -0.3958815617041076,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": -0.0,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.2098961289792095,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.13866584781914476,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.14103085984420952,
+            "synthetic_chat_specificity.mean_l0": -0.0013528950010121875
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "weaker_short_seed2": {
-      "rank_delta": -0.18257565236873205,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.6845565736409472,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.19733287521884862,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.1993872564681595,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.20382149375262207,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.13804849737876157,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.13349203492183853,
-        "synthetic_chat_specificity.mean_l0": -0.003048954398516053
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.23076923076923078,
@@ -925,32 +1881,65 @@
           "chat_reconstruction_fve": -0.4082971124107886,
           "mean_l0": 14.6953125
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": 0.15317312367066238,
+          "finite_metric_subtotal": 0.15317312367066238,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.40996403958629074,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.76665481103019,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.21469044367905368,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.14552488656716603,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.14050395879596433,
+            "synthetic_chat_specificity.mean_l0": -0.0028445484636666508
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": -0.2168763295939095,
+          "finite_metric_subtotal": -0.2168763295939095,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.20498201979314537,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.1916637027575475,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.21456834890778817,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.14535671562311028,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.14050503794995994,
+            "synthetic_chat_specificity.mean_l0": -0.003174099810067055
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     },
     "weaker_short_seed3": {
-      "rank_delta": -0.6702893551088155,
-      "contributions": {
-        "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.6845565736409472,
-        "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.7893315008753945,
-        "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.398774512936319,
-        "synthetic_chat_specificity.chat_only_latent_count": 0.0066444644011602084,
-        "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9716930560734824,
-        "synthetic_chat_specificity.reconstruction_fve": -0.24489620681573573,
-        "synthetic_chat_specificity.base_reconstruction_fve": -0.16553731262327356,
-        "synthetic_chat_specificity.chat_reconstruction_fve": -0.1607306001917991,
-        "synthetic_chat_specificity.mean_l0": -0.002349194372627123
-      },
-      "missing_or_nonfinite": [
-        "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
-        "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
-        "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
-        "synthetic_complete_shrinkage.chat_only_latent_count",
-        "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
-        "synthetic_complete_shrinkage.reconstruction_fve",
-        "synthetic_complete_shrinkage.base_reconstruction_fve",
-        "synthetic_complete_shrinkage.chat_reconstruction_fve",
-        "synthetic_complete_shrinkage.mean_l0"
-      ],
       "metrics": {
         "synthetic_chat_specificity": {
           "fraction_top_norm_true_chat": 0.0,
@@ -963,40 +1952,159 @@
           "chat_reconstruction_fve": -0.686497213538569,
           "mean_l0": 14.61328125
         }
+      },
+      "ranks": {
+        "frozen": {
+          "rank_delta": -0.370234804704903,
+          "finite_metric_subtotal": -0.370234804704903,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -1.0249100989657267,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.9583185137877374,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.2579308949266056,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.1744689459099479,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.1691735018829292,
+            "synthetic_chat_specificity.mean_l0": -0.0021160665400447036
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        },
+        "replayed": {
+          "rank_delta": -0.740284257969475,
+          "finite_metric_subtotal": -0.740284257969475,
+          "contributions": {
+            "synthetic_chat_specificity.fraction_top_norm_scaling_specific": -0.703084739057338,
+            "synthetic_chat_specificity.fraction_top_norm_true_chat": -0.8199280791725815,
+            "synthetic_chat_specificity.fraction_top_norm_weak_or_shared": 0.383327405515095,
+            "synthetic_chat_specificity.chat_only_latent_count": 0.006994766490819964,
+            "synthetic_chat_specificity.false_ft_only_rate_pi06": 0.9961361622991318,
+            "synthetic_chat_specificity.reconstruction_fve": -0.2578088001553401,
+            "synthetic_chat_specificity.base_reconstruction_fve": -0.1743007749658922,
+            "synthetic_chat_specificity.chat_reconstruction_fve": -0.16917458103692484,
+            "synthetic_chat_specificity.mean_l0": -0.002445617886445108
+          },
+          "missing": [
+            "synthetic_complete_shrinkage.fraction_top_norm_scaling_specific",
+            "synthetic_complete_shrinkage.fraction_top_norm_true_chat",
+            "synthetic_complete_shrinkage.fraction_top_norm_weak_or_shared",
+            "synthetic_complete_shrinkage.chat_only_latent_count",
+            "synthetic_complete_shrinkage.false_ft_only_rate_pi06",
+            "synthetic_complete_shrinkage.reconstruction_fve",
+            "synthetic_complete_shrinkage.base_reconstruction_fve",
+            "synthetic_complete_shrinkage.chat_reconstruction_fve",
+            "synthetic_complete_shrinkage.mean_l0"
+          ],
+          "nonfinite": []
+        }
       }
     }
   },
   "reference_seed": {
-    "values": [
-      1.028121622125326,
-      0.693635581346707,
-      0.4147549374611925
-    ],
-    "mean": 0.7121707136444085,
-    "min": 0.4147549374611925,
-    "max": 1.028121622125326,
-    "range": 0.6133666846641335
+    "frozen": {
+      "values": [
+        1.4368353489557941,
+        1.1064401073898686,
+        0.8353605785903832
+      ],
+      "mean": 1.1262120116453487,
+      "min": 0.8353605785903832,
+      "max": 1.4368353489557941,
+      "range": 0.601474770365411
+    },
+    "replayed": {
+      "values": [
+        1.0667858956912224,
+        0.7363906541252966,
+        0.46531112532581115
+      ],
+      "mean": 0.7561625583807767,
+      "min": 0.46531112532581115,
+      "max": 1.0667858956912224,
+      "range": 0.6014747703654113
+    }
   },
   "better_longer_seed": {
-    "values": [
-      -0.3504721213950665,
-      -0.5344761651539202,
-      -0.8092605413412723
-    ],
-    "mean": -0.5647362759634197,
-    "min": -0.8092605413412723,
-    "max": -0.3504721213950665,
-    "range": 0.45878841994620584
+    "frozen": {
+      "values": [
+        0.01815871963012566,
+        -0.16809901001002422,
+        -0.44969959894787553
+      ],
+      "mean": -0.19987996310925804,
+      "min": -0.44969959894787553,
+      "max": 0.01815871963012566,
+      "range": 0.4678583185780012
+    },
+    "replayed": {
+      "values": [
+        -0.3518907336344461,
+        -0.5381484632745961,
+        -0.8197490522124476
+      ],
+      "mean": -0.56992941637383,
+      "min": -0.8197490522124476,
+      "max": -0.3518907336344461,
+      "range": 0.46785831857800153
+    }
+  },
+  "better_amplitude_seed": {
+    "frozen": {
+      "values": [
+        1.5890771864504671,
+        1.2584660422373766,
+        0.5660226537934221
+      ],
+      "mean": 1.1378552941604219,
+      "min": 0.5660226537934221,
+      "max": 1.5890771864504671,
+      "range": 1.023054532657045
+    },
+    "replayed": {
+      "values": [
+        1.219027733185895,
+        0.8884165889728045,
+        0.19597320052885006
+      ],
+      "mean": 0.7678058408958498,
+      "min": 0.19597320052885006,
+      "max": 1.219027733185895,
+      "range": 1.0230545326570448
+    }
   },
   "weaker_short_seed": {
-    "values": [
-      -0.3699204123782794,
-      -0.18257565236873205,
-      -0.6702893551088155
-    ],
-    "mean": -0.4075951399519423,
-    "min": -0.6702893551088155,
-    "max": -0.18257565236873205,
-    "range": 0.4877137027400834
+    "frozen": {
+      "values": [
+        -0.025832108439535505,
+        0.15317312367066238,
+        -0.370234804704903
+      ],
+      "mean": -0.0809645964912587,
+      "min": -0.370234804704903,
+      "max": 0.15317312367066238,
+      "range": 0.5234079283755654
+    },
+    "replayed": {
+      "values": [
+        -0.3958815617041076,
+        -0.2168763295939095,
+        -0.740284257969475
+      ],
+      "mean": -0.4510140497558307,
+      "min": -0.740284257969475,
+      "max": -0.2168763295939095,
+      "range": 0.5234079283755655
+    }
   }
 }

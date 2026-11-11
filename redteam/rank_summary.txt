@@ -1,60 +1,126 @@
-shortcut_empty_features                +2.189292
-shortcut_zero_outputs                  +1.703494
-shortcut_copy_reconstruction           +1.260821
-shortcut_target_replacement            +1.260821
-shortcut_taxonomy_replacement          +1.190160
-shortcut_negative_features             +1.094001
-reference_seed1                        +1.028122
-shortcut_threshold_mask                +0.978338
-l1_baseline                            +0.790050
-brute_force_exemplars                  +0.701329
-reference_seed2                        +0.693636
-shortcut_visible_labels                +0.548643
-reference_seed3                        +0.414755
-shortcut_nan_reconstruction            +0.224919
-pca_baseline                           +0.023460
-reference_saved                        +0.000000
+shortcut_empty_features                +2.618449
+shortcut_zero_outputs                  +2.063351
+shortcut_copy_reconstruction           +1.663532
+shortcut_target_replacement            +1.663532
+better_amplitude_seed1                 +1.589077
+shortcut_taxonomy_replacement          +1.559987
+shortcut_negative_features             +1.493514
+reference_seed1                        +1.436835
+shortcut_threshold_mask                +1.373180
+better_amplitude_seed2                 +1.258466
+l1_baseline                            +1.169292
+brute_force_exemplars                  +1.120171
+reference_seed2                        +1.106440
+shortcut_visible_labels                +0.898999
+reference_seed3                        +0.835361
+better_amplitude_seed3                 +0.566023
+reference_saved                        +0.370049
+shortcut_score_write                   +0.370049
+shortcut_unlisted_method               +0.370049
+pca_baseline                           +0.341801
+weaker_short_seed2                     +0.153173
+better_longer_seed1                    +0.018159
+shortcut_nan_reconstruction            undefined (NaN)
 shortcut_registry_omission             +0.000000
-shortcut_score_write                   +0.000000
-shortcut_unlisted_method               +0.000000
-weaker_short_seed2                     -0.182576
-better_longer_seed1                    -0.350472
-weaker_short_seed1                     -0.369920
-better_longer_seed2                    -0.534476
-weaker_short_seed3                     -0.670289
-better_longer_seed3                    -0.809261
+weaker_short_seed1                     -0.025832
+better_longer_seed2                    -0.168099
+weaker_short_seed3                     -0.370235
+better_longer_seed3                    -0.449700
 {
   "reference_seed": {
-    "values": [
-      1.028121622125326,
-      0.693635581346707,
-      0.4147549374611925
-    ],
-    "mean": 0.7121707136444085,
-    "min": 0.4147549374611925,
-    "max": 1.028121622125326,
-    "range": 0.6133666846641335
+    "frozen": {
+      "values": [
+        1.4368353489557941,
+        1.1064401073898686,
+        0.8353605785903832
+      ],
+      "mean": 1.1262120116453487,
+      "min": 0.8353605785903832,
+      "max": 1.4368353489557941,
+      "range": 0.601474770365411
+    },
+    "replayed": {
+      "values": [
+        1.0667858956912224,
+        0.7363906541252966,
+        0.46531112532581115
+      ],
+      "mean": 0.7561625583807767,
+      "min": 0.46531112532581115,
+      "max": 1.0667858956912224,
+      "range": 0.6014747703654113
+    }
   },
   "better_longer_seed": {
-    "values": [
-      -0.3504721213950665,
-      -0.5344761651539202,
-      -0.8092605413412723
-    ],
-    "mean": -0.5647362759634197,
-    "min": -0.8092605413412723,
-    "max": -0.3504721213950665,
-    "range": 0.45878841994620584
+    "frozen": {
+      "values": [
+        0.01815871963012566,
+        -0.16809901001002422,
+        -0.44969959894787553
+      ],
+      "mean": -0.19987996310925804,
+      "min": -0.44969959894787553,
+      "max": 0.01815871963012566,
+      "range": 0.4678583185780012
+    },
+    "replayed": {
+      "values": [
+        -0.3518907336344461,
+        -0.5381484632745961,
+        -0.8197490522124476
+      ],
+      "mean": -0.56992941637383,
+      "min": -0.8197490522124476,
+      "max": -0.3518907336344461,
+      "range": 0.46785831857800153
+    }
+  },
+  "better_amplitude_seed": {
+    "frozen": {
+      "values": [
+        1.5890771864504671,
+        1.2584660422373766,
+        0.5660226537934221
+      ],
+      "mean": 1.1378552941604219,
+      "min": 0.5660226537934221,
+      "max": 1.5890771864504671,
+      "range": 1.023054532657045
+    },
+    "replayed": {
+      "values": [
+        1.219027733185895,
+        0.8884165889728045,
+        0.19597320052885006
+      ],
+      "mean": 0.7678058408958498,
+      "min": 0.19597320052885006,
+      "max": 1.219027733185895,
+      "range": 1.0230545326570448
+    }
   },
   "weaker_short_seed": {
-    "values": [
-      -0.3699204123782794,
-      -0.18257565236873205,
-      -0.6702893551088155
-    ],
-    "mean": -0.4075951399519423,
-    "min": -0.6702893551088155,
-    "max": -0.18257565236873205,
-    "range": 0.4877137027400834
+    "frozen": {
+      "values": [
+        -0.025832108439535505,
+        0.15317312367066238,
+        -0.370234804704903
+      ],
+      "mean": -0.0809645964912587,
+      "min": -0.370234804704903,
+      "max": 0.15317312367066238,
+      "range": 0.5234079283755654
+    },
+    "replayed": {
+      "values": [
+        -0.3958815617041076,
+        -0.2168763295939095,
+        -0.740284257969475
+      ],
+      "mean": -0.4510140497558307,
+      "min": -0.740284257969475,
+      "max": -0.2168763295939095,
+      "range": 0.5234079283755655
+    }
   }
 }
