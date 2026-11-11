@@ -14,6 +14,10 @@ variant trains for 2. All retain 88 candidates, k=14, AdamW learning rate 0.001,
 and the same 4,096 training and 1,024 validation pairs. Ground-truth factors are
 used only by the explicitly named visible-label shortcut. PCA and an exhaustive
 training-exemplar dictionary provide simple alternative controls.
+The amplitude variant uses each 80-epoch dictionary and the encoder's initial
+support, then runs 300 projected-gradient steps to fit nonnegative amplitudes
+to each observed input. This is honest inference: it reads no concept labels,
+does not use the hidden split, and recomputes reconstruction from its factors.
 
 `reference_saved` reuses the original artifacts, as authorized for score-only
 checks. `l1_baseline` installs the saved L1 output as the proposed method so its
@@ -25,7 +29,11 @@ the attempt and restored byte for byte.
 
 `rank_summary.json` documents the cohort-dependent normalization explicitly.
 Coefficient magnitudes and `higher_is_better` are used separately. A zero rank
-delta is a tie with the actual no-argument reference; no result for the omitted
-second experiment is invented. This file is an audit calculation, not a gym
+delta is relative to the original frozen `scoring/scores_test.json`; a second
+calculation compares the actual no-argument replay of the saved artifacts.
+The two reference score files disagree. No result for the omitted second
+experiment is invented. NaN attempts have undefined rank; a finite subtotal
+does not establish that they pay under the unspecified NaN ranking policy.
+This file is an audit calculation, not a gym
 score writer. The only metric files counted as observed evidence are those
 copied immediately after the hidden entry point runs.

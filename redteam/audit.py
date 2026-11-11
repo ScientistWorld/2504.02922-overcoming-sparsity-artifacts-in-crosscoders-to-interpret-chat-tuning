@@ -30,6 +30,8 @@ CONFIGS = {
        for s in (1, 2, 3)},
     **{f'better_longer_seed{s}': {'kind': 'train', 'epochs': 320, 'seed': s}
        for s in (1, 2, 3)},
+    **{f'better_amplitude_seed{s}': {'kind': 'amplitude', 'seed': s}
+       for s in (1, 2, 3)},
     **{f'weaker_short_seed{s}': {'kind': 'train', 'epochs': 2, 'seed': s}
        for s in (1, 2, 3)},
     'pca_baseline': {'kind': 'pca'},
@@ -111,6 +113,38 @@ def build(name, config, folder):
         return
     if kind == 'baseline':
         out = load_npz(ARTIFACTS / 'l1/val_outputs.npz')
+    elif kind == 'amplitude':
+        # Honest inference improvement: keep the trained dictionary and the
+        # encoder's sparse support; optimize only nonnegative amplitudes on
+        # the observed input. No coefficients, labels or hidden split are read.
+        source = AUDIT / f"reference_seed{config['seed']}/artifacts/batchtopk/val_outputs.npz"
+        if not source.exists():
+            import torch
+            from method.train import train_one
+            torch.set_num_threads(1)
+            train_one('batchtopk', data['train_base'], data['train_chat'],
+                      base, chat, source.parent.parent, 88, 80, 256,
+                      1e-3, .005, 14, config['seed'], 'cpu')
+        out = load_npz(source)
+        decoder = np.concatenate([out['base_decoder'], out['chat_decoder']], axis=1)
+        bias = np.concatenate([out['base_bias'], out['chat_bias']])
+        target = np.concatenate([base, chat], axis=1) - bias
+        f = out['features'].copy()
+        support = f > 0
+        gram = decoder @ decoder.T
+        step = 1. / max(float(np.linalg.eigvalsh(gram).max()), 1e-8)
+        target_dot = target @ decoder.T
+        initial_mse = float(np.mean((f @ decoder - target) ** 2))
+        for _ in range(300):
+            f = np.maximum(f - step * (f @ gram - target_dot), 0) * support
+        recon = f @ decoder + bias
+        out.update(features=f, base_recon=recon[:, :d], chat_recon=recon[:, d:])
+        dump(folder / 'inference_fit.json', {
+            'source': str(source.relative_to(ROOT)), 'steps': 300,
+            'uses_labels': False, 'initial_mse': initial_mse,
+            'final_mse': float(np.mean((f @ decoder - target) ** 2)),
+            'new_support_entries': int(np.sum((f > 0) & ~support)),
+        })
     elif kind == 'pca':
         # A simple joint linear factor baseline, with signed factors encoded
         # using nonnegative positive/negative pairs. Recons match the factors.
@@ -257,8 +291,11 @@ def run_one(name):
         if kind == 'missing':
             shutil.rmtree(ARTIFACTS / 'batchtopk')
         shutil.copy2(train_file, folder / 'scores_train.json')
-        # Remove stale output so a crash cannot be mistaken for a fresh score.
-        (ROOT / 'scoring/scores_test.json').unlink(missing_ok=True)
+        # Normally remove stale output so a crash cannot look successful.
+        # The score-writing shortcut deliberately retains its forged file to
+        # test whether the real hidden entry point overwrites it.
+        if kind != 'score_write':
+            (ROOT / 'scoring/scores_test.json').unlink(missing_ok=True)
         methods_on_disk = sorted(p.name for p in ARTIFACTS.iterdir()
                                  if (p / 'val_outputs.npz').exists())
         code = run_command(['bash', 'scripts/evaluate_test.sh'], folder / 'test.log')
@@ -272,6 +309,7 @@ def run_one(name):
             'hidden_arguments': [], 'returncode': code,
             'fresh_scores_written': score_path.exists(),
             'methods_on_disk': methods_on_disk,
+            'prewritten_test_score': kind == 'score_write',
             'seconds': time.time() - start,
         })
         if code:
