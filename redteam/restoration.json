@@ -169,5 +169,8 @@
   },
   "verification": "29 executable attempts; 28 fresh test score files; all hidden commands no-argument; intended missing-artifact failure; forged scores overwritten; registry omission writes empty results; zero outputs outrank frozen reference.",
   "preexisting_system_changes": "README.md and manifest.json modified; tracked trajectory files deleted. See initial_status.txt. Preserved unchanged.",
-  "workflow_exception": "action.yaml is updated to done for the required end-of-turn protocol."
+  "workflow_exception": "action.yaml is updated to done for the required end-of-turn protocol.",
+  "other_tracked_changes_excluding_preexisting_and_workflow": [],
+  "executable_runners_verified": 29,
+  "scheduler_files": "New tracked jobs/ files restored to starting commit after preserving both jobs stdout/stderr under redteam/job_logs/."
 }
