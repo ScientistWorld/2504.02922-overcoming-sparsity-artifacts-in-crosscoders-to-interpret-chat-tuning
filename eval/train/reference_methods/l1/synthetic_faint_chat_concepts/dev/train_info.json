@@ -1,0 +1,39 @@
+{
+ "config": {
+  "sparsity": "l1",
+  "n_latents": 256,
+  "k": 8,
+  "k_start": 0,
+  "k_anneal_frac": 0.25,
+  "mu": 0.0,
+  "steps": 16000,
+  "batch_size": 256,
+  "lr": 0.001,
+  "lr_decay_frac": 0.2,
+  "init_norm": 0.0,
+  "aux_alpha": 0.03125,
+  "aux_k": 32,
+  "dead_samples": 200000,
+  "selection_norm": "sum",
+  "target_l0": 8.0,
+  "max_l0": 8.4
+ },
+ "seed": 0,
+ "data": "data/worlds/synthetic_faint_chat_concepts/dev/train.npz",
+ "train_seconds": 35.792542934417725,
+ "final_recon_loss": 9.521650314331055,
+ "final_aux_loss": 0.0,
+ "dead_fraction": 0.01953125,
+ "mu": 1.4270485380032651,
+ "train_l0": 7.998291015625,
+ "calibration": {
+  "0.15": 24.0191650390625,
+  "0.3": 17.6956787109375,
+  "0.6": 13.5933837890625,
+  "1.2": 9.2435302734375,
+  "1.30861": 8.870361328125,
+  "1.42705": 7.998291015625,
+  "1.69706": 6.3992919921875,
+  "2.4": 2.0430908203125
+ }
+}

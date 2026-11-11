@@ -1,54 +1,31 @@
 {
+  "slice": "train",
   "experiments": {
     "synthetic_chat_specificity": {
       "results": {
-        "l1": {
-          "fraction_top_norm_true_chat": 0.6153846153846154,
-          "fraction_top_norm_weak_or_shared": 0.6153846153846154,
-          "fraction_top_norm_scaling_specific": 0.5384615384615384,
-          "chat_only_latent_count": 32,
-          "false_ft_only_rate_pi06": 0.53125,
-          "reconstruction_fve": 0.9817642070324544,
-          "mean_l0": 11.6279296875,
-          "base_reconstruction_fve": 0.9814668309745369,
-          "chat_reconstruction_fve": 0.9820333817273244
-        },
         "batchtopk": {
-          "fraction_top_norm_true_chat": 0.6153846153846154,
-          "fraction_top_norm_weak_or_shared": 0.6153846153846154,
-          "fraction_top_norm_scaling_specific": 0.3076923076923077,
-          "chat_only_latent_count": 3,
-          "false_ft_only_rate_pi06": 0.33333333333333337,
-          "reconstruction_fve": 0.9527255054086545,
-          "mean_l0": 14.3037109375,
-          "base_reconstruction_fve": 0.9497787784739462,
-          "chat_reconstruction_fve": 0.9553927522978128
+          "false_ft_only_rate": 0.5708692850996437,
+          "chat_specific_recall": 0.5,
+          "reconstruction_fve": 0.9791228857744978
+        },
+        "l1": {
+          "false_ft_only_rate": 0.6646900739050878,
+          "chat_specific_recall": 0.5,
+          "reconstruction_fve": 0.8244742880456302
         }
       }
     },
-    "synthetic_complete_shrinkage": {
+    "synthetic_faint_chat_concepts": {
       "results": {
-        "l1": {
-          "fraction_top_norm_true_chat": 1.0,
-          "fraction_top_norm_weak_or_shared": 0.0,
-          "fraction_top_norm_scaling_specific": 1.0,
-          "chat_only_latent_count": 29,
-          "false_ft_only_rate_pi06": 0.4482758620689655,
-          "reconstruction_fve": 0.9903566377011248,
-          "mean_l0": 6.978515625,
-          "base_reconstruction_fve": 0.9904013609157762,
-          "chat_reconstruction_fve": 0.9903271240113453
-        },
         "batchtopk": {
-          "fraction_top_norm_true_chat": 0.5384615384615384,
-          "fraction_top_norm_weak_or_shared": 0.6153846153846154,
-          "fraction_top_norm_scaling_specific": 0.6923076923076923,
-          "chat_only_latent_count": 1,
-          "false_ft_only_rate_pi06": 0.0,
-          "reconstruction_fve": 0.9722138466281328,
-          "mean_l0": 14.1728515625,
-          "base_reconstruction_fve": 0.9735053199316823,
-          "chat_reconstruction_fve": 0.9713615812491034
+          "false_ft_only_rate": 0.8874392811535051,
+          "chat_specific_recall": 0.34375,
+          "reconstruction_fve": 0.9778027075796661
+        },
+        "l1": {
+          "false_ft_only_rate": 1.0,
+          "chat_specific_recall": 0.0,
+          "reconstruction_fve": 0.7093056941014388
         }
       }
     }

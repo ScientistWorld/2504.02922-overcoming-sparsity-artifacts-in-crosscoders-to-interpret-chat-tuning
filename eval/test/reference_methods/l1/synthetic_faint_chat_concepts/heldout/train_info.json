@@ -1,0 +1,39 @@
+{
+ "config": {
+  "sparsity": "l1",
+  "n_latents": 256,
+  "k": 8,
+  "k_start": 0,
+  "k_anneal_frac": 0.25,
+  "mu": 0.0,
+  "steps": 16000,
+  "batch_size": 256,
+  "lr": 0.001,
+  "lr_decay_frac": 0.2,
+  "init_norm": 0.0,
+  "aux_alpha": 0.03125,
+  "aux_k": 32,
+  "dead_samples": 200000,
+  "selection_norm": "sum",
+  "target_l0": 8.0,
+  "max_l0": 8.4
+ },
+ "seed": 0,
+ "data": "data/worlds/synthetic_faint_chat_concepts/heldout/train.npz",
+ "train_seconds": 34.80392909049988,
+ "final_recon_loss": 10.497186660766602,
+ "final_aux_loss": 0.0,
+ "dead_fraction": 0.0078125,
+ "mu": 1.5562074655812115,
+ "train_l0": 8.0264892578125,
+ "calibration": {
+  "0.15": 24.521240234375,
+  "0.3": 17.569580078125,
+  "0.6": 13.683837890625,
+  "1.2": 9.9189453125,
+  "1.42705": 8.4525146484375,
+  "1.55621": 8.0264892578125,
+  "1.69706": 6.8880615234375,
+  "2.4": 3.00341796875
+ }
+}

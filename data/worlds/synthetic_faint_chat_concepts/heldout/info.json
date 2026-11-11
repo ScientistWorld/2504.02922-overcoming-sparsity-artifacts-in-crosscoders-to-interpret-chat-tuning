@@ -1,0 +1,6 @@
+{
+ "experiment": "synthetic_faint_chat_concepts",
+ "n_train": 32768,
+ "d_model": 64,
+ "note": "Unlabeled paired activations from the held-out world scored by the hidden test."
+}

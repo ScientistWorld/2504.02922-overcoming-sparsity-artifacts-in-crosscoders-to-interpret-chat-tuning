@@ -1,8 +1,5 @@
-# Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends.
-action: pending
-gpus: 0
+action: submit
+gpus: 1
 test: false
 milestone: core_claim
-notes: ""
+notes: "Hardening: build dev/held-out worlds, train BatchTopK reference + L0-matched L1 baseline, freeze into eval/, score train/test, run audit (3 seeds, better/weaker variants, PCA/exemplar baselines, shortcuts, entry-point attacks)."
