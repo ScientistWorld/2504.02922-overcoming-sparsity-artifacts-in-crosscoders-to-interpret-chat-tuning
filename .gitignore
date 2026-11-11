@@ -231,3 +231,14 @@ tmp/
 protocol.md
 *.egg-info
 core.[0-9]*
+
+# ---- Gym data and frozen evaluation assets (small; committed on purpose) ----
+# Public dev worlds + unlabeled held-out training activations.
+!data/worlds/**/*.npz
+# Hidden held-out worlds (ground truth for the hidden test).
+!eval/test/worlds/*.npz
+# Frozen reference/baseline artifacts scored by the evaluators.
+!eval/train/reference_methods/**/*.npz
+!eval/test/reference_methods/**/*.npz
+# Hardening audit binaries (results JSON under hardening/results/ is tracked).
+hardening/methods/

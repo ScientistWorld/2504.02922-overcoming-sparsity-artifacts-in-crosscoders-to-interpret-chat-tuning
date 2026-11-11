@@ -1,80 +1,81 @@
 {
   "experiments": {
     "synthetic_chat_specificity": {
-      "description": "Scaled shared-factor decoupling benchmark for paired base/fine-tuned activation streams. Paper-reported anchors: Table 1 false fine-tuned-only rates and Table 4 fine-tuned-only candidate counts; remaining alignment fields are benchmark analogues used to score the scaled synthetic setting.",
-      "weight": 0.5,
-      "notes": "The benchmark uses fewer candidates than the paper's 73,728-candidate Gemma setting, so raw candidate counts are scale anchors rather than expected exact matches. The paper reports aggregate validation FVE, not separate base/chat FVE.",
+      "description": "Model diffing on paired base/fine-tuned activations from a world whose shared concepts include strength-asymmetric and partially decoupled ones next to genuine fine-tuned-only concepts. Measures whether factors labelled fine-tuned-only are genuinely specific (paper Table 1 'False FT-only'), how many genuinely fine-tuned-specific structures the top of the fine-tuned-only ranking recovers (paper Fig. 2c / Table 1 '# latents < pi'), and reconstruction (paper Tables 2-3, validation FVE). Scored on a hidden held-out world.",
+      "weight": 0.6,
       "primary_metric": "reconstruction_fve",
+      "notes": "Scaled synthetic setting: 64-d paired streams, 112 ground-truth concepts, dictionaries of at most 256 latents at mean L0 <= 8.8 (paper: Gemma-2-2B layer 13, 73,728 latents, L0 ~ 100). Genuine specificity is judged against the world's ground truth (concept alignment and base/chat presence ratio < 0.2) instead of the paper's Latent Scaling estimate, and the false rate is weighted by each latent's activation mass. The paper's results below are its Gemma numbers (Table 1, Tables 2-3); they anchor the direction of the effect, not its scale. The paper reports aggregate validation FVE only.",
       "metrics": {
-        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top fine-tuned-specific candidates whose reconstruction and residual evidence indicate genuine stream-specific structure."},
-        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top fine-tuned-specific candidates aligned to held-out true fine-tuned-only concept directions."},
-        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top fine-tuned-specific candidates aligned to weak shared or fully shared concept directions."},
-        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive fine-tuned-only candidate labels so methods cannot win by over-marking candidates as specific."},
-        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes fine-tuned-only candidate labels whose independent evidence fails the pi=0.6 specificity check."},
-        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.15, "description": "Rewards aggregate fraction of variance explained across both paired activation streams."},
-        "base_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the base activation stream to catch one-sided reconstruction shortcuts."},
-        "chat_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the chat activation stream to catch one-sided reconstruction shortcuts."},
-        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser candidate activations so specificity gains cannot come only from using many more active factors."}
+        "false_ft_only_rate": {
+          "higher_is_better": false,
+          "coefficient": -1.0,
+          "description": "Activation-mass-weighted fraction of the factors labelled fine-tuned-only (relative decoder norm difference >= 0.9) that are not genuinely fine-tuned-specific. If no factor is labelled fine-tuned-only the rate is 1.0 (nothing specific was found)."
+        },
+        "chat_specific_recall": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Fraction of the world's fine-tuned-specific structures (fine-tuned-only concepts and fine-tuned-exclusive uses of decoupled concepts) recovered by a genuinely specific factor among the top 1.5x(number of targets) factors ranked by relative decoder norm difference."
+        },
+        "reconstruction_fve": {
+          "higher_is_better": true,
+          "coefficient": 0.5,
+          "description": "Fraction of variance of both activation streams explained by the reconstruction the evaluator computes from the submitted encoder and decoders (clipped to [0, 1])."
+        }
       },
       "results": {
         "l1": {
           "type": "baseline",
-          "fraction_top_norm_scaling_specific": 0.329,
-          "fraction_top_norm_true_chat": 0.329,
-          "fraction_top_norm_weak_or_shared": 0.671,
-          "chat_only_latent_count": 3176,
-          "false_ft_only_rate_pi06": 0.671,
-          "reconstruction_fve": 0.844,
-          "mean_l0": 101.0
+          "false_ft_only_rate": 0.671,
+          "reconstruction_fve": 0.844
         },
         "batchtopk": {
           "type": "proposed",
-          "fraction_top_norm_scaling_specific": 0.993,
-          "fraction_top_norm_true_chat": 0.993,
-          "fraction_top_norm_weak_or_shared": 0.007,
-          "chat_only_latent_count": 134,
-          "false_ft_only_rate_pi06": 0.007,
-          "reconstruction_fve": 0.876,
-          "mean_l0": 99.48
+          "false_ft_only_rate": 0.007,
+          "reconstruction_fve": 0.876
         }
+      },
+      "_paper_reported": {
+        "source": "Table 1 (Gemma2-2B-Chat rows), Table 4, Tables 2-3 (validation, final epoch)",
+        "batchtopk": {"n_ft_only_delta_ge_0.9": 134, "false_ft_only_count_nu_gt_0.6": 1, "false_ft_only_rate": 0.007,
+                      "n_latents_below_pi": {"0.2": 301, "0.4": 979, "0.6": 2035, "0.8": 3269},
+                      "validation_fve": 0.876, "validation_l0": 99.48, "dead_fraction": 0.12},
+        "l1": {"n_ft_only_delta_ge_0.9": 3176, "false_ft_only_count_nu_gt_0.6": 2132, "false_ft_only_rate": 0.671,
+               "n_latents_below_pi": {"0.2": 13, "0.4": 201, "0.6": 982, "0.8": 2970},
+               "validation_fve": 0.844, "validation_l0": 101.0, "dead_fraction": 0.081}
       }
     },
-    "synthetic_complete_shrinkage": {
-      "description": "Scaled complete-shrinkage benchmark: weak concepts present in both streams can be misidentified as fine-tuned-only when stream-specific evidence is measured naively.",
-      "weight": 0.5,
-      "notes": "The benchmark uses fewer candidates than the paper's 73,728-candidate Gemma setting, so raw candidate counts are scale anchors rather than expected exact matches. The paper reports aggregate validation FVE, not separate base/chat FVE.",
+    "synthetic_faint_chat_concepts": {
+      "description": "Same measurement on a denser world whose fine-tuned-only concepts are faint (0.15-0.45 of normal strength), probing a regime the paper names as a limitation: the BatchTopK selection favours latents used by both models (App. B.3) and much fine-tuned-specific information can remain in the reconstruction error (Sec. 5). Scored on a hidden held-out world.",
+      "weight": 0.4,
       "primary_metric": "reconstruction_fve",
+      "notes": "Headroom experiment added for this gym; the paper does not run this regime. The results below repeat the paper's main Gemma numbers (Table 1, Tables 2-3) as directional anchors only. Same scaled setting and constraints as synthetic_chat_specificity.",
       "metrics": {
-        "fraction_top_norm_scaling_specific": {"higher_is_better": true, "coefficient": 1.0, "description": "Rewards top fine-tuned-specific candidates whose reconstruction and residual evidence indicate genuine stream-specific structure."},
-        "fraction_top_norm_true_chat": {"higher_is_better": true, "coefficient": 0.7, "description": "Rewards top fine-tuned-specific candidates aligned to held-out true fine-tuned-only concept directions."},
-        "fraction_top_norm_weak_or_shared": {"higher_is_better": false, "coefficient": -0.7, "description": "Penalizes top fine-tuned-specific candidates aligned to weak shared or fully shared concept directions."},
-        "chat_only_latent_count": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes excessive fine-tuned-only candidate labels so methods cannot win by over-marking candidates as specific."},
-        "false_ft_only_rate_pi06": {"higher_is_better": false, "coefficient": -1.0, "description": "Penalizes fine-tuned-only candidate labels whose independent evidence fails the pi=0.6 specificity check."},
-        "reconstruction_fve": {"higher_is_better": true, "coefficient": 0.15, "description": "Rewards aggregate fraction of variance explained across both paired activation streams."},
-        "base_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the base activation stream to catch one-sided reconstruction shortcuts."},
-        "chat_reconstruction_fve": {"higher_is_better": true, "coefficient": 0.1, "description": "Rewards reconstruction quality on the chat activation stream to catch one-sided reconstruction shortcuts."},
-        "mean_l0": {"higher_is_better": false, "coefficient": -0.1, "description": "Penalizes denser candidate activations so specificity gains cannot come only from using many more active factors."}
+        "false_ft_only_rate": {
+          "higher_is_better": false,
+          "coefficient": -1.0,
+          "description": "Activation-mass-weighted fraction of the factors labelled fine-tuned-only (relative decoder norm difference >= 0.9) that are not genuinely fine-tuned-specific; 1.0 if none is labelled."
+        },
+        "chat_specific_recall": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Fraction of the world's fine-tuned-specific structures recovered by a genuinely specific factor among the top 1.5x(number of targets) factors ranked by relative decoder norm difference."
+        },
+        "reconstruction_fve": {
+          "higher_is_better": true,
+          "coefficient": 0.5,
+          "description": "Fraction of variance of both activation streams explained by the evaluator-computed reconstruction (clipped to [0, 1])."
+        }
       },
       "results": {
         "l1": {
           "type": "baseline",
-          "fraction_top_norm_scaling_specific": 0.329,
-          "fraction_top_norm_true_chat": 0.329,
-          "fraction_top_norm_weak_or_shared": 0.671,
-          "chat_only_latent_count": 3176,
-          "false_ft_only_rate_pi06": 0.671,
-          "reconstruction_fve": 0.844,
-          "mean_l0": 101.0
+          "false_ft_only_rate": 0.671,
+          "reconstruction_fve": 0.844
         },
         "batchtopk": {
           "type": "proposed",
-          "fraction_top_norm_scaling_specific": 0.993,
-          "fraction_top_norm_true_chat": 0.993,
-          "fraction_top_norm_weak_or_shared": 0.007,
-          "chat_only_latent_count": 134,
-          "false_ft_only_rate_pi06": 0.007,
-          "reconstruction_fve": 0.876,
-          "mean_l0": 99.48
+          "false_ft_only_rate": 0.007,
+          "reconstruction_fve": 0.876
         }
       }
     }

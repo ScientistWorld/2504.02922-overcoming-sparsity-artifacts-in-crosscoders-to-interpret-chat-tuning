@@ -1,30 +1,12 @@
 #!/bin/bash
-# Run a baseline method from the paper.
-#
-# Baselines are simple reference methods the paper compares against. 
-# Implement this only if applicable, i.e. the paper has baselines.
-# You do not need to implement all baselines to begin — 
-# just enough to validate that the evaluation pipeline works 
-# and provide a reference point. You can decide to expand more baselines later.
-# Each baseline must be actually run and scored through evaluate.sh
-# so the numbers are verified, not self-reported.
-# You can decide what this baseline script should do yourself.
-#
-# Usage:
-#   bash scripts/baseline.sh <name>
+# Train the paper's baseline: the L1 crosscoder, with its sparsity weight mu
+# calibrated on each world's training activations so that its L0 matches the
+# BatchTopK crosscoder (k = 8), as in the paper's L0-matched comparison.
+# Writes checkpoints/methods/l1/<experiment>/{dev,heldout}/crosscoder.npz.
 
 set -e
 
-cd /home/user
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-python3 data/synthetic_activations.py --out-dir data --seed 0
-python3 -m method.train \
-  --data data/synthetic_activations.npz \
-  --out-dir checkpoints/crosscoder_synthetic \
-  --epochs "${EPOCHS:-80}" \
-  --batch-size "${BATCH_SIZE:-256}" \
-  --n-latents "${N_LATENTS:-88}" \
-  --k "${K:-14}" \
-  --mu "${MU:-0.005}"
-
-bash scripts/evaluate.sh checkpoints/crosscoder_synthetic
+python3 -m method.train --method l1 --out checkpoints/methods/l1 \
+  --seed 0 --workers "${WORKERS:-4}"

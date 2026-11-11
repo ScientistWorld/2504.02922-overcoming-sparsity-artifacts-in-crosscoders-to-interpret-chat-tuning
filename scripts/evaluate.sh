@@ -1,45 +1,17 @@
 #!/bin/bash
-# Evaluation script — the standard way to evaluate work in this environment.
+# Standard (public) evaluation: scores every method under checkpoints/methods/
+# on the public dev worlds of every experiment and writes scoring/scores.json.
+# Uses only eval/train/ code, so it works without the hidden test.
 #
-# This script must be SELF-CONTAINED using only code in eval/.
-# Do NOT import from method/ — evaluate.sh must work even when the
-# paper's method code is hidden from a scientist agent.
-#
-# Design it so that anyone following the same output format can run
-# this script to evaluate their results.
-#
-# OUTPUT CONTRACT: This script MUST write scoring/scores.json containing
-# a JSON dict nested by experiment, e.g.:
-#   {"imagenet_classification": {"top1_accuracy": 82.1, "top5_accuracy": 94.8}}
-# Experiment and metric names must match the keys in scoring/reference.json.
-# This file is read by the system for automated comparison.
-#
-# Example usage:
-#   ./evaluate.sh <method_and_run_name>                             # evaluate with defaults
-#   ./evaluate.sh <method_and_run_name> checkpoints/epoch_10.pt     # evaluate a specific checkpoint
-#
-# Called from run.sh after training, or independently.
+# Output contract per method and experiment:
+#   checkpoints/methods/<method>/<experiment>/dev/crosscoder.npz
+# (see briefing/evaluation.md for the arrays it must contain).
 
 set -e
 
-cd /home/user
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 mkdir -p scoring
-
-if [ "${1:-}" = "--suite" ]; then
-  ARTIFACTS_ROOT="${2:-checkpoints/crosscoder_suite}"
-  DATA_ROOT="${3:-data/benchmarks}"
-  python3 -m eval.evaluate_suite \
-    --artifacts-root "$ARTIFACTS_ROOT" \
-    --data-root "$DATA_ROOT" \
-    --out scoring/scores.json
-else
-  ARTIFACTS="${1:-checkpoints/crosscoder_synthetic}"
-  EXPERIMENT_NAME="${EXPERIMENT_NAME:-synthetic_chat_specificity}"
-  python3 -m eval.evaluate_crosscoders \
-    --artifacts "$ARTIFACTS" \
-    --data data/synthetic_activations.npz \
-    --metadata data/synthetic_metadata.json \
-    --experiment-name "$EXPERIMENT_NAME" \
-    --out scoring/scores.json
-fi
+python3 -m eval.train.evaluate \
+  --methods-root checkpoints/methods \
+  --out scoring/scores.json

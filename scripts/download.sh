@@ -1,43 +1,29 @@
 #!/bin/bash
-# Download all data and models needed for this environment.
+# Prepare all data for this environment. Idempotent.
 #
-# Run on a node with internet access BEFORE building the container
-# or submitting compute jobs.
+# Estimated total download size: 0 GB (no external datasets or model weights).
+# Estimated disk usage: ~35 MB.
 #
-# This script should be idempotent — safe to run multiple times.
-# It should skip files that already exist.
-#
-# Update the storage estimate below as you add downloads.
-#
-# Estimated total download size: 0 GB
-# Estimated disk usage after generation: < 10 MB
-#
-# This benchmark uses generated paired activations and has no external dataset
-# or model downloads. The commands below regenerate every ignored activation
-# bundle that the method and suite evaluators read.
+# The benchmark uses synthetic paired activations:
+#   * data/worlds/<experiment>/dev/      public development worlds; regenerated
+#                                        here from data/synthetic_activations.py
+#                                        if missing (they are also committed).
+#   * data/worlds/<experiment>/heldout/  unlabeled training activations of the
+#                                        held-out worlds; committed to git.
 
 set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-if ! python3 -c "import numpy" >/dev/null 2>&1; then
-  echo "No external downloads required."
-  echo "Install dependencies with environment/setup.sh or run inside the compute container to regenerate synthetic activations."
-  exit 0
-fi
+python3 data/synthetic_activations.py
 
-generate_if_missing() {
-  local out_dir="$1"
-  local scenario="$2"
-
-  if [ ! -f "$out_dir/synthetic_activations.npz" ]; then
-    python3 data/synthetic_activations.py \
-      --out-dir "$out_dir" \
-      --seed 0 \
-      --scenario "$scenario"
+for exp in synthetic_chat_specificity synthetic_faint_chat_concepts; do
+  if [ ! -f "data/worlds/$exp/heldout/train.npz" ]; then
+    if [ -f eval/test/build_heldout.py ]; then
+      python3 -m eval.test.build_heldout
+    else
+      echo "missing data/worlds/$exp/heldout/train.npz (committed in git; restore it from the repository)" >&2
+      exit 1
+    fi
   fi
-}
-
-generate_if_missing data decoupling
-generate_if_missing data/benchmarks/decoupling decoupling
-generate_if_missing data/benchmarks/complete_shrinkage complete_shrinkage
+done

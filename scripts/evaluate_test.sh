@@ -1,32 +1,19 @@
 #!/bin/bash
-# Held-out test-slice evaluation. Mirrors scripts/evaluate.sh but writes
-# scoring/scores_test.json and, when available, scores every method listed in
-# scoring/scores_train.json.
+# Hidden-test evaluation. Takes no arguments.
+#
+# Scores every method directory under checkpoints/methods/ on every experiment:
+# for each <method>/<experiment>/heldout/crosscoder.npz it samples fresh paired
+# inputs from the hidden held-out world in eval/test/worlds/, recomputes all
+# activations, reconstructions and metrics from the submitted parameters, and
+# writes scoring/scores_test.json (plus unscored diagnostics). A missing or
+# invalid artifact scores that experiment with the worst value of every metric.
 
 set -e
 
-cd /home/user
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 mkdir -p scoring
-
-TRAIN_SCORES="${TRAIN_SCORES:-scoring/scores_train.json}"
-
-if [ "${1:-}" = "--suite" ]; then
-  ARTIFACTS_ROOT="${2:-checkpoints/crosscoder_suite}"
-  DATA_ROOT="${3:-data/benchmarks}"
-  python3 -m eval.test.evaluate_suite \
-    --artifacts-root "$ARTIFACTS_ROOT" \
-    --data-root "$DATA_ROOT" \
-    --train-scores "$TRAIN_SCORES" \
-    --out scoring/scores_test.json
-else
-  ARTIFACTS="${1:-checkpoints/crosscoder_synthetic}"
-  EXPERIMENT_NAME="${EXPERIMENT_NAME:-synthetic_chat_specificity}"
-  python3 -m eval.test.evaluate_crosscoders \
-    --artifacts "$ARTIFACTS" \
-    --data data/synthetic_activations.npz \
-    --metadata data/synthetic_metadata.json \
-    --experiment-name "$EXPERIMENT_NAME" \
-    --train-scores "$TRAIN_SCORES" \
-    --out scoring/scores_test.json
-fi
+python3 -m eval.test.evaluate \
+  --methods-root checkpoints/methods \
+  --out scoring/scores_test.json \
+  --diagnostics scoring/diagnostics_test.json
