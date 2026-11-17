@@ -1,3 +1,7 @@
+# Current status (2026-11-17)
+
+Final hardening patch prepared; one consolidated GPU audit is pending. Earlier entries below are historical and describe earlier gym versions. The current contract is in `briefing/evaluation.md`; the final evidence will be in `HARDENING.md`. The decoupling mechanism is not yet verified in the final setup.
+
 # Progress
 
 ## What Works

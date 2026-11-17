@@ -16,4 +16,4 @@
 
 set -e
 
-uv pip install --system numpy torch
+uv pip install --system numpy torch onnx onnxruntime

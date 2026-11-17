@@ -1,49 +1,49 @@
 # Evaluation
 
-## Output contract
+A submission is a directory `checkpoints/methods/<name>/`. Each experiment needs `dev/crosscoder.npz` and `heldout/crosscoder.npz`, trained on the corresponding `data/worlds/<experiment>/<world>/train.npz`. Use a new name: `batchtopk` and `l1` identify evaluator-frozen comparison artifacts on both evaluation sides.
 
-A method is a directory `checkpoints/methods/<method>/`. For every experiment and both worlds it contains one dictionary trained on that world's training activations:
+## Artifact interface
 
-```
-checkpoints/methods/<method>/<experiment>/dev/crosscoder.npz      # trained on data/worlds/<experiment>/dev/train.npz
-checkpoints/methods/<method>/<experiment>/heldout/crosscoder.npz  # trained on data/worlds/<experiment>/heldout/train.npz
-```
+The NPZ contains finite numeric arrays; d = 64 and D is the number of factors:
 
-`crosscoder.npz` holds float arrays (d = 64, D = number of factors):
-
-| key | shape | meaning |
+| Array | Shape | Meaning |
 |---|---|---|
-| `W_enc` | (2d, D) | encoder; rows 0..d-1 act on the base stream, rows d..2d-1 on the chat stream |
-| `b_enc` | (D,) | encoder bias |
-| `threshold` | (D,) | per-factor activation threshold |
-| `W_dec_base`, `W_dec_chat` | (D, d) | each factor's direction in the base / chat stream |
-| `b_dec_base`, `b_dec_chat` | (d,) | decoder biases |
-| `topk` (optional) | scalar int | if > 0, keep only the `topk` largest `a_j * (‖W_dec_base_j‖ + ‖W_dec_chat_j‖)` per input |
+| `W_enc` | (2d, D) | base rows followed by chat rows |
+| `b_enc`, `threshold` | (D,) | bias and activation threshold |
+| `W_dec_base`, `W_dec_chat` | (D, d) | reconstruction directions |
+| `b_dec_base`, `b_dec_chat` | (d,) | reconstruction biases |
+| optional `topk` | integer scalar | positive values retain at most this many factors per input, ordered by activation times the sum of decoder norms |
 
-The evaluator computes everything itself on inputs it samples:
-`pre = h_base @ W_enc[:d] + h_chat @ W_enc[d:] + b_enc`, then `a_j = pre_j` if `pre_j > 0` and `pre_j > threshold_j`, otherwise 0. The reconstructions are `a @ W_dec_base + b_dec_base` and `a @ W_dec_chat + b_dec_chat`. Nothing a method writes besides these parameters is read.
+By default `p = base @ W_enc[:d] + chat @ W_enc[d:] + b_enc`; a feature equals p where p > 0 and p > threshold, and zero elsewhere.
 
-## Fixed constraints (failure = worst value on every metric of that experiment)
+Alternatively, place `encoder.onnx` beside the NPZ to supply a different inference procedure. It receives one float32 tensor `(batch, 128)` containing base then chat activations and returns one finite nonnegative `(batch, D)` feature tensor. The evaluator invokes it in batches of 1,024 with ONNX Runtime's standard CPU operators. Constants must be embedded, external tensor data is forbidden, and the file must be at most 64 MiB. The required NPZ arrays still define D and the decoders; `W_enc`, `b_enc` and `threshold` are ignored in this mode. Optional `topk` is applied after either encoder. This tensor program receives only input activations, with no files, concept labels or evaluation statistics.
 
-- the artifact must exist, load without pickle, have the shapes above and contain only finite values;
-- dictionary size D ≤ 256;
-- mean number of active factors per input (L0) ≤ 8.8 on the scored inputs.
+For both interfaces, reconstructions are always recomputed as `features @ W_dec_stream + b_dec_stream`. Submitted feature arrays, reconstructions, scores, labels and flags are never read.
 
-## Metrics (per experiment)
+## Measurements
 
-A factor is labelled **fine-tuned-only** when its relative decoder norm difference `0.5 * (1 + (‖d_chat‖ − ‖d_base‖) / max(‖d_chat‖, ‖d_base‖))` is ≥ 0.9. A factor is alive if it fires on at least 10 scored inputs. A factor is **genuinely fine-tuned-specific** when it meets two conditions:
+Each experiment uses 65,536 fresh paired inputs, fixed by the evaluator and common to every method. Public development and hidden worlds have the same difficulty and measurement but independent concepts and samples.
 
-- its chat direction has cosine ≥ 0.8 with a ground-truth concept;
-- that concept's base-to-chat presence ratio, weighted by the factor's own activations, is below 0.2.
+There are 32 targets: fine-tuned-only concepts and fine-tuned-exclusive occurrences of partially separated concepts. A factor is eligible after firing on at least ten inputs with nonzero chat direction. Its measured model presence is `max(sum(feature * dot(base, unit_chat)), 0) / sum(feature * dot(chat, unit_chat))`; nonpositive chat denominators are ineligible. Select the 32 eligible factors with lowest presence, breaking ties by greater measured chat-contribution mass. This operating point is fixed; decoder magnitudes cannot set the selection threshold.
 
-- `false_ft_only_rate` (lower is better): the activation-mass-weighted fraction of alive fine-tuned-only factors that are not genuinely fine-tuned-specific. A factor's mass is its mean activation times ‖d_chat‖. If no factor is labelled fine-tuned-only, the rate is 1.0.
-- `chat_specific_recall` (higher is better): the fraction of the world's fine-tuned-specific targets recovered by a genuinely specific factor. The targets are its fine-tuned-only concepts and the fine-tuned-exclusive uses of its decoupled concepts. Only the top 1.5 × (number of targets) alive factors, ranked by relative decoder norm difference, are considered.
-- `reconstruction_fve` (higher is better): fraction of the variance of both streams explained by the evaluator-computed reconstruction, clipped to [0, 1].
+Correctness requires chat-direction cosine at least 0.8 with its best-matching concept and activity-weighted ground-truth base/chat concept presence below 0.2. Each target receives credit once. The measured chat-contribution mass is mean(feature) times `max(sum(feature * dot(chat, unit_chat)), 0) / sum(feature²)`. It is invariant to positive rescaling of the factor or its decoder magnitude.
 
-## Entry points (no arguments)
+- `false_ft_only_rate`: fraction of selected mass without a credited target, including duplicates; lower is better. Empty discovery has value 1. This historical key now measures fixed-budget false discovery rather than an editable norm label.
+- `chat_specific_recall`: fraction of the 32 targets credited, higher is better.
+- `reconstruction_fve`: fraction of joint input variance explained by recomputed reconstructions, higher is better.
 
-- `bash scripts/evaluate_train.sh` → `scoring/scores_train.json`: dev dictionaries scored on fresh inputs from the public dev worlds.
-- `bash scripts/evaluate.sh` → `scoring/scores.json`: same as the train side.
-- `bash scripts/evaluate_test.sh` → `scoring/scores_test.json` (hidden): held-out dictionaries scored on fresh inputs from the hidden held-out worlds.
+Decoder-norm labels and per-family recovery remain unscored mechanism diagnostics. No metric measures agreement with a published number or elapsed time.
 
-Every directory under `checkpoints/methods/` is scored. A method missing an experiment's artifact gets the worst values there. The names `batchtopk` and `l1` are reserved for the frozen reference and baseline: the hidden test always scores the copies stored with the evaluator under those names. Unscored diagnostics (L0, alive factors, per-family recall, spurious-mass breakdown, per-stream FVE) are written next to the scores.
+## Constraints and failures
+
+D must be between 1 and 512, mean active factors must not exceed 6.6, joint and each stream's FVE must be at least 0.60, and recall must be at least 0.10. Every artifact, feature, reconstruction and scored number must be finite and valid. A failure in either experiment assigns **every metric of both experiments** its worst value: false rate 1, recall 0 and FVE 0. Missing artifacts cannot omit losses.
+
+## Entry points and rank
+
+All commands take no arguments and discover every method directory on disk, independently of existing score files:
+
+- `bash scripts/evaluate_train.sh` writes `scoring/scores_train.json` on public dev worlds.
+- `bash scripts/evaluate_test.sh` writes `scoring/scores_test.json` on hidden held-out worlds.
+- `bash scripts/evaluate.sh` writes `scoring/scores.json`, equivalent to the train side.
+
+Only numbers under each experiment's `results` are ranked. Each metric contributes experiment weight times the absolute coefficient in `scoring/reference.json`, times improvement in its stated better direction, divided by its population standard deviation across attempts being ranked. A zero standard deviation contributes no distinction (the audit uses denominator 1). Rank values in the hardening audit use its complete cohort, including failed attempts; future cohort normalization changes their magnitudes.

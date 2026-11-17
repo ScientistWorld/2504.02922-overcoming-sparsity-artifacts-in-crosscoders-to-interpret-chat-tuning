@@ -9,7 +9,7 @@ are sampled here, at test time, from the hidden world in ``eval/test/worlds``.
 Nothing the method wrote is trusted: activations, reconstructions, decoder
 norm statistics and every metric are recomputed from the submitted encoder and
 decoder parameters. A missing, malformed or non-finite artifact, a dictionary
-larger than ``D_MAX`` or a mean L0 above ``L0_MAX`` scores the experiment as a
+larger than ``D_MAX`` or a mean L0 above ``L0_MAX`` scores the complete suite as a
 failed run: every metric receives its worst value.
 
 This module is self-contained (no imports from method/, data/ or eval/train/).
@@ -32,14 +32,16 @@ ARTIFACT = "crosscoder.npz"
 EXPERIMENTS = ("synthetic_chat_specificity", "synthetic_faint_chat_concepts")
 
 # Fixed comparison settings (identical on the train side).
-N_EVAL = 32_768          # paired inputs scored per experiment
-D_MAX = 256              # maximum dictionary size
-L0_MAX = 8.8             # maximum mean number of active latents per input
+N_EVAL = 65_536          # paired inputs scored per experiment
+D_MAX = 512              # maximum dictionary size
+L0_MAX = 6.6             # maximum mean number of active latents per input
 FT_ONLY_DELTA = 0.9      # relative decoder norm difference labelling a latent fine-tuned-only
 ALIGN_COS = 0.8          # min cosine between a latent's chat decoder and a concept direction
 SPECIFICITY_PI = 0.2     # max base/chat presence ratio for a genuinely chat-specific latent
 MIN_FIRING = 10          # a latent is alive if it fires on at least this many inputs
-TOP_N_FACTOR = 1.5       # top-N by relative norm difference, N = factor * number of targets
+TOP_N_FACTOR = 1.0       # fixed discovery count, N = factor * number of targets
+FVE_MIN = 0.60
+RECALL_MIN = 0.10
 LS_FALSE_NU = 0.6        # diagnostic only: Latent Scaling false fine-tuned-only threshold
 
 WORST = {"false_ft_only_rate": 1.0, "chat_specific_recall": 0.0, "reconstruction_fve": 0.0}
@@ -90,14 +92,56 @@ def load_artifact(path: Path, d: int) -> dict:
         if not np.all(np.isfinite(arr)):
             raise RunFailure(f"{key} contains non-finite values")
     art["topk"] = topk
+    encoder_path = path.with_name("encoder.onnx")
+    if encoder_path.exists():
+        # A portable tensor program lets an attempt supply its own inference
+        # procedure without executing Python with access to the hidden world.
+        if encoder_path.stat().st_size > 64 * 1024 * 1024:
+            raise RunFailure("encoder.onnx exceeds 64 MiB")
+        import onnx
+        raw = encoder_path.read_bytes()
+        model = onnx.load_model_from_string(raw)
+        def check_message(message):
+            if hasattr(message, "external_data") and message.external_data:
+                raise RunFailure("ONNX external data is forbidden; embed tensor constants")
+            for field, value in message.ListFields():
+                if field.message_type is not None:
+                    if getattr(field, "is_repeated", False) or getattr(field, "label", None) == 3:
+                        for item in value:
+                            check_message(item)
+                    else:
+                        check_message(value)
+        check_message(model)
+        art["encoder_model"] = raw
     return art
 
 
 def encode(art: dict, base: np.ndarray, chat: np.ndarray) -> np.ndarray:
     d = base.shape[1]
     w = art["W_enc"]
-    pre = base @ w[:d] + chat @ w[d:] + art["b_enc"]
-    f = np.where((pre > 0.0) & (pre > art["threshold"]), pre, 0.0)
+    if "encoder_model" in art:
+        import onnxruntime as ort
+        opts = ort.SessionOptions()
+        opts.intra_op_num_threads = 1
+        opts.inter_op_num_threads = 1
+        session = ort.InferenceSession(art["encoder_model"], sess_options=opts,
+                                      providers=["CPUExecutionProvider"])
+        inputs = session.get_inputs()
+        if len(inputs) != 1 or inputs[0].type != "tensor(float)":
+            raise RunFailure("encoder.onnx needs one float32 paired-input tensor")
+        chunks = []
+        for start in range(0, len(base), 1024):
+            x = np.hstack([base[start:start+1024], chat[start:start+1024]]).astype(np.float32)
+            outputs = session.run(None, {inputs[0].name: x})
+            if len(outputs) != 1 or outputs[0].shape != (len(x), w.shape[1]):
+                raise RunFailure("encoder.onnx must return one (batch, D) feature tensor")
+            chunks.append(np.asarray(outputs[0], dtype=np.float64))
+        f = np.concatenate(chunks)
+    else:
+        pre = base @ w[:d] + chat @ w[d:] + art["b_enc"]
+        f = np.where((pre > 0.0) & (pre > art["threshold"]), pre, 0.0)
+    if not np.isfinite(f).all() or np.any(f < 0):
+        raise RunFailure("features must be finite and nonnegative")
     topk = art["topk"]
     if 0 < topk < f.shape[1]:
         score = f * (np.linalg.norm(art["W_dec_base"], axis=1) + np.linalg.norm(art["W_dec_chat"], axis=1))
@@ -129,6 +173,9 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     sse_c, sst_c = _fve(hc, rc)
     fve = 1.0 - (sse_b + sse_c) / (sst_b + sst_c)
 
+    if not (math.isfinite(sse_b) and math.isfinite(sse_c)):
+        raise RunFailure("overflow in reconstruction error")
+
     nb = np.linalg.norm(wdb, axis=1)
     nc = np.linalg.norm(wdc, axis=1)
     mx = np.maximum(nb, nc)
@@ -153,19 +200,49 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     rho = np.where(fc > 0, fb / np.where(fc > 0, fc, 1.0), np.inf)
     genuine = alive & aligned & (rho < SPECIFICITY_PI)
 
-    ft_only = alive & (delta >= FT_ONLY_DELTA)
-    ft_mass = float(mass[ft_only].sum())
-    false_rate = 1.0 if ft_mass <= 0 else float(mass[ft_only & ~genuine].sum()) / ft_mass
-
+    # Fixed operating point, ranked by the paper's raw-activation Latent
+    # Scaling (Eq. 4), rather than the submitted base decoder norm. Merely
+    # changing decoder norms cannot improve discovery or specificity.
+    num_base = ((f.T @ hb) * unit_chat).sum(axis=1)
+    num_chat = ((f.T @ hc) * unit_chat).sum(axis=1)
+    presence = np.divide(np.maximum(num_base, 0), num_chat,
+                         out=np.full_like(num_chat, np.inf), where=num_chat > 1e-12)
+    sq_f = (f ** 2).sum(axis=0)
+    measured_mass = f.mean(axis=0) * np.divide(np.maximum(num_chat, 0), sq_f,
+                    out=np.zeros_like(sq_f), where=sq_f > 0)
     family = np.asarray(world["family"])
     target_ids = {FAMILIES.index(name) for name in TARGET_FAMILIES}
     targets = {int(c) for c in np.flatnonzero(np.isin(family, list(target_ids)))}
     top_n = int(math.ceil(TOP_N_FACTOR * len(targets)))
-    alive_idx = np.flatnonzero(alive)
-    order = alive_idx[np.lexsort((-mass[alive_idx], -delta[alive_idx]))]
+    candidates = np.flatnonzero(alive & (nc > 0) & np.isfinite(presence))
+    order = candidates[np.lexsort((-measured_mass[candidates], presence[candidates]))]
     top = order[:top_n]
-    covered = {int(concept[j]) for j in top if genuine[j]} & targets
+    # Only one factor can claim a given concept. Duplicating good factors
+    # must not dilute spurious factors at a fixed discovery budget.
+    credited = np.zeros(f.shape[1], dtype=bool)
+    seen = set()
+    for j in top:
+        c = int(concept[j])
+        if genuine[j] and c in targets and c not in seen:
+            credited[j] = True
+            seen.add(c)
+    selected_mass = float(measured_mass[top].sum())
+    false_rate = 1.0 if selected_mass <= 0 else float(measured_mass[top[~credited[top]]].sum()) / selected_mass
+    covered = seen
     recall = len(covered) / max(len(targets), 1)
+    # These are task-success constraints, not additive rewards that an empty
+    # dictionary can trade against a low error rate.
+    if not math.isfinite(fve) or fve < FVE_MIN or fve > 1 + 1e-9:
+        raise RunFailure(f"FVE {fve} outside [{FVE_MIN}, 1]")
+    if min(1 - sse_b / sst_b, 1 - sse_c / sst_c) < FVE_MIN:
+        raise RunFailure("a stream fails the reconstruction constraint")
+    if recall < RECALL_MIN:
+        raise RunFailure(f"specific recovery {recall} below {RECALL_MIN}")
+
+    # The paper's decoder-norm classification remains a mechanism diagnostic.
+    ft_only = alive & (delta >= FT_ONLY_DELTA)
+    ft_mass = float(mass[ft_only].sum())
+    norm_false = 1.0 if ft_mass <= 0 else float(mass[ft_only & ~genuine].sum()) / ft_mass
 
     metrics = {
         "false_ft_only_rate": float(false_rate),
@@ -195,14 +272,23 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     for name in TARGET_FAMILIES:
         fam = {int(c) for c in np.flatnonzero(family == FAMILIES.index(name))}
         recall_by_family[name] = len(covered & fam) / max(len(fam), 1)
+    dec_ids = set(int(c) for c in np.flatnonzero(family == FAMILIES.index("decoupled")))
+    shared_factor = alive & aligned & (rho >= SPECIFICITY_PI) & (rho <= 1 / SPECIFICITY_PI) & (nb >= .2 * nc) & (nc >= .2 * nb)
+    shared_dec = set(int(concept[j]) for j in np.flatnonzero(shared_factor)) & dec_ids
+    twin_dec = set(int(concept[j]) for j in np.flatnonzero(ft_only & ~genuine & aligned)) & dec_ids
     diag = {
         "status": "ok",
+        "n_decoupled_with_shared_factor": len(shared_dec),
+        "n_decoupled_with_spurious_chat_twin": len(twin_dec),
         "n_latents": int(f.shape[1]),
         "n_alive": int(alive.sum()),
         "mean_l0": l0,
         "base_fve": 1.0 - sse_b / sst_b,
         "chat_fve": 1.0 - sse_c / sst_c,
         "n_ft_only": n_ft,
+        "norm_false_ft_only_rate": norm_false,
+        "selection": "raw-activation Latent Scaling at fixed top N",
+        "n_selected": len(top),
         "n_ft_only_genuine": int((ft_only & genuine).sum()),
         "ft_only_mass": ft_mass,
         "spurious_mass_fraction_by_family": {k: v / ft_mass for k, v in sorted(spurious.items())} if ft_mass > 0 else {},
@@ -219,8 +305,8 @@ def load_world(experiment: str) -> dict:
         return {key: z[key] for key in z.files}
 
 
-def eval_sample(experiment: str, world: dict) -> dict:
-    rng = np.random.default_rng([WORLD_SEEDS[experiment], 2])
+def eval_sample(experiment: str, world: dict, replicate: int = 0) -> dict:
+    rng = np.random.default_rng([WORLD_SEEDS[experiment], 2] if replicate == 0 else [WORLD_SEEDS[experiment], 2, replicate])
     base, chat, base_coeff, chat_coeff = sample_heldout(world, N_EVAL, rng)
     return {"base": base, "chat": chat, "base_coeff": base_coeff, "chat_coeff": chat_coeff}
 
@@ -266,6 +352,14 @@ def evaluate(root: Path) -> tuple[dict, dict]:
             print(f"[{SLICE}] {experiment} {method}: {metrics} ({diag.get('status')})", flush=True)
         scores["experiments"][experiment] = {"results": results}
         diagnostics["experiments"][experiment] = diags
+    for method in methods:
+        failures = {e: diagnostics["experiments"][e][method] for e in EXPERIMENTS
+                    if diagnostics["experiments"][e][method].get("status") != "ok"}
+        if failures:
+            for experiment in EXPERIMENTS:
+                scores["experiments"][experiment]["results"][method] = dict(WORST)
+                diagnostics["experiments"][experiment][method]["suite_status"] = "failed"
+                diagnostics["experiments"][experiment][method]["failed_experiments"] = sorted(failures)
     return scores, diagnostics
 
 

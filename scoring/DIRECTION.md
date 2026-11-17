@@ -14,7 +14,7 @@ Improve sparse paired dictionary learning so that:
 
 ## Approach Scope
 
-Anything that produces a paired encoder/decoder dictionary in the documented format is in scope. This includes:
+Anything that produces a sparse paired dictionary through the documented NPZ/optional tensor-program interface is in scope. Alternative inference procedures and learned encoders are allowed. This includes:
 
 - sparsity mechanisms, selection rules, auxiliary losses, initialisation, schedules and training budgets;
 - dictionary partitioning (shared vs model-specific factors);

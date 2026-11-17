@@ -1,19 +1,13 @@
 # Evaluation Targets
 
-Scored by `bash scripts/evaluate_test.sh` (hidden held-out worlds) and, for development, `bash scripts/evaluate_train.sh` (public dev worlds). Both scripts take no arguments and score every directory under `checkpoints/methods/`.
-
-Fixed constraints in every experiment: at most 256 factors, mean L0 ≤ 8.8 on the scored inputs, and a valid finite artifact. Breaking a constraint, or a missing artifact, gives every metric of that experiment its worst value (false rate 1, recall 0, FVE 0).
+`bash scripts/evaluate_test.sh` scores all methods on hidden inputs; `bash scripts/evaluate_train.sh` applies the same measurements to development worlds. Both take no arguments. Measured reference values are in `scores_test.json` and `scores_train.json`; `reference.json` preserves published values separately as underscore-prefixed context.
 
 ## synthetic_chat_specificity
 
-- Benefit: `chat_specific_recall`, higher is better (coefficient 1.0).
-- Benefit / specificity constraint: `false_ft_only_rate`, lower is better (coefficient 1.0). The rate is 1.0 when nothing is labelled fine-tuned-only.
-- Constraint: `reconstruction_fve`, higher is better (coefficient 0.5).
+Weight 0.6. Benefit: `chat_specific_recall` (higher, coefficient magnitude 1). Specificity constraint and benefit: `false_ft_only_rate` (lower, magnitude 1). Reconstruction constraint and benefit: `reconstruction_fve` (higher, magnitude 0.5).
 
 ## synthetic_faint_chat_concepts
 
-- Benefit: `chat_specific_recall`, higher is better (coefficient 1.0).
-- Specificity constraint: `false_ft_only_rate`, lower is better (coefficient 0.5).
-- Constraint: `reconstruction_fve`, higher is better (coefficient 0.5).
+Weight 0.4. Benefit: `chat_specific_recall` (higher, magnitude 1). Specificity constraint and benefit: `false_ft_only_rate` (lower, magnitude 0.5). Reconstruction constraint and benefit: `reconstruction_fve` (higher, magnitude 0.5).
 
-Reference (hidden test, BatchTopK crosscoder): 0.572 / 0.50 / 0.981 and 0.912 / 0.25 / 0.979 (false rate / recall / FVE). L1 baseline: 0.701 / 0.50 / 0.818 and 1.000 / 0.00 / 0.699.
+The discovery budget is 32 factors; empty discovery has false rate 1. Both experiments require dictionary size <= 512, mean L0 <= 6.6, each stream's FVE >= 0.60, joint FVE >= 0.60, and recall >= 0.10. Invalid or missing outputs, or any failed constraint, give false rate 1, recall 0, FVE 0 in every experiment. Success therefore dominates failure on all scored quantities.

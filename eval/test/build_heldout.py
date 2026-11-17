@@ -24,7 +24,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[2]
 WORLD_DIR = Path(__file__).resolve().parent / "worlds"
 FAMILIES = ("shared", "weak_shared", "decoupled", "chat_only", "base_only")
-N_TRAIN = 32_768
+N_TRAIN = 65_536
+DATA_VERSION = 2
 
 # Secret 126-bit world seeds. Training activations use stream [seed, 1];
 # hidden test inputs use stream [seed, 2] (see evaluate.py).
@@ -40,7 +41,7 @@ PARAMS = {
         "d_model": 64,
         "counts": {"shared": 46, "weak_shared": 18, "decoupled": 16, "chat_only": 16, "base_only": 16},
         "rate": {"shared": 0.05, "weak_shared": 0.05, "chat_only": 0.05, "base_only": 0.05},
-        "decoupled_rates": [0.04, 0.03, 0.03],
+        "decoupled_rates": [0.12, 0.012, 0.012],
         "weak_base_scale": [0.3, 0.6],
         "chat_only_scale": [1.0, 1.0],
         "concept_gain": [0.7, 1.3],
@@ -49,10 +50,10 @@ PARAMS = {
     "synthetic_faint_chat_concepts": {
         "d_model": 64,
         "counts": {"shared": 50, "weak_shared": 14, "decoupled": 16, "chat_only": 16, "base_only": 16},
-        "rate": {"shared": 0.08, "weak_shared": 0.05, "chat_only": 0.05, "base_only": 0.05},
-        "decoupled_rates": [0.04, 0.03, 0.03],
+        "rate": {"shared": 0.06, "weak_shared": 0.05, "chat_only": 0.05, "base_only": 0.05},
+        "decoupled_rates": [0.12, 0.012, 0.012],
         "weak_base_scale": [0.3, 0.6],
-        "chat_only_scale": [0.15, 0.45],
+        "chat_only_scale": [0.25, 0.65],
         "concept_gain": [0.7, 1.3],
         "noise_std": 0.05,
     },
@@ -123,7 +124,8 @@ def build(experiment: str) -> None:
     train_dir = ROOT / "data" / "worlds" / experiment / "heldout"
     train_path = train_dir / "train.npz"
     seed = WORLD_SEEDS[experiment]
-    if world_path.exists() and train_path.exists():
+    info_path = train_dir / "info.json"
+    if world_path.exists() and train_path.exists() and info_path.exists() and json.loads(info_path.read_text()).get("data_version") == DATA_VERSION:
         print(f"[heldout] {experiment}: present; skipping")
         return
     if world_path.exists() != train_path.exists():
@@ -138,7 +140,7 @@ def build(experiment: str) -> None:
     np.savez_compressed(world_path, **world)
     np.savez_compressed(train_path, base=base.astype(np.float16), chat=chat.astype(np.float16))
     (train_dir / "info.json").write_text(
-        json.dumps({"experiment": experiment, "n_train": N_TRAIN, "d_model": int(world["directions"].shape[1]),
+        json.dumps({"data_version": DATA_VERSION, "experiment": experiment, "n_train": N_TRAIN, "d_model": int(world["directions"].shape[1]),
                     "note": "Unlabeled paired activations from the held-out world scored by the hidden test."},
                    indent=1) + "\n",
         encoding="utf-8",

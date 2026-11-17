@@ -242,3 +242,8 @@ core.[0-9]*
 !eval/test/reference_methods/**/*.npz
 # Hardening audit binaries (results JSON under hardening/results/ is tracked).
 hardening/methods/
+
+# Final audit artifacts and small private historical replay assets.
+hardening/final_methods/
+!eval/test/previous_worlds/*.npz
+!eval/test/previous_methods/**/*.npz

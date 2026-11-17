@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: method_runs** (final hardening measurements pending)
 
 ## Progress Log
 
@@ -48,5 +48,9 @@
 - Added `synthetic_faint_chat_concepts` (headroom from the paper's stated limitations). A 4x-budget k-annealed variant beats the reference by more than seed noise on every seed; all red-team shortcuts now score far below the reference. See `HARDENING.md`.
 - Milestone stays `core_claim`: the relative claim reproduces on scaled synthetic worlds. BatchTopK still shows Latent Decoupling on every decoupled concept, and real Gemma activations and the causal experiments are not reproduced.
 
+## Final hardening
+
+Review identified an unresolved decoupling mechanism. The final patch changes only scale, data frequencies, inference measurement and the supported submission interface; the paper training procedure is retained. `hardening/final_audit.py` will check three matched training seeds, common fresh test inputs, stronger and weaker methods, and affected shortcuts before a final milestone is assigned.
+
 ## Stop Justification
-- Completed at milestone `core_claim`.
+- Not finished: final hardening job pending.

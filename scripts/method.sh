@@ -9,4 +9,4 @@ set -e
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 python3 -m method.train --method batchtopk --out checkpoints/methods/batchtopk \
-  --seed 0 --workers "${WORKERS:-4}"
+  --seed 0 --workers "${WORKERS:-1}"

@@ -1,72 +1,59 @@
 {
   "experiments": {
     "synthetic_chat_specificity": {
-      "description": "Model diffing on paired base/fine-tuned activations from a world whose shared concepts include strength-asymmetric and partially decoupled ones next to genuine fine-tuned-only concepts. Measures whether factors labelled fine-tuned-only are genuinely specific (paper Table 1 'False FT-only'), how many genuinely fine-tuned-specific structures the top of the fine-tuned-only ranking recovers (paper Fig. 2c / Table 1 '# latents < pi'), and reconstruction (paper Tables 2-3, validation FVE). Scored on a hidden held-out world.",
+      "description": "Recovery of genuinely fine-tuned-specific structure among shared, strength-asymmetric and partially separated concepts.",
       "weight": 0.6,
       "primary_metric": "reconstruction_fve",
-      "notes": "Scaled synthetic setting: 64-d paired streams, 112 ground-truth concepts, dictionaries of at most 256 latents at mean L0 <= 8.8 (paper: Gemma-2-2B layer 13, 73,728 latents, L0 ~ 100). Genuine specificity is judged against the world's ground truth (concept alignment and base/chat presence ratio < 0.2) instead of the paper's Latent Scaling estimate, and the false rate is weighted by each latent's activation mass. The paper's results below are its Gemma numbers (Table 1, Tables 2-3); they anchor the direction of the effect, not its scale. The paper reports aggregate validation FVE only.",
+      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Fixed-size discovery uses measured model presence and ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
       "metrics": {
         "false_ft_only_rate": {
           "higher_is_better": false,
           "coefficient": -1.0,
-          "description": "Activation-mass-weighted fraction of the factors labelled fine-tuned-only (relative decoder norm difference >= 0.9) that are not genuinely fine-tuned-specific. If no factor is labelled fine-tuned-only the rate is 1.0 (nothing specific was found)."
+          "description": "False discovery fraction of measured chat-contribution mass among 32 factors with lowest measured base/chat presence. Ground-truth alignment and conditional presence determine correctness. Duplicate claims on one target receive no extra credit. Empty discovery has value 1."
         },
         "chat_specific_recall": {
           "higher_is_better": true,
           "coefficient": 1.0,
-          "description": "Fraction of the world's fine-tuned-specific structures (fine-tuned-only concepts and fine-tuned-exclusive uses of decoupled concepts) recovered by a genuinely specific factor among the top 1.5x(number of targets) factors ranked by relative decoder norm difference."
+          "description": "Fraction of 32 fine-tuned-specific target structures recovered by the fixed 32 selected factors; genuinely specific requires cosine >= 0.8 and activity-weighted ground-truth base/chat ratio < 0.2."
         },
         "reconstruction_fve": {
           "higher_is_better": true,
           "coefficient": 0.5,
-          "description": "Fraction of variance of both activation streams explained by the reconstruction the evaluator computes from the submitted encoder and decoders (clipped to [0, 1])."
-        }
-      },
-      "results": {
-        "l1": {
-          "type": "baseline",
-          "false_ft_only_rate": 0.671,
-          "reconstruction_fve": 0.844
-        },
-        "batchtopk": {
-          "type": "proposed",
-          "false_ft_only_rate": 0.007,
-          "reconstruction_fve": 0.876
+          "description": "Evaluator-computed fraction of joint activation variance explained. Each stream must also have FVE >= 0.60; recall >= 0.10 and fixed capacity/sparsity constraints must hold in both experiments, or every scored metric receives its worst value."
         }
       },
       "_paper_reported": {
         "source": "Table 1 (Gemma2-2B-Chat rows), Table 4, Tables 2-3 (validation, final epoch)",
-        "batchtopk": {"n_ft_only_delta_ge_0.9": 134, "false_ft_only_count_nu_gt_0.6": 1, "false_ft_only_rate": 0.007,
-                      "n_latents_below_pi": {"0.2": 301, "0.4": 979, "0.6": 2035, "0.8": 3269},
-                      "validation_fve": 0.876, "validation_l0": 99.48, "dead_fraction": 0.12},
-        "l1": {"n_ft_only_delta_ge_0.9": 3176, "false_ft_only_count_nu_gt_0.6": 2132, "false_ft_only_rate": 0.671,
-               "n_latents_below_pi": {"0.2": 13, "0.4": 201, "0.6": 982, "0.8": 2970},
-               "validation_fve": 0.844, "validation_l0": 101.0, "dead_fraction": 0.081}
-      }
-    },
-    "synthetic_faint_chat_concepts": {
-      "description": "Same measurement on a denser world whose fine-tuned-only concepts are faint (0.15-0.45 of normal strength), probing a regime the paper names as a limitation: the BatchTopK selection favours latents used by both models (App. B.3) and much fine-tuned-specific information can remain in the reconstruction error (Sec. 5). Scored on a hidden held-out world.",
-      "weight": 0.4,
-      "primary_metric": "reconstruction_fve",
-      "notes": "Headroom experiment added for this gym; the paper does not run this regime. The results below repeat the paper's main Gemma numbers (Table 1, Tables 2-3) as directional anchors only. Same scaled setting and constraints as synthetic_chat_specificity.",
-      "metrics": {
-        "false_ft_only_rate": {
-          "higher_is_better": false,
-          "coefficient": -0.5,
-          "description": "Activation-mass-weighted fraction of the factors labelled fine-tuned-only (relative decoder norm difference >= 0.9) that are not genuinely fine-tuned-specific; 1.0 if none is labelled. Half weight here: in this world the spurious mass is dominated by decoupled-concept twins that synthetic_chat_specificity already scores, while recovery of the faint fine-tuned-only concepts (chat_specific_recall) is what this experiment adds."
+        "batchtopk": {
+          "n_ft_only_delta_ge_0.9": 134,
+          "false_ft_only_count_nu_gt_0.6": 1,
+          "false_ft_only_rate": 0.007,
+          "n_latents_below_pi": {
+            "0.2": 301,
+            "0.4": 979,
+            "0.6": 2035,
+            "0.8": 3269
+          },
+          "validation_fve": 0.876,
+          "validation_l0": 99.48,
+          "dead_fraction": 0.12
         },
-        "chat_specific_recall": {
-          "higher_is_better": true,
-          "coefficient": 1.0,
-          "description": "Fraction of the world's fine-tuned-specific structures recovered by a genuinely specific factor among the top 1.5x(number of targets) factors ranked by relative decoder norm difference."
-        },
-        "reconstruction_fve": {
-          "higher_is_better": true,
-          "coefficient": 0.5,
-          "description": "Fraction of variance of both activation streams explained by the evaluator-computed reconstruction (clipped to [0, 1])."
+        "l1": {
+          "n_ft_only_delta_ge_0.9": 3176,
+          "false_ft_only_count_nu_gt_0.6": 2132,
+          "false_ft_only_rate": 0.671,
+          "n_latents_below_pi": {
+            "0.2": 13,
+            "0.4": 201,
+            "0.6": 982,
+            "0.8": 2970
+          },
+          "validation_fve": 0.844,
+          "validation_l0": 101.0,
+          "dead_fraction": 0.081
         }
       },
-      "results": {
+      "_paper_directional_anchors": {
         "l1": {
           "type": "baseline",
           "false_ft_only_rate": 0.671,
@@ -76,6 +63,69 @@
           "type": "proposed",
           "false_ft_only_rate": 0.007,
           "reconstruction_fve": 0.876
+        }
+      },
+      "results": {
+        "batchtopk": {
+          "type": "proposed",
+          "false_ft_only_rate": 0.5719192997911798,
+          "chat_specific_recall": 0.5,
+          "reconstruction_fve": 0.9810926654615417
+        },
+        "l1": {
+          "type": "baseline",
+          "false_ft_only_rate": 0.7010326486812922,
+          "chat_specific_recall": 0.5,
+          "reconstruction_fve": 0.8176115868833972
+        }
+      }
+    },
+    "synthetic_faint_chat_concepts": {
+      "description": "Recovery in denser inputs with fine-tuned-only concept strength 0.25-0.65, a small-variance information regime.",
+      "weight": 0.4,
+      "primary_metric": "reconstruction_fve",
+      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Fixed-size discovery uses measured model presence and ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
+      "metrics": {
+        "false_ft_only_rate": {
+          "higher_is_better": false,
+          "coefficient": -0.5,
+          "description": "False discovery fraction of measured chat-contribution mass among 32 factors with lowest measured base/chat presence. Ground-truth alignment and conditional presence determine correctness. Duplicate claims on one target receive no extra credit. Empty discovery has value 1."
+        },
+        "chat_specific_recall": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Fraction of 32 fine-tuned-specific target structures recovered by the fixed 32 selected factors; genuinely specific requires cosine >= 0.8 and activity-weighted ground-truth base/chat ratio < 0.2."
+        },
+        "reconstruction_fve": {
+          "higher_is_better": true,
+          "coefficient": 0.5,
+          "description": "Evaluator-computed fraction of joint activation variance explained. Each stream must also have FVE >= 0.60; recall >= 0.10 and fixed capacity/sparsity constraints must hold in both experiments, or every scored metric receives its worst value."
+        }
+      },
+      "_paper_directional_anchors": {
+        "l1": {
+          "type": "baseline",
+          "false_ft_only_rate": 0.671,
+          "reconstruction_fve": 0.844
+        },
+        "batchtopk": {
+          "type": "proposed",
+          "false_ft_only_rate": 0.007,
+          "reconstruction_fve": 0.876
+        }
+      },
+      "results": {
+        "batchtopk": {
+          "type": "proposed",
+          "false_ft_only_rate": 0.9123822677380696,
+          "chat_specific_recall": 0.25,
+          "reconstruction_fve": 0.9785665131853872
+        },
+        "l1": {
+          "type": "baseline",
+          "false_ft_only_rate": 1.0,
+          "chat_specific_recall": 0.0,
+          "reconstruction_fve": 0.6986495862791422
         }
       }
     }

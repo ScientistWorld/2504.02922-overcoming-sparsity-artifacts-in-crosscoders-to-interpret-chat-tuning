@@ -26,6 +26,7 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 import numpy as np
+os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
 import torch
 
 from method.crosscoder import Crosscoder
@@ -38,12 +39,12 @@ DATA_ROOT = Path("data/worlds")
 @dataclass
 class Config:
     sparsity: str = "batchtopk"          # "batchtopk" or "l1"
-    n_latents: int = 256
-    k: int = 8                           # BatchTopK active latents per input
-    k_start: int = 0                     # >0: anneal k from k_start to k (paper App. I.1 recipe)
-    k_anneal_frac: float = 0.25
+    n_latents: int = 512
+    k: int = 6                           # BatchTopK active latents per input
+    k_start: int = 24                     # >0: anneal k from k_start to k (paper App. I.1 recipe)
+    k_anneal_frac: float = 0.125
     mu: float = 0.0                      # L1 sparsity weight (calibrated to the target L0)
-    steps: int = 16_000
+    steps: int = 32_000
     batch_size: int = 256
     lr: float = 1e-3
     lr_decay_frac: float = 0.2           # linear decay to 0 over the final fraction of steps
@@ -52,8 +53,8 @@ class Config:
     aux_k: int = 32                      # dead latents used by the auxiliary loss per input
     dead_samples: int = 200_000          # a latent is dead after this many inputs without firing
     selection_norm: str = "sum"          # BatchTopK scaling: sum (paper) / concat / max (App. B.3)
-    target_l0: float = 8.0               # L1 calibration target (paper: match L0 across crosscoders)
-    max_l0: float = 8.4
+    target_l0: float = 6.0               # L1 calibration target (paper: match L0 across crosscoders)
+    max_l0: float = 6.3
 
 
 def load_pair(path: Path, device: str) -> tuple[torch.Tensor, torch.Tensor]:
@@ -85,6 +86,7 @@ def _recon_loss(xb, xc, rb, rc):
 def train_crosscoder(cfg: Config, hb: torch.Tensor, hc: torch.Tensor, seed: int) -> tuple[Crosscoder, dict]:
     device = hb.device
     torch.manual_seed(seed)
+    torch.use_deterministic_algorithms(True)
     gen = torch.Generator(device=device)
     gen.manual_seed(seed)
     n, d = hb.shape
@@ -326,7 +328,7 @@ def main() -> None:
     parser.add_argument("--method", choices=("batchtopk", "l1"), default="batchtopk")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--steps", type=int, default=None)
     parser.add_argument("--k", type=int, default=None)

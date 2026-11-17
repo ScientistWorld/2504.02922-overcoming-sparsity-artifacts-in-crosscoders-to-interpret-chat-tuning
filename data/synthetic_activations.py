@@ -43,7 +43,7 @@ EXPERIMENTS: dict[str, dict] = {
         "d_model": 64,
         "counts": {"shared": 48, "weak_shared": 16, "decoupled": 16, "chat_only": 16, "base_only": 16},
         "rate": {"shared": 0.05, "weak_shared": 0.05, "chat_only": 0.05, "base_only": 0.05},
-        "decoupled_rates": [0.04, 0.03, 0.03],  # both-stream subset, base-exclusive, chat-exclusive
+        "decoupled_rates": [0.12, 0.012, 0.012],  # shared occurrence dominates: L0 savings favour coupled factors
         "weak_base_scale": [0.3, 0.6],
         "chat_only_scale": [1.0, 1.0],
         "concept_gain": [0.7, 1.3],
@@ -54,17 +54,18 @@ EXPERIMENTS: dict[str, dict] = {
     "synthetic_faint_chat_concepts": {
         "d_model": 64,
         "counts": {"shared": 48, "weak_shared": 16, "decoupled": 16, "chat_only": 16, "base_only": 16},
-        "rate": {"shared": 0.08, "weak_shared": 0.05, "chat_only": 0.05, "base_only": 0.05},
-        "decoupled_rates": [0.04, 0.03, 0.03],
+        "rate": {"shared": 0.06, "weak_shared": 0.05, "chat_only": 0.05, "base_only": 0.05},
+        "decoupled_rates": [0.12, 0.012, 0.012],
         "weak_base_scale": [0.3, 0.6],
-        "chat_only_scale": [0.15, 0.45],
+        "chat_only_scale": [0.25, 0.65],
         "concept_gain": [0.7, 1.3],
         "noise_std": 0.05,
     },
 }
 
+DATA_VERSION = 2
 DEV_SEEDS = {"synthetic_chat_specificity": 11_011, "synthetic_faint_chat_concepts": 22_022}
-N_TRAIN = 32_768
+N_TRAIN = 65_536
 WORLDS_DIR = Path(__file__).resolve().parent / "worlds"
 
 
@@ -136,7 +137,7 @@ def load_world(path: Path) -> dict:
 
 def write_dev_world(experiment: str, root: Path = WORLDS_DIR, force: bool = False) -> None:
     out = root / experiment / "dev"
-    if not force and (out / "world.npz").exists() and (out / "train.npz").exists():
+    if not force and (out / "world.npz").exists() and (out / "train.npz").exists() and (out / "world.json").exists() and json.loads((out / "world.json").read_text()).get("data_version") == DATA_VERSION:
         print(f"[data] {experiment}/dev exists; skipping")
         return
     out.mkdir(parents=True, exist_ok=True)
@@ -151,7 +152,7 @@ def write_dev_world(experiment: str, root: Path = WORLDS_DIR, force: bool = Fals
         for idx, name in enumerate(FAMILIES)
     }
     (out / "world.json").write_text(
-        json.dumps({"experiment": experiment, "seed": seed, "n_train": N_TRAIN,
+        json.dumps({"data_version": DATA_VERSION, "experiment": experiment, "seed": seed, "n_train": N_TRAIN,
                     "params": params, "families": list(FAMILIES), "taxonomy": taxonomy}, indent=1) + "\n",
         encoding="utf-8",
     )

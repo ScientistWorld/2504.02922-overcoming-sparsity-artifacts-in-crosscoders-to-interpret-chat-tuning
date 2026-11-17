@@ -1,17 +1,13 @@
-# Experiment Overview
+# Experiments
 
-Both experiments are scored on hidden held-out worlds. You see only those worlds' unlabeled training activations. The public dev worlds of the same generator family are for development and for `scores_train.json`. All scores are computed by the evaluator from the submitted dictionary parameters, on inputs it samples itself.
+Both experiments measure discovery of fine-tuning-specific structure while preserving reconstruction under fixed capacity and activity budgets. Each has a public development world and an independent held-out world. Methods learn from unlabeled activations; the evaluator generates new inputs, computes outputs from submitted procedures, and judges against its own ground truth. The 32-factor discovery budget is fixed for every method.
 
 ## synthetic_chat_specificity (weight 0.6)
 
-Establishes whether factors labelled fine-tuned-only are genuinely specific to the fine-tuned model. The world mixes genuine fine-tuned-only concepts with two kinds of shared concepts that are easy to mistake for them: concepts weaker in the base stream, and concepts both models use on partly different inputs. The experiment asks three things:
-
-- whether the fine-tuned-only label is trustworthy (false fine-tuned-only rate);
-- whether the top of the fine-tuned-only ranking recovers the genuinely fine-tuned-specific structure (recall);
-- whether this comes without giving up reconstruction (FVE).
-
-Sparsity and dictionary size are fixed budgets.
+The world contains genuinely specific concepts alongside shared concepts that are weaker in one model or occur on partly different inputs. The experiment measures false discoveries, coverage of the truly specific structures, and explained input variance. It asks whether discoveries are useful and trustworthy without sacrificing reconstruction or sparsity.
 
 ## synthetic_faint_chat_concepts (weight 0.4)
 
-The same question in a denser world whose fine-tuned-only concepts are faint (0.15–0.45 of normal strength). It establishes whether a method can recover fine-tuned-specific structure that carries little variance, under the same sparsity budget, while keeping its fine-tuned-only labels trustworthy. Recall weighs most here; the false fine-tuned-only rate has half weight because its spurious mass mostly repeats what `synthetic_chat_specificity` already measures.
+The same measurements on denser inputs with fine-tuned-only signal strength 0.25–0.65 of ordinary signal strength. Useful changes carry little variance here. This checks whether a method finds subtle structure instead of spending its budget only on dominant shared signals. False discoveries have half the main experiment's coefficient because recovery is the additional challenge; reconstruction remains a constraint and a scored quantity.
+
+Every experiment reports `false_ft_only_rate` (lower), `chat_specific_recall` (higher), and `reconstruction_fve` (higher). A failure in either experiment gives the worst values in both. The detailed measurement and portable submission interface are in `briefing/evaluation.md`.
