@@ -1,12 +1,12 @@
 {
  "config": {
   "sparsity": "batchtopk",
-  "n_latents": 256,
-  "k": 8,
-  "k_start": 0,
-  "k_anneal_frac": 0.25,
+  "n_latents": 512,
+  "k": 6,
+  "k_start": 24,
+  "k_anneal_frac": 0.125,
   "mu": 0.0,
-  "steps": 16000,
+  "steps": 32000,
   "batch_size": 256,
   "lr": 0.001,
   "lr_decay_frac": 0.2,
@@ -15,15 +15,15 @@
   "aux_k": 32,
   "dead_samples": 200000,
   "selection_norm": "sum",
-  "target_l0": 8.0,
-  "max_l0": 8.4
+  "target_l0": 6.0,
+  "max_l0": 6.3
  },
  "seed": 0,
- "data": "data/worlds/synthetic_chat_specificity/dev/train.npz",
- "train_seconds": 86.59962344169617,
- "final_recon_loss": 0.5067620873451233,
- "final_aux_loss": 1.0034732818603516,
- "dead_fraction": 0.01953125,
- "theta": 0.38090139627456665,
- "train_l0": 7.98590087890625
+ "data": "/home/user/data/worlds/synthetic_chat_specificity/dev/train.npz",
+ "train_seconds": 104.74752926826477,
+ "final_recon_loss": 0.7377540469169617,
+ "final_aux_loss": 0.9102410078048706,
+ "dead_fraction": 0.255859375,
+ "theta": 1.0863063335418701,
+ "train_l0": 5.9907073974609375
 }

@@ -1,7 +1,8 @@
 {
+ "data_version": 2,
  "experiment": "synthetic_faint_chat_concepts",
  "seed": 22022,
- "n_train": 32768,
+ "n_train": 65536,
  "params": {
   "d_model": 64,
   "counts": {
@@ -12,23 +13,23 @@
    "base_only": 16
   },
   "rate": {
-   "shared": 0.08,
+   "shared": 0.06,
    "weak_shared": 0.05,
    "chat_only": 0.05,
    "base_only": 0.05
   },
   "decoupled_rates": [
-   0.04,
-   0.03,
-   0.03
+   0.12,
+   0.012,
+   0.012
   ],
   "weak_base_scale": [
    0.3,
    0.6
   ],
   "chat_only_scale": [
-   0.15,
-   0.45
+   0.25,
+   0.65
   ],
   "concept_gain": [
    0.7,

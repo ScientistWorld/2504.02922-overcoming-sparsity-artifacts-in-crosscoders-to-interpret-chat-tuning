@@ -1,12 +1,12 @@
 {
  "config": {
   "sparsity": "batchtopk",
-  "n_latents": 256,
-  "k": 8,
-  "k_start": 0,
-  "k_anneal_frac": 0.25,
+  "n_latents": 512,
+  "k": 6,
+  "k_start": 24,
+  "k_anneal_frac": 0.125,
   "mu": 0.0,
-  "steps": 16000,
+  "steps": 32000,
   "batch_size": 256,
   "lr": 0.001,
   "lr_decay_frac": 0.2,
@@ -15,15 +15,15 @@
   "aux_k": 32,
   "dead_samples": 200000,
   "selection_norm": "sum",
-  "target_l0": 8.0,
-  "max_l0": 8.4
+  "target_l0": 6.0,
+  "max_l0": 6.3
  },
  "seed": 0,
- "data": "data/worlds/synthetic_chat_specificity/heldout/train.npz",
- "train_seconds": 86.59192991256714,
- "final_recon_loss": 0.5058760643005371,
- "final_aux_loss": 1.0042880773544312,
- "dead_fraction": 0.01953125,
- "theta": 0.3972553014755249,
- "train_l0": 7.987152099609375
+ "data": "/home/user/data/worlds/synthetic_chat_specificity/heldout/train.npz",
+ "train_seconds": 103.48925137519836,
+ "final_recon_loss": 0.7681338787078857,
+ "final_aux_loss": 0.8586083650588989,
+ "dead_fraction": 0.34765625,
+ "theta": 1.1132453680038452,
+ "train_l0": 5.993072509765625
 }

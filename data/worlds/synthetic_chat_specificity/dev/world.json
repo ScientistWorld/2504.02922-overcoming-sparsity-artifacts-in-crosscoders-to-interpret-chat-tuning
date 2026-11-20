@@ -1,7 +1,8 @@
 {
+ "data_version": 2,
  "experiment": "synthetic_chat_specificity",
  "seed": 11011,
- "n_train": 32768,
+ "n_train": 65536,
  "params": {
   "d_model": 64,
   "counts": {
@@ -18,9 +19,9 @@
    "base_only": 0.05
   },
   "decoupled_rates": [
-   0.04,
-   0.03,
-   0.03
+   0.12,
+   0.012,
+   0.012
   ],
   "weak_base_scale": [
    0.3,
