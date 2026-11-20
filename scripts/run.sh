@@ -1,5 +1,5 @@
 #!/bin/bash
-# Consolidated rescore after all training fits completed. This is restored to
+# Preemption-resumable rescore after all training fits completed. Restored to
 # scripts/reproduce.sh after the hardening evidence has been reviewed.
 set -euo pipefail
 cd /home/user

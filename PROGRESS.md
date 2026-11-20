@@ -1,5 +1,7 @@
 # Current status (2026-11-20)
 
+Job `505179e7-81d` was cancelled after repeated scheduler preemptions discarded unfinished scoring passes. It confirmed agreement of both independent scorers and streamed versus direct reconstruction statistics. The audit now checkpoints each completed method/experiment/replicate with raw-artifact and scorer fingerprints, and skips completed construction after a restart. Published evaluators continue to recompute every number without a cache; the audit checks exact agreement with their fresh reference-only results. The same CPU rescore is being resumed with no scientific settings or training changes.
+
 Job `70271ff1-8a1` completed all 48 fits but failed validation: the independent train scorer referenced an undefined `unit_chat`. BatchTopK's shared-factor mechanism now appears on every one of the 16 partially separated concepts, across all three seeds and both regimes. The 65,536-input paired headroom check failed, despite improvements on the original batch. Its measurements are archived in `hardening/intermediate_65536/`.
 
 A consolidated CPU rescore fixes the evaluator, preserves failed-run mechanism diagnostics, increases evaluation to 524,288 common inputs with streaming statistics, and measures training-only iterative inference against the simple decoder-refit control. Existing reference, baseline, weaker and longer fits are reused unchanged. No final headroom or completed hardening claim is made until this job finishes. The current milestone remains `method_runs`.

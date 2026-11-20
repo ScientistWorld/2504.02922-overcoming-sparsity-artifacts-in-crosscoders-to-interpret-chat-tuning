@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: false
 milestone: method_runs
-notes: "Consolidated CPU rescore: reuse all 48 completed fits, fix train evaluator, stream an eightfold paired test, measure iterative inference and closed-form controls, replay affected shortcuts, regenerate reference-only scores, and validate. No reference retraining."
+notes: "Resume the consolidated CPU rescore with atomic per-artifact audit checkpoints so scheduler preemption preserves completed scoring. Reuse all 48 fits; finish the unchanged five-batch paired headroom and shortcut audit, compare fresh uncached reference-only scores, and validate. No retraining or scientific-setting changes."

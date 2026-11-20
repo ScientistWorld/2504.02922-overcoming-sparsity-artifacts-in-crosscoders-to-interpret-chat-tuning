@@ -245,5 +245,6 @@ hardening/methods/
 
 # Final audit artifacts and small private historical replay assets.
 hardening/final_methods/
+hardening/final_results/.resume/
 !eval/test/previous_worlds/*.npz
 !eval/test/previous_methods/**/*.npz
