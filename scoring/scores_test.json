@@ -4,28 +4,28 @@
     "synthetic_chat_specificity": {
       "results": {
         "batchtopk": {
-          "false_ft_only_rate": 0.5719192997911798,
-          "chat_specific_recall": 0.5,
-          "reconstruction_fve": 0.9810926654615417
+          "false_ft_only_rate": 0.05103695459085216,
+          "chat_specific_recall": 0.46875,
+          "reconstruction_fve": 0.9773699066728865
         },
         "l1": {
-          "false_ft_only_rate": 0.7010326486812922,
-          "chat_specific_recall": 0.5,
-          "reconstruction_fve": 0.8176115868833972
+          "false_ft_only_rate": 1.0,
+          "chat_specific_recall": 0.0,
+          "reconstruction_fve": 0.0
         }
       }
     },
     "synthetic_faint_chat_concepts": {
       "results": {
         "batchtopk": {
-          "false_ft_only_rate": 0.9123822677380696,
-          "chat_specific_recall": 0.25,
-          "reconstruction_fve": 0.9785665131853872
+          "false_ft_only_rate": 0.08441320908313771,
+          "chat_specific_recall": 0.6875,
+          "reconstruction_fve": 0.9752895066854699
         },
         "l1": {
           "false_ft_only_rate": 1.0,
           "chat_specific_recall": 0.0,
-          "reconstruction_fve": 0.6986495862791422
+          "reconstruction_fve": 0.0
         }
       }
     }
