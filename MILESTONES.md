@@ -52,5 +52,7 @@
 
 Review identified an unresolved decoupling mechanism. The final patch changes only scale, data frequencies, inference measurement and the supported submission interface; the paper training procedure is retained. `hardening/final_audit.py` will check three matched training seeds, common fresh test inputs, stronger and weaker methods, and affected shortcuts before a final milestone is assigned.
 
+The first audit job lost its worker after saving 41/48 fits. It is being resumed from the saved artifacts; no scientific settings changed and the milestone remains `method_runs` pending evaluation.
+
 ## Stop Justification
 - Not finished: final hardening job pending.

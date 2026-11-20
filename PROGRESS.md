@@ -2,6 +2,8 @@
 
 Final hardening patch prepared; one consolidated GPU audit is pending. Earlier entries below are historical and describe earlier gym versions. The current contract is in `briefing/evaluation.md`; the final evidence will be in `HARDENING.md`. The decoupling mechanism is not yet verified in the final setup.
 
+Job `e69a33f1-5fd` stopped because its worker node died, without a Python or training error. It saved all reference and L1 fits across three seeds, all weaker fits, and five of twelve longer fits (41/48 total). The same audit resumes from these completed artifacts with unchanged scientific settings. Phase markers and per-batch paired measurements now save progress during evaluation too. No final metric or mechanism claim has been established yet.
+
 # Progress
 
 ## What Works

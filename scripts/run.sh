@@ -1,5 +1,6 @@
 #!/bin/bash
-# Single consolidated final hardening audit. Restored to reference reproduction
+# Resume the consolidated audit after worker loss; completed fits are reused.
+# Restored to reference reproduction
 # after the audit has completed and its evidence has been reviewed.
 set -euo pipefail
 cd /home/user
