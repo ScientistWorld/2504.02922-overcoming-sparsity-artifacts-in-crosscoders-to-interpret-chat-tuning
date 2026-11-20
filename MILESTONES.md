@@ -4,6 +4,12 @@
 
 ## Progress Log
 
+### [2026-11-20] - method_runs
+- All 48 final fits completed; BatchTopK now learns shared factors for 16/16 partially separated concepts on both held-out regimes, at all three training seeds.
+- Validation exposed an undefined variable in the train evaluator. The paired sampling check rejected both apparent headroom gains; headroom remains unverified.
+- Submitted one consolidated rescore with eightfold evaluation size, streaming metrics, preserved failed-run diagnostics and training-only iterative inference controls. Reference training code and saved fits are unchanged.
+
+
 ### [2026-05-29 06:51] - method_runs
 - Implemented the paper's shared-encoder, two-decoder crosscoder on paired synthetic activations.
 - Trained L1 and BatchTopK variants end-to-end and evaluated saved artifacts with decoder norm and Latent Scaling diagnostics.

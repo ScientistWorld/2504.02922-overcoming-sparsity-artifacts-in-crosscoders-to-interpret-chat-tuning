@@ -32,13 +32,13 @@ ARTIFACT = "crosscoder.npz"
 EXPERIMENTS = ("synthetic_chat_specificity", "synthetic_faint_chat_concepts")
 
 # Fixed comparison settings (identical on the train side).
-N_EVAL = 65_536          # paired inputs scored per experiment
+N_EVAL = 524_288          # paired inputs scored per experiment
 D_MAX = 512              # maximum dictionary size
 L0_MAX = 6.6             # maximum mean number of active latents per input
 FT_ONLY_DELTA = 0.9      # relative decoder norm difference labelling a latent fine-tuned-only
 ALIGN_COS = 0.8          # min cosine between a latent's chat decoder and a concept direction
 SPECIFICITY_PI = 0.2     # max base/chat presence ratio for a genuinely chat-specific latent
-MIN_FIRING = 10          # a latent is alive if it fires on at least this many inputs
+MIN_FIRING = 80          # a latent is alive if it fires on at least this many inputs
 TOP_N_FACTOR = 1.0       # fixed discovery count, N = factor * number of targets
 FVE_MIN = 0.60
 RECALL_MIN = 0.10
@@ -50,7 +50,11 @@ TARGET_FAMILIES = ("chat_only", "decoupled")
 
 
 class RunFailure(Exception):
-    """The submitted artifact cannot be scored or violates a fixed constraint."""
+    """Invalid run; optional recomputed diagnostics never enter ranked results."""
+
+    def __init__(self, reason, diagnostics=None):
+        super().__init__(reason)
+        self.diagnostics = diagnostics or {}
 
 
 def load_artifact(path: Path, d: int) -> dict:
@@ -124,8 +128,10 @@ def encode(art: dict, base: np.ndarray, chat: np.ndarray) -> np.ndarray:
         opts = ort.SessionOptions()
         opts.intra_op_num_threads = 1
         opts.inter_op_num_threads = 1
-        session = ort.InferenceSession(art["encoder_model"], sess_options=opts,
-                                      providers=["CPUExecutionProvider"])
+        if "encoder_session" not in art:
+            art["encoder_session"] = ort.InferenceSession(art["encoder_model"], sess_options=opts,
+                                                        providers=["CPUExecutionProvider"])
+        session = art["encoder_session"]
         inputs = session.get_inputs()
         if len(inputs) != 1 or inputs[0].type != "tensor(float)":
             raise RunFailure("encoder.onnx needs one float32 paired-input tensor")
@@ -152,37 +158,49 @@ def encode(art: dict, base: np.ndarray, chat: np.ndarray) -> np.ndarray:
     return f
 
 
-def _fve(target: np.ndarray, recon: np.ndarray) -> tuple[float, float]:
-    sse = float(((target - recon) ** 2).sum())
-    sst = float(((target - target.mean(axis=0)) ** 2).sum())
-    return sse, sst
-
-
 def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     hb, hc, ab, ac = sample["base"], sample["chat"], sample["base_coeff"], sample["chat_coeff"]
-    f = encode(art, hb, hc)
-    l0 = float((f > 0).sum(axis=1).mean())
-    if not math.isfinite(l0) or l0 > L0_MAX:
-        raise RunFailure(f"mean L0 {l0:.3f} exceeds the sparsity budget {L0_MAX}")
+    # Stream sufficient statistics so a larger paired test does not retain an
+    # N-by-D feature matrix. No method-written summary is accepted.
+    n, D = len(hb), art["W_enc"].shape[1]
     wdb, wdc = art["W_dec_base"], art["W_dec_chat"]
-    rb = f @ wdb + art["b_dec_base"]
-    rc = f @ wdc + art["b_dec_chat"]
-    if not (np.all(np.isfinite(rb)) and np.all(np.isfinite(rc))):
-        raise RunFailure("non-finite reconstruction")
-    sse_b, sst_b = _fve(hb, rb)
-    sse_c, sst_c = _fve(hc, rc)
-    fve = 1.0 - (sse_b + sse_c) / (sst_b + sst_c)
-
+    sf, sq_f, fires = np.zeros(D), np.zeros(D), np.zeros(D, dtype=np.int64)
+    fhb, fhc = np.zeros((D,hb.shape[1])), np.zeros((D,hc.shape[1]))
+    fab, fac = np.zeros((D,ab.shape[1])), np.zeros((D,ac.shape[1]))
+    frb, frc = np.zeros_like(fhb), np.zeros_like(fhc)
+    sse_b = sse_c = 0.0
+    for start in range(0,n,4096):
+        stop = start + 4096
+        xb, xc = hb[start:stop], hc[start:stop]
+        f = encode(art, xb, xc)
+        rb, rc = f @ wdb + art["b_dec_base"], f @ wdc + art["b_dec_chat"]
+        if not (np.isfinite(rb).all() and np.isfinite(rc).all()):
+            raise RunFailure("non-finite reconstruction")
+        sf += f.sum(axis=0)
+        sq_f += (f*f).sum(axis=0)
+        fires += (f>0).sum(axis=0)
+        fhb += f.T @ xb
+        fhc += f.T @ xc
+        fab += f.T @ ab[start:stop]
+        fac += f.T @ ac[start:stop]
+        frb += f.T @ rb
+        frc += f.T @ rc
+        sse_b += float(((xb-rb)**2).sum())
+        sse_c += float(((xc-rc)**2).sum())
     if not (math.isfinite(sse_b) and math.isfinite(sse_c)):
         raise RunFailure("overflow in reconstruction error")
+    l0 = float(fires.sum()/n)
+    mean_f = sf/n
+    sst_b = float((hb*hb).sum() - n*(hb.mean(axis=0)**2).sum())
+    sst_c = float((hc*hc).sum() - n*(hc.mean(axis=0)**2).sum())
+    fve = 1.0 - (sse_b+sse_c)/(sst_b+sst_c)
 
     nb = np.linalg.norm(wdb, axis=1)
     nc = np.linalg.norm(wdc, axis=1)
     mx = np.maximum(nb, nc)
     delta = np.where(mx > 0, 0.5 * (1.0 + (nc - nb) / np.where(mx > 0, mx, 1.0)), 0.5)
-    fires = (f > 0).sum(axis=0)
     alive = fires >= MIN_FIRING
-    mass = f.mean(axis=0) * nc  # mean magnitude each latent contributes to the chat stream
+    mass = mean_f * nc  # mean magnitude each latent contributes to the chat stream
 
     directions = np.asarray(world["directions"], dtype=np.float64)
     directions = directions / np.linalg.norm(directions, axis=1, keepdims=True)
@@ -194,21 +212,20 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
 
     # Ground-truth presence ratio of the matched concept, weighted by the
     # latent's own activations: sum_i f_ij a^base_c(i) / sum_i f_ij a^chat_c(i).
-    idx = np.arange(f.shape[1])
-    fb = (f.T @ ab)[idx, concept]
-    fc = (f.T @ ac)[idx, concept]
+    idx = np.arange(D)
+    fb = fab[idx, concept]
+    fc = fac[idx, concept]
     rho = np.where(fc > 0, fb / np.where(fc > 0, fc, 1.0), np.inf)
     genuine = alive & aligned & (rho < SPECIFICITY_PI)
 
     # Fixed operating point, ranked by the paper's raw-activation Latent
     # Scaling (Eq. 4), rather than the submitted base decoder norm. Merely
     # changing decoder norms cannot improve discovery or specificity.
-    num_base = ((f.T @ hb) * unit_chat).sum(axis=1)
-    num_chat = ((f.T @ hc) * unit_chat).sum(axis=1)
+    num_base = (fhb * unit_chat).sum(axis=1)
+    num_chat = (fhc * unit_chat).sum(axis=1)
     presence = np.divide(np.maximum(num_base, 0), num_chat,
                          out=np.full_like(num_chat, np.inf), where=num_chat > 1e-12)
-    sq_f = (f ** 2).sum(axis=0)
-    measured_mass = f.mean(axis=0) * np.divide(np.maximum(num_chat, 0), sq_f,
+    measured_mass = mean_f * np.divide(np.maximum(num_chat, 0), sq_f,
                     out=np.zeros_like(sq_f), where=sq_f > 0)
     family = np.asarray(world["family"])
     target_ids = {FAMILIES.index(name) for name in TARGET_FAMILIES}
@@ -219,7 +236,7 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     top = order[:top_n]
     # Only one factor can claim a given concept. Duplicating good factors
     # must not dilute spurious factors at a fixed discovery budget.
-    credited = np.zeros(f.shape[1], dtype=bool)
+    credited = np.zeros(D, dtype=bool)
     seen = set()
     for j in top:
         c = int(concept[j])
@@ -230,15 +247,6 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     false_rate = 1.0 if selected_mass <= 0 else float(measured_mass[top[~credited[top]]].sum()) / selected_mass
     covered = seen
     recall = len(covered) / max(len(targets), 1)
-    # These are task-success constraints, not additive rewards that an empty
-    # dictionary can trade against a low error rate.
-    if not math.isfinite(fve) or fve < FVE_MIN or fve > 1 + 1e-9:
-        raise RunFailure(f"FVE {fve} outside [{FVE_MIN}, 1]")
-    if min(1 - sse_b / sst_b, 1 - sse_c / sst_c) < FVE_MIN:
-        raise RunFailure("a stream fails the reconstruction constraint")
-    if recall < RECALL_MIN:
-        raise RunFailure(f"specific recovery {recall} below {RECALL_MIN}")
-
     # The paper's decoder-norm classification remains a mechanism diagnostic.
     ft_only = alive & (delta >= FT_ONLY_DELTA)
     ft_mass = float(mass[ft_only].sum())
@@ -253,12 +261,12 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
         raise RunFailure(f"non-finite metric {metrics}")
 
     # ---- diagnostics (not scored) ----
-    sq = (f ** 2).sum(axis=0)
+    sq = sq_f
     denom = sq * nc ** 2
-    num_b_err = ((f.T @ (hb - rb)) * wdc).sum(axis=1) + sq * (wdb * wdc).sum(axis=1)
-    num_c_err = ((f.T @ (hc - rc)) * wdc).sum(axis=1) + sq * nc ** 2
-    num_b_rec = ((f.T @ rb) * wdc).sum(axis=1)
-    num_c_rec = ((f.T @ rc) * wdc).sum(axis=1)
+    num_b_err = ((fhb-frb) * wdc).sum(axis=1) + sq * (wdb * wdc).sum(axis=1)
+    num_c_err = ((fhc-frc) * wdc).sum(axis=1) + sq * nc ** 2
+    num_b_rec = (frb * wdc).sum(axis=1)
+    num_c_rec = (frc * wdc).sum(axis=1)
     with np.errstate(divide="ignore", invalid="ignore"):
         nu_err = (num_b_err / denom) / (num_c_err / denom)
         nu_rec = (num_b_rec / denom) / (num_c_rec / denom)
@@ -280,7 +288,7 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
         "status": "ok",
         "n_decoupled_with_shared_factor": len(shared_dec),
         "n_decoupled_with_spurious_chat_twin": len(twin_dec),
-        "n_latents": int(f.shape[1]),
+        "n_latents": D,
         "n_alive": int(alive.sum()),
         "mean_l0": l0,
         "base_fve": 1.0 - sse_b / sst_b,
@@ -297,6 +305,18 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
         "n_genuine_in_top_n": int(sum(bool(genuine[j]) for j in top)),
         "latent_scaling_false_ft_only_fraction": (float(ls_false[ft_only].mean()) if n_ft else None),
     }
+    # Keep evaluator-computed mechanism and raw performance diagnostics even
+    # when task constraints fail; ranked metrics are still the complete WORST.
+    diag["raw_metrics"] = dict(metrics, reconstruction_fve=float(fve))
+    if not math.isfinite(l0) or l0 > L0_MAX:
+        raise RunFailure(f"mean L0 {l0:.3f} exceeds the sparsity budget {L0_MAX}", diag)
+    if not math.isfinite(fve) or fve < FVE_MIN or fve > 1 + 1e-9:
+        raise RunFailure(f"FVE {fve} outside [{FVE_MIN}, 1]", diag)
+    if min(1 - sse_b / sst_b, 1 - sse_c / sst_c) < FVE_MIN:
+        raise RunFailure("a stream fails the reconstruction constraint", diag)
+    if recall < RECALL_MIN:
+        raise RunFailure(f"specific recovery {recall} below {RECALL_MIN}", diag)
+
     return metrics, diag
 
 
@@ -344,7 +364,7 @@ def evaluate(root: Path) -> tuple[dict, dict]:
                 art = load_artifact(path, d)
                 metrics, diag = score_artifact(art, sample, world)
             except RunFailure as exc:
-                metrics, diag = dict(WORST), {"status": "failed", "reason": str(exc)}
+                metrics, diag = dict(WORST), {**exc.diagnostics, "status": "failed", "reason": str(exc)}
             except Exception as exc:  # never let one submission abort the run
                 metrics, diag = dict(WORST), {"status": "failed", "reason": f"{type(exc).__name__}: {exc}"}
             results[method] = metrics

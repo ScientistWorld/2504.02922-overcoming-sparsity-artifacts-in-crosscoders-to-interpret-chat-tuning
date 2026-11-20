@@ -1,5 +1,5 @@
 action: submit
-gpus: 1
+gpus: 0
 test: false
 milestone: method_runs
-notes: "Resume consolidated final hardening after worker-node loss: reuse 41 saved fits, finish seven longer fits, then score paired variants and affected shortcuts, publish reference-only scores, and validate. Scientific settings unchanged."
+notes: "Consolidated CPU rescore: reuse all 48 completed fits, fix train evaluator, stream an eightfold paired test, measure iterative inference and closed-form controls, replay affected shortcuts, regenerate reference-only scores, and validate. No reference retraining."

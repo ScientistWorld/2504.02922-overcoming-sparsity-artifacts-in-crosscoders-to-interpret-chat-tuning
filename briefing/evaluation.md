@@ -22,9 +22,9 @@ For both interfaces, reconstructions are always recomputed as `features @ W_dec_
 
 ## Measurements
 
-Each experiment uses 65,536 fresh paired inputs, fixed by the evaluator and common to every method. Public development and hidden worlds have the same difficulty and measurement but independent concepts and samples.
+Each experiment uses 524,288 fresh paired inputs, fixed by the evaluator and common to every method. Public development and hidden worlds have the same difficulty and measurement but independent concepts and samples.
 
-There are 32 targets: fine-tuned-only concepts and fine-tuned-exclusive occurrences of partially separated concepts. A factor is eligible after firing on at least ten inputs with nonzero chat direction. Its measured model presence is `max(sum(feature * dot(base, unit_chat)), 0) / sum(feature * dot(chat, unit_chat))`; nonpositive chat denominators are ineligible. Select the 32 eligible factors with lowest presence, breaking ties by greater measured chat-contribution mass. This operating point is fixed; decoder magnitudes cannot set the selection threshold.
+There are 32 targets: fine-tuned-only concepts and fine-tuned-exclusive occurrences of partially separated concepts. A factor is eligible after firing on at least 80 inputs with nonzero chat direction. Its measured model presence is `max(sum(feature * dot(base, unit_chat)), 0) / sum(feature * dot(chat, unit_chat))`; nonpositive chat denominators are ineligible. Select the 32 eligible factors with lowest presence, breaking ties by greater measured chat-contribution mass. This operating point is fixed; decoder magnitudes cannot set the selection threshold.
 
 Correctness requires chat-direction cosine at least 0.8 with its best-matching concept and activity-weighted ground-truth base/chat concept presence below 0.2. Each target receives credit once. The measured chat-contribution mass is mean(feature) times `max(sum(feature * dot(chat, unit_chat)), 0) / sum(feature²)`. It is invariant to positive rescaling of the factor or its decoder magnitude.
 
@@ -36,7 +36,7 @@ Decoder-norm labels and per-family recovery remain unscored mechanism diagnostic
 
 ## Constraints and failures
 
-D must be between 1 and 512, mean active factors must not exceed 6.6, joint and each stream's FVE must be at least 0.60, and recall must be at least 0.10. Every artifact, feature, reconstruction and scored number must be finite and valid. A failure in either experiment assigns **every metric of both experiments** its worst value: false rate 1, recall 0 and FVE 0. Missing artifacts cannot omit losses.
+D must be between 1 and 512, mean active factors must not exceed 6.6, joint and each stream's FVE must be at least 0.60, and recall must be at least 0.10. Every artifact, feature, reconstruction and scored number must be finite and valid. A failure in either experiment assigns **every metric of both experiments** its worst value: false rate 1, recall 0 and FVE 0. Missing artifacts cannot omit losses. Unscored diagnostics retain evaluator-computed raw measurements for scientific inspection even when a constraint fails; they never substitute for ranked results.
 
 ## Entry points and rank
 

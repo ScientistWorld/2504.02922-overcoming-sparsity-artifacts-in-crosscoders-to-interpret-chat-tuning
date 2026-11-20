@@ -4,7 +4,7 @@
       "description": "Recovery of genuinely fine-tuned-specific structure among shared, strength-asymmetric and partially separated concepts.",
       "weight": 0.6,
       "primary_metric": "reconstruction_fve",
-      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Fixed-size discovery uses measured model presence and ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
+      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and 524,288 evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Fixed-size discovery uses measured model presence and ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
       "metrics": {
         "false_ft_only_rate": {
           "higher_is_better": false,
@@ -84,7 +84,7 @@
       "description": "Recovery in denser inputs with fine-tuned-only concept strength 0.25-0.65, a small-variance information regime.",
       "weight": 0.4,
       "primary_metric": "reconstruction_fve",
-      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Fixed-size discovery uses measured model presence and ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
+      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and 524,288 evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Fixed-size discovery uses measured model presence and ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
       "metrics": {
         "false_ft_only_rate": {
           "higher_is_better": false,

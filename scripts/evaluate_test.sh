@@ -6,7 +6,7 @@
 # inputs from the hidden held-out world in eval/test/worlds/, recomputes all
 # activations, reconstructions and metrics from the submitted parameters, and
 # writes scoring/scores_test.json (plus unscored diagnostics). A missing or
-# invalid artifact scores that experiment with the worst value of every metric.
+# invalid artifact scores the complete suite with the worst value of every metric.
 
 set -e
 
