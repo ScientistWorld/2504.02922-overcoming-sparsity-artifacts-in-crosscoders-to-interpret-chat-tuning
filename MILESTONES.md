@@ -81,5 +81,4 @@ Earlier entries below describe historical gym versions and superseded measuremen
 Complete; see `HARDENING.md` and `hardening/final_results/`. Both items in `REVIEW.md` were measured and fixed. The final evaluator rescores raw outputs without retraining. The reference and baseline were rerun from final training code and data before the evaluator-only changes.
 
 ## Stop Justification
-
-The final audit establishes paired headroom, closes the measured major shortcuts, verifies the paper's mechanism on the scaled task, and passes validation. Reference-only scores and reusable reproduction scripts are committed. Higher milestones would require real-model, causal and interpretability experiments that this synthetic gym does not implement.
+- Completed at milestone `core_claim`.
