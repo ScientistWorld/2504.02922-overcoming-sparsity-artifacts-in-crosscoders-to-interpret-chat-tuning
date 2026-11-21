@@ -1,5 +1,3 @@
-action: submit
-gpus: 0
-test: false
-milestone: method_runs
-notes: "Rescore saved outputs with decoder-independent covariance discovery. Reuse all 48 final fits and constructed variants; verify raw streamed statistics and decoder-refit invariance, nonpaying closed-form controls, five paired input batches and three matched training seeds, complete failures, fresh reference-only entry points, and validation. Training, data, weights and paper numbers unchanged."
+action: done
+milestone: core_claim
+notes: "Final 48-fit audit and fresh reference scoring passed. Paired headroom exceeds sampling noise; decoder edits and closed-form refitting no longer pay. Reference-only scores regenerated, documentation finalized, and end-to-end reproduction restored."

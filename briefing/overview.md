@@ -1,11 +1,11 @@
 # Overview
 
-The paper shows that standard L1 crosscoders misidentify concepts shared by a base and a chat model as chat-only latents, through Complete Shrinkage and Latent Decoupling. It introduces Latent Scaling to detect these artifacts and finds that BatchTopK crosscoders have far fewer of them, at a better reconstruction.
+The paper identifies Complete Shrinkage and Latent Decoupling as reasons that L1 crosscoders can mislabel shared structure as fine-tuned-only. It introduces Latent Scaling to detect these artifacts and finds that BatchTopK crosscoders recover more genuinely model-specific structure while preserving sparse reconstruction.
 
-This gym reproduces that comparison on synthetic paired-activation worlds with known ground truth, scored on hidden held-out worlds:
+This gym implements the paper's training procedure on scaled synthetic paired activations, with independent development and hidden worlds. In the final three-seed hidden audit, BatchTopK learns shared factors for all 16 partially separated concepts, with no spurious chat-only twins. L1 retains 14–16 such twins in the main world and 15–16 in the faint world. Raw norm-based false-discovery diagnostics and reconstruction also favor BatchTopK. This establishes the mechanism on these synthetic worlds; real Gemma activations, causal patching, steering and interpretation studies are not reproduced.
 
-- In `synthetic_chat_specificity`, the BatchTopK crosscoder (proposed) has a lower false fine-tuned-only rate than the L0-matched L1 crosscoder (0.57 vs 0.70). It also reconstructs far better (FVE 0.981 vs 0.818). Both recover all genuine fine-tuned-only concepts.
-- The paper's mechanism claim is not reproduced in this world. BatchTopK still represents every decoupled concept as a fine-tuned-only/base-only twin pair (Latent Decoupling), and these twins make up all of its false fine-tuned-only mass. The paper's own Latent Scaling estimate would accept most of them (ν < 0.6).
-- In `synthetic_faint_chat_concepts`, BatchTopK recovers only about 40% of the faint fine-tuned-only concepts. This is the regime the paper flags as a limitation, and the L1 crosscoder recovers none.
+The frozen BatchTopK reference has hidden false discovery / recall / FVE of 0.0441 / 0.9375 / 0.9773 in `synthetic_chat_specificity`, and 0.0210 / 0.8438 / 0.9753 in `synthetic_faint_chat_concepts`. L1's raw joint FVE is about 0.586, below the fixed 0.60 reconstruction requirement; its ranked results therefore receive complete failure values. Raw diagnostics remain available in the hardening evidence.
 
-The gap between the reference and a genuinely better variant (a 4x training budget with the paper's k-annealing recipe) is larger than seed noise. Details: `HARDENING.md`.
+Discovery is judged from feature/input evidence at a fixed specificity threshold, alongside ground-truth correctness, coverage, reconstruction and sparsity. This hardened measurement differs from the paper's decoder-norm labels, which remain diagnostic. See `evaluation.md` for the method-neutral contract.
+
+An alternative inference procedure improves reconstruction within the same learned support. It beats the reference at all three matched training seeds and all five common input batches; the mean paired rank gain is 0.00787 with a 95% lower bound of 0.00604. Neither it nor the reference saturates the scored metrics. Simple decoder refitting, PCA and exemplar controls do not beat the reference. Full measurements and remaining limitations are in `HARDENING.md`.

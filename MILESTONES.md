@@ -1,8 +1,16 @@
 # Reproduction Milestones
 
-**Current: method_runs** (mechanism reproduced; final shortcut closure and headroom verification pending)
+**Current: core_claim** (paper mechanism reproduced on scaled synthetic worlds; final hardening verified)
 
 ## Progress Log
+
+### [2026-11-21] - core_claim
+- Final job `caf0ab6e-583` exited 0: complete 48-fit audit, independent/streamed metric consistency, no-argument discovery, complete failure propagation, fresh reference-only scoring and validation passed.
+- BatchTopK learns shared factors for 16/16 partially separated concepts, with zero spurious chat twins, in both hidden worlds at all three training seeds; the L1 comparison retains many twins and has lower raw reconstruction.
+- Honest amplitude fitting improves rank on all five paired input batches and all three matched training seeds: mean +0.007865, SD 0.001472, 95% lower bound +0.006038. Closed-form decoder refitting loses on every paired comparison. No scored reference metric is at its bound.
+- Published scores contain reference runs only; all shortcut scores and measured limits are in `HARDENING.md`. The method preserves the paper's computational steps; real Gemma and causal experiments remain outside this reproduction.
+
+Earlier entries below describe historical gym versions and superseded measurements.
 
 ### [2026-11-21] - method_runs
 - Fixed-presence audit completed successfully: amplitude fitting improves all five paired batches and all three matched training seeds, mean rank gain +0.008205 with SD 0.0000458.
@@ -70,9 +78,8 @@
 
 ## Final hardening
 
-Review identified an unresolved decoupling mechanism. The final patch changes only scale, data frequencies, inference measurement and the supported submission interface; the paper training procedure is retained. `hardening/final_audit.py` will check three matched training seeds, common fresh test inputs, stronger and weaker methods, and affected shortcuts before a final milestone is assigned.
-
-The first audit job lost its worker after saving 41/48 fits. It is being resumed from the saved artifacts; no scientific settings changed and the milestone remains `method_runs` pending evaluation.
+Complete; see `HARDENING.md` and `hardening/final_results/`. Both items in `REVIEW.md` were measured and fixed. The final evaluator rescores raw outputs without retraining. The reference and baseline were rerun from final training code and data before the evaluator-only changes.
 
 ## Stop Justification
-- Not finished: final hardening job pending.
+
+The final audit establishes paired headroom, closes the measured major shortcuts, verifies the paper's mechanism on the scaled task, and passes validation. Reference-only scores and reusable reproduction scripts are committed. Higher milestones would require real-model, causal and interpretability experiments that this synthetic gym does not implement.
