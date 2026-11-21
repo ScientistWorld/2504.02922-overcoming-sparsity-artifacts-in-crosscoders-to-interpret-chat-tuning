@@ -4,17 +4,17 @@
       "description": "Recovery of genuinely fine-tuned-specific structure among shared, strength-asymmetric and partially separated concepts.",
       "weight": 0.6,
       "primary_metric": "reconstruction_fve",
-      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and 524,288 evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Discovery uses fixed measured model-presence threshold 0.2 and minimum firing frequency 0.5%, with ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
+      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and 524,288 evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Discovery uses centered feature/input covariance at a fixed model-presence threshold 0.2 and minimum firing frequency 0.5%, independent of submitted decoder rotation or magnitude, with ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
       "metrics": {
         "false_ft_only_rate": {
           "higher_is_better": false,
           "coefficient": -1.0,
-          "description": "False discovery fraction of measured chat-contribution mass among supported factors with measured base/chat presence below 0.2. Ground-truth alignment and conditional presence determine correctness. Only the largest-mass correct factor per target gets credit; duplicate mass is false. Empty discovery has value 1."
+          "description": "False discovery fraction of centered covariance-derived chat-contribution mass among supported factors with measured base/chat presence below 0.2. Discovery selection and mass are independent of submitted decoder rotation or magnitude. Ground-truth alignment and conditional presence determine correctness. Only the largest-mass correct factor per target gets credit; duplicate mass is false. Empty discovery has value 1."
         },
         "chat_specific_recall": {
           "higher_is_better": true,
           "coefficient": 1.0,
-          "description": "Fraction of 32 fine-tuned-specific target structures recovered by factors firing on at least 0.5% of inputs with measured base/chat presence below 0.2; genuinely specific requires cosine >= 0.8 and activity-weighted ground-truth base/chat ratio < 0.2."
+          "description": "Fraction of 32 fine-tuned-specific target structures recovered by factors firing on at least 0.5% of inputs with covariance-derived base/chat presence below 0.2; genuinely specific requires submitted decoder cosine >= 0.8 and activity-weighted ground-truth base/chat ratio < 0.2."
         },
         "reconstruction_fve": {
           "higher_is_better": true,
@@ -84,17 +84,17 @@
       "description": "Recovery in denser inputs with fine-tuned-only concept strength 0.25-0.65, a small-variance information regime.",
       "weight": 0.4,
       "primary_metric": "reconstruction_fve",
-      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and 524,288 evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Discovery uses fixed measured model-presence threshold 0.2 and minimum firing frequency 0.5%, with ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
+      "notes": "Scaled synthetic setting: 64-d paired streams, 112 concepts, 512 factors, mean L0 <= 6.6, 65,536 training and 524,288 evaluation inputs. These results are measured gym reference runs, refreshed by hardening/final_audit.py. Original Gemma paper numbers are preserved unchanged under underscore-prefixed metadata and are not comparison targets. Discovery uses centered feature/input covariance at a fixed model-presence threshold 0.2 and minimum firing frequency 0.5%, independent of submitted decoder rotation or magnitude, with ground-truth specificity; decoder-norm and residual Latent Scaling classifications are separate unscored diagnostics.",
       "metrics": {
         "false_ft_only_rate": {
           "higher_is_better": false,
           "coefficient": -0.5,
-          "description": "False discovery fraction of measured chat-contribution mass among supported factors with measured base/chat presence below 0.2. Ground-truth alignment and conditional presence determine correctness. Only the largest-mass correct factor per target gets credit; duplicate mass is false. Empty discovery has value 1."
+          "description": "False discovery fraction of centered covariance-derived chat-contribution mass among supported factors with measured base/chat presence below 0.2. Discovery selection and mass are independent of submitted decoder rotation or magnitude. Ground-truth alignment and conditional presence determine correctness. Only the largest-mass correct factor per target gets credit; duplicate mass is false. Empty discovery has value 1."
         },
         "chat_specific_recall": {
           "higher_is_better": true,
           "coefficient": 1.0,
-          "description": "Fraction of 32 fine-tuned-specific target structures recovered by factors firing on at least 0.5% of inputs with measured base/chat presence below 0.2; genuinely specific requires cosine >= 0.8 and activity-weighted ground-truth base/chat ratio < 0.2."
+          "description": "Fraction of 32 fine-tuned-specific target structures recovered by factors firing on at least 0.5% of inputs with covariance-derived base/chat presence below 0.2; genuinely specific requires submitted decoder cosine >= 0.8 and activity-weighted ground-truth base/chat ratio < 0.2."
         },
         "reconstruction_fve": {
           "higher_is_better": true,

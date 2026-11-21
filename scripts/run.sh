@@ -1,5 +1,5 @@
 #!/bin/bash
-# Rescore fixed-presence discovery after all 48 training fits completed. Restored to
+# Rescore covariance-based discovery after all 48 training fits completed. Restored to
 # scripts/reproduce.sh after the hardening evidence has been reviewed.
 set -euo pipefail
 cd /home/user

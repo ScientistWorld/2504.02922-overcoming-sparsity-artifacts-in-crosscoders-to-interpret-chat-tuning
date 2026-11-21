@@ -1,8 +1,13 @@
 # Reproduction Milestones
 
-**Current: method_runs** (mechanism reproduced; final headroom measurement pending)
+**Current: method_runs** (mechanism reproduced; final shortcut closure and headroom verification pending)
 
 ## Progress Log
+
+### [2026-11-21] - method_runs
+- Fixed-presence audit completed successfully: amplitude fitting improves all five paired batches and all three matched training seeds, mean rank gain +0.008205 with SD 0.0000458.
+- A simple decoder refit still gained +0.001905 by rotating selection evidence despite worse reconstruction. Changed selection and mass to centered feature/input covariance, preserving decoder alignment for correctness and actual decoder reconstruction.
+- All 48 training fits remain final and unchanged. One combined saved-output rescore must establish both nonpaying closed-form controls and robust headroom before advancing the milestone.
 
 ### [2026-11-21] - method_runs
 - Completed the consolidated 48-fit audit and validation. Fresh reference-only evaluator results exactly match audit checkpoints.

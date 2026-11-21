@@ -18,10 +18,10 @@ Implemented in `method/` (`crosscoder.py`, `train.py`):
 
 Options used by the hardening audit, not by the reference: the alternative selection norms of App. B.3 (`selection_norm = concat | max`); disabling the auxiliary loss.
 
-Deviations from the paper (scale, not procedure):
+Scale changes and evaluation departures from the paper:
 
 - Synthetic 64-dimensional paired worlds with known ground truth replace Gemma-2-2B layer-13 activations on 100M tokens.
 - 512 latents and k = 6 (paper: 73,728 and k = 100).
 - 32k steps at lr 1e-3 (paper: about 2 epochs at lr 1e-4 over 100M tokens). The learning rate is raised because the run is far shorter.
 - The causal (KL patching), steering and auto-interpretability experiments are not reproduced.
-- Discovery uses raw-activation Latent Scaling with measured presence below 0.2 and support on at least 0.5% of inputs, with negative base estimates clipped to zero. Only the largest-mass correct factor per target gets credit; duplicate contribution counts as false discovery. Specificity correctness is judged against ground truth. Decoder-norm classification and residual/reconstruction Latent Scaling remain diagnostics; these synthetic rates are not paper-scale Table 1 estimates.
+- Training preserves the paper's computational procedure. Scored discovery uses centered feature/input covariance to estimate model presence, with presence below 0.2 and support on at least 0.5% of inputs; negative base estimates are clipped to zero. This evaluator-specific measurement is independent of submitted decoder norms and rotations. It differs from the paper's uncentered Latent Scaling along a learned decoder. Only the largest-mass correct factor per target gets credit; duplicate contribution counts as false discovery. Correctness uses decoder alignment and ground-truth specificity. Decoder-norm classification and residual/reconstruction Latent Scaling remain diagnostics; these synthetic rates are not paper-scale Table 1 estimates.

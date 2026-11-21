@@ -217,20 +217,30 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     rho = np.where(fc > 0, fb / np.where(fc > 0, fc, 1.0), np.inf)
     genuine = alive & aligned & (rho < SPECIFICITY_PI)
 
-    # Fixed specificity operating point from raw-activation Latent Scaling
-    # (Eq. 4), independent of submitted decoder magnitudes. A top-N boundary
-    # made distinct-target recovery depend on near-tied rare factors. Require
-    # adequate support and measured presence below the evaluator's fixed pi.
-    num_base = (fhb * unit_chat).sum(axis=1)
-    num_chat = (fhc * unit_chat).sum(axis=1)
-    presence = np.divide(np.maximum(num_base, 0), num_chat,
-                         out=np.full_like(num_chat, np.inf), where=num_chat > 1e-12)
-    measured_mass = mean_f * np.divide(np.maximum(num_chat, 0), sq_f,
-                    out=np.zeros_like(sq_f), where=sq_f > 0)
+    # Measure discovery from feature/input covariance, rather than letting a
+    # submitted decoder rotate the selection boundary. The empirical chat
+    # direction is the univariate least-squares direction with an intercept.
+    # Centering removes co-occurrence with the background activation mean.
+    # Decoder alignment still determines correctness, and actual submitted
+    # decoders still determine reconstruction. Thus a decoder-only relabel or
+    # rotation cannot hide a false feature, including by zeroing its decoder.
+    cov_base = fhb - sf[:, None] * hb.mean(axis=0)
+    cov_chat = fhc - sf[:, None] * hc.mean(axis=0)
+    chat_energy = np.linalg.norm(cov_chat, axis=1)
+    evidence_direction = np.divide(cov_chat, chat_energy[:, None],
+                                  out=np.zeros_like(cov_chat),
+                                  where=chat_energy[:, None] > 1e-12)
+    base_projection = (cov_base * evidence_direction).sum(axis=1)
+    presence = np.divide(np.maximum(base_projection, 0), chat_energy,
+                         out=np.full_like(chat_energy, np.inf),
+                         where=chat_energy > 1e-12)
+    feature_variance = np.maximum(sq_f - sf * sf / n, 0)
+    measured_mass = mean_f * np.divide(chat_energy, feature_variance,
+                    out=np.zeros_like(chat_energy), where=feature_variance > 1e-12)
     family = np.asarray(world["family"])
     target_ids = {FAMILIES.index(name) for name in TARGET_FAMILIES}
     targets = {int(c) for c in np.flatnonzero(np.isin(family, list(target_ids)))}
-    candidates = np.flatnonzero(alive & (nc > 0) & np.isfinite(presence)
+    candidates = np.flatnonzero(alive & (chat_energy > 1e-12) & np.isfinite(presence)
                                 & (presence < SPECIFICITY_PI))
     # Credit the largest contribution once per target. Sorting by an almost
     # zero presence estimate used to credit arbitrary low-mass duplicates.
@@ -296,7 +306,8 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
         "chat_fve": 1.0 - sse_c / sst_c,
         "n_ft_only": n_ft,
         "norm_false_ft_only_rate": norm_false,
-        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "selection": "feature/input covariance below fixed presence threshold",
+        "selected_mass": selected_mass,
         "minimum_firing_rate": MIN_FIRING_RATE,
         "presence_threshold": SPECIFICITY_PI,
         "n_selected": len(top),

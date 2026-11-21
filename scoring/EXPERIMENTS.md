@@ -1,6 +1,6 @@
 # Experiments
 
-Both experiments measure discovery of fine-tuning-specific structure while preserving reconstruction under fixed capacity and activity budgets. Each has a public development world and an independent held-out world. Methods learn from unlabeled activations; the evaluator generates new inputs, computes outputs from submitted procedures, and judges against its own ground truth. Every method uses the same measured-presence threshold (0.2) and minimum firing frequency (0.5%). Duplicate factors receive no extra target credit.
+Both experiments measure discovery of fine-tuning-specific structure while preserving reconstruction under fixed capacity and activity budgets. Each has a public development world and an independent held-out world. Methods learn from unlabeled activations; the evaluator generates new inputs, computes outputs from submitted procedures, and judges against its own ground truth. Every method uses the same measured-presence threshold (0.2) and minimum firing frequency (0.5%). Presence and contribution mass come from centered feature/input covariance, so decoder rotation or scaling cannot change discovery selection. Submitted reconstruction directions still determine correctness and explained variance. Duplicate factors receive no extra target credit.
 
 ## synthetic_chat_specificity (weight 0.6)
 

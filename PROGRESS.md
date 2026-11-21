@@ -1,3 +1,9 @@
+## 2026-11-21 — decoder-independent discovery follow-up
+
+Job `bc9fe25e-7c5` finished with exit 0. Fresh reference-only entry points, all complete-failure/discovery checks and validation passed. Fixed-threshold discovery established amplitude-fitting headroom: five paired gains averaged +0.008205, SD 0.0000458, with a positive 95% lower bound and gains at all three matched training seeds. Longer training and iterative alternatives did not consistently improve rank. Results are archived in `hardening/intermediate_decoder_selection/`.
+
+A remaining simple closed-form decoder refit paid +0.001905 on seed 0 despite slightly reducing FVE, because decoder rotation changed discovery selection. Both independent evaluators now derive selection and mass from centered feature/input covariance, independently of decoder rotation, scaling or zeroing. Correctness still requires the submitted decoder to align with a genuine target, and reconstruction uses the submitted decoders. Added direct-versus-streamed covariance and decoder-refit invariance checks, and require that the refit control not pay on any paired batch or matched training seed before accepting headroom. Rescore all saved outputs together; no training, data or coefficient changes. Final hardening remains pending this audit.
+
 ## 2026-11-21 — measurement stability follow-up
 
 Job `b0f5e3b1-cb1` finished with exit 0. All 48 fits were reused, both no-argument entry points passed discovery and complete-failure checks, fresh uncached reference scores exactly matched the resumed audit, and validation passed. The paper's decoupling mechanism now appears in its direction on both hidden worlds at all three seeds. Nevertheless, five paired 524,288-input batches rejected headroom: iterative inference mean gain +0.0682 had 95% lower bound -0.0340, and decoder-refitted inference lost on one batch. Archived the full fixed-count results under `hardening/intermediate_top32/`.

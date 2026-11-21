@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: false
 milestone: method_runs
-notes: "Rescore saved reference, baseline, honest variants and shortcuts with fixed presence threshold 0.2, minimum support 0.5%, and duplicate penalties on both independent evaluators. Reuse all 48 fits; measure five paired batches, verify fresh no-argument reference-only scores against the audit, and validate. Training, data and weights unchanged."
+notes: "Rescore saved outputs with decoder-independent covariance discovery. Reuse all 48 final fits and constructed variants; verify raw streamed statistics and decoder-refit invariance, nonpaying closed-form controls, five paired input batches and three matched training seeds, complete failures, fresh reference-only entry points, and validation. Training, data, weights and paper numbers unchanged."
