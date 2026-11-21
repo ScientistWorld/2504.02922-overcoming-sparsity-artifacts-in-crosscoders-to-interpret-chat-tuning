@@ -1,3 +1,9 @@
+## 2026-11-21 — measurement stability follow-up
+
+Job `b0f5e3b1-cb1` finished with exit 0. All 48 fits were reused, both no-argument entry points passed discovery and complete-failure checks, fresh uncached reference scores exactly matched the resumed audit, and validation passed. The paper's decoupling mechanism now appears in its direction on both hidden worlds at all three seeds. Nevertheless, five paired 524,288-input batches rejected headroom: iterative inference mean gain +0.0682 had 95% lower bound -0.0340, and decoder-refitted inference lost on one batch. Archived the full fixed-count results under `hardening/intermediate_top32/`.
+
+Changed both independent scorers to fixed presence <0.2 and minimum frequency 0.5%, with largest-mass single target credit and duplicate false-mass penalties. This removes the noisy top-32 truncation without changing training, data, weights, or the supported method interface. Updated scientific documentation. Submitting one combined saved-output rescore of reference, baselines, better/weaker variants and affected shortcuts; no retraining.
+
 # Current status (2026-11-20)
 
 Job `505179e7-81d` was cancelled after repeated scheduler preemptions discarded unfinished scoring passes. It confirmed agreement of both independent scorers and streamed versus direct reconstruction statistics. The audit now checkpoints each completed method/experiment/replicate with raw-artifact and scorer fingerprints, and skips completed construction after a restart. Published evaluators continue to recompute every number without a cache; the audit checks exact agreement with their fresh reference-only results. The same CPU rescore is being resumed with no scientific settings or training changes.

@@ -38,8 +38,7 @@ L0_MAX = 6.6
 FT_ONLY_DELTA = 0.9
 ALIGN_COS = 0.8
 SPECIFICITY_PI = 0.2
-MIN_FIRING = 80
-TOP_N_FACTOR = 1.0
+MIN_FIRING_RATE = 0.005
 FVE_MIN = 0.60
 RECALL_MIN = 0.10
 LS_FALSE_NU = 0.6
@@ -223,7 +222,7 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     nc = np.linalg.norm(wdc, axis=1)
     mx = np.maximum(nb, nc)
     delta = np.where(mx > 0, 0.5 * (1.0 + (nc - nb) / np.where(mx > 0, mx, 1.0)), 0.5)
-    alive = fires >= MIN_FIRING
+    alive = fires >= max(1, math.ceil(MIN_FIRING_RATE * n))
     mass = mean_f * nc
 
     directions = np.asarray(world["directions"], dtype=np.float64)
@@ -239,9 +238,10 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     rho = np.where(fc > 0, fb / np.where(fc > 0, fc, 1.0), np.inf)
     genuine = alive & aligned & (rho < SPECIFICITY_PI)
 
-    # Fixed operating point, ranked by the paper's raw-activation Latent
-    # Scaling (Eq. 4), rather than the submitted base decoder norm. Merely
-    # changing decoder norms cannot improve discovery or specificity.
+    # Fixed specificity operating point from raw-activation Latent Scaling
+    # (Eq. 4), independent of submitted decoder magnitudes. A top-N boundary
+    # made distinct-target recovery depend on near-tied rare factors. Require
+    # adequate support and measured presence below the evaluator's fixed pi.
     num_base = (fhb * unit_chat).sum(axis=1)
     num_chat = (fhc * unit_chat).sum(axis=1)
     presence = np.divide(np.maximum(num_base, 0), num_chat,
@@ -251,12 +251,13 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
     family = np.asarray(world["family"])
     target_ids = {FAMILIES.index(name) for name in TARGET_FAMILIES}
     targets = {int(c) for c in np.flatnonzero(np.isin(family, list(target_ids)))}
-    top_n = int(math.ceil(TOP_N_FACTOR * len(targets)))
-    candidates = np.flatnonzero(alive & (nc > 0) & np.isfinite(presence))
-    order = candidates[np.lexsort((-measured_mass[candidates], presence[candidates]))]
-    top = order[:top_n]
-    # Only one factor can claim a given concept. Duplicating good factors
-    # must not dilute spurious factors at a fixed discovery budget.
+    candidates = np.flatnonzero(alive & (nc > 0) & np.isfinite(presence)
+                                & (presence < SPECIFICITY_PI))
+    # Credit the largest contribution once per target. Sorting by an almost
+    # zero presence estimate used to credit arbitrary low-mass duplicates.
+    top = candidates[np.argsort(-measured_mass[candidates], kind="stable")]
+    # Only one factor can claim a given concept. All duplicate contribution
+    # remains in the false-discovery denominator and receives no extra credit.
     credited = np.zeros(D, dtype=bool)
     seen = set()
     for j in top:
@@ -315,14 +316,15 @@ def score_artifact(art: dict, sample: dict, world: dict) -> tuple[dict, dict]:
         "chat_fve": 1.0 - sse_c / sst_c,
         "n_ft_only": n_ft,
         "norm_false_ft_only_rate": norm_false,
-        "selection": "raw-activation Latent Scaling at fixed top N",
+        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "minimum_firing_rate": MIN_FIRING_RATE,
+        "presence_threshold": SPECIFICITY_PI,
         "n_selected": len(top),
         "n_ft_only_genuine": int((ft_only & genuine).sum()),
         "ft_only_mass": ft_mass,
         "spurious_mass_fraction_by_family": {k: v / ft_mass for k, v in sorted(spurious.items())} if ft_mass > 0 else {},
         "recall_by_family": recall_by_family,
-        "top_n": top_n,
-        "n_genuine_in_top_n": int(sum(bool(genuine[j]) for j in top)),
+        "n_genuine_selected": int(sum(bool(genuine[j]) for j in top)),
         "latent_scaling_false_ft_only_fraction": (float(ls_false[ft_only].mean()) if n_ft else None),
     }
     # Keep evaluator-computed mechanism and raw performance diagnostics even

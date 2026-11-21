@@ -1,8 +1,13 @@
 # Reproduction Milestones
 
-**Current: method_runs** (final hardening measurements pending)
+**Current: method_runs** (mechanism reproduced; final headroom measurement pending)
 
 ## Progress Log
+
+### [2026-11-21] - method_runs
+- Completed the consolidated 48-fit audit and validation. Fresh reference-only evaluator results exactly match audit checkpoints.
+- The paper's mechanism direction is now clear on both hidden worlds at all three seeds: BatchTopK has 16/16 coupled factors and zero spurious twins; L1 retains 15–16 twins. Raw reconstruction and false norm-label metrics also favor BatchTopK.
+- Headroom remains unestablished: top-32 truncation makes coverage fluctuate across common test batches even at 524,288 inputs. Replaced it with a fixed presence threshold and minimum-support frequency on both evaluator sides; rescoring saved outputs in one job before final claims.
 
 ### [2026-11-20] - method_runs
 - The CPU rescore was repeatedly preempted. Both independent scorers and streamed statistics passed their consistency check; final paired headroom is still pending.

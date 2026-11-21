@@ -24,4 +24,4 @@ Deviations from the paper (scale, not procedure):
 - 512 latents and k = 6 (paper: 73,728 and k = 100).
 - 32k steps at lr 1e-3 (paper: about 2 epochs at lr 1e-4 over 100M tokens). The learning rate is raised because the run is far shorter.
 - The causal (KL patching), steering and auto-interpretability experiments are not reproduced.
-- The discovery ranking uses raw-activation Latent Scaling at a fixed 32-factor operating point, with negative base estimates clipped to zero. Specificity correctness is judged against ground truth. Decoder-norm classification and residual/reconstruction Latent Scaling remain diagnostics; these synthetic rates are not paper-scale Table 1 estimates.
+- Discovery uses raw-activation Latent Scaling with measured presence below 0.2 and support on at least 0.5% of inputs, with negative base estimates clipped to zero. Only the largest-mass correct factor per target gets credit; duplicate contribution counts as false discovery. Specificity correctness is judged against ground truth. Decoder-norm classification and residual/reconstruction Latent Scaling remain diagnostics; these synthetic rates are not paper-scale Table 1 estimates.

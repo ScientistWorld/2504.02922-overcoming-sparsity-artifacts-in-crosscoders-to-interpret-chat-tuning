@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: false
 milestone: method_runs
-notes: "Resume the consolidated CPU rescore with atomic per-artifact audit checkpoints so scheduler preemption preserves completed scoring. Reuse all 48 fits; finish the unchanged five-batch paired headroom and shortcut audit, compare fresh uncached reference-only scores, and validate. No retraining or scientific-setting changes."
+notes: "Rescore saved reference, baseline, honest variants and shortcuts with fixed presence threshold 0.2, minimum support 0.5%, and duplicate penalties on both independent evaluators. Reuse all 48 fits; measure five paired batches, verify fresh no-argument reference-only scores against the audit, and validate. Training, data and weights unchanged."
