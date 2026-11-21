@@ -7,30 +7,65 @@
         "n_decoupled_with_shared_factor": 16,
         "n_decoupled_with_spurious_chat_twin": 0,
         "n_latents": 512,
-        "n_alive": 187,
-        "mean_l0": 6.040771484375,
-        "base_fve": 0.9773204229407368,
-        "chat_fve": 0.9774121854150235,
+        "n_alive": 186,
+        "mean_l0": 6.021137237548828,
+        "base_fve": 0.977250238534724,
+        "chat_fve": 0.9773684791318111,
         "n_ft_only": 37,
-        "norm_false_ft_only_rate": 0.11014770024622102,
+        "norm_false_ft_only_rate": 0.10938360864764786,
         "selection": "raw-activation Latent Scaling at fixed top N",
         "n_selected": 32,
         "n_ft_only_genuine": 27,
-        "ft_only_mass": 1.971292766120129,
+        "ft_only_mass": 1.9774411548487116,
         "spurious_mass_fraction_by_family": {
-          "unaligned": 0.11014770024622102
+          "unaligned": 0.10938360864764786
         },
         "recall_by_family": {
           "chat_only": 0.6875,
-          "decoupled": 0.25
+          "decoupled": 0.3125
         },
         "top_n": 32,
-        "n_genuine_in_top_n": 15,
-        "latent_scaling_false_ft_only_fraction": 0.21621621621621623
+        "n_genuine_in_top_n": 16,
+        "latent_scaling_false_ft_only_fraction": 0.21621621621621623,
+        "raw_metrics": {
+          "false_ft_only_rate": 0.05011969586562028,
+          "chat_specific_recall": 0.5,
+          "reconstruction_fve": 0.977313997900792
+        }
       },
       "l1": {
         "status": "failed",
-        "reason": "FVE 0.5859141596985238 outside [0.6, 1]",
+        "n_decoupled_with_shared_factor": 6,
+        "n_decoupled_with_spurious_chat_twin": 15,
+        "n_latents": 512,
+        "n_alive": 328,
+        "mean_l0": 5.78460693359375,
+        "base_fve": 0.5752669345715686,
+        "chat_fve": 0.5956636796990199,
+        "n_ft_only": 63,
+        "norm_false_ft_only_rate": 0.7577773421858736,
+        "selection": "raw-activation Latent Scaling at fixed top N",
+        "n_selected": 32,
+        "n_ft_only_genuine": 16,
+        "ft_only_mass": 1.9875625149077203,
+        "spurious_mass_fraction_by_family": {
+          "decoupled": 0.5162302051025772,
+          "shared": 0.016569335920434754,
+          "weak_shared": 0.22497780116286148
+        },
+        "recall_by_family": {
+          "chat_only": 1.0,
+          "decoupled": 0.0
+        },
+        "top_n": 32,
+        "n_genuine_in_top_n": 16,
+        "latent_scaling_false_ft_only_fraction": 0.4603174603174603,
+        "raw_metrics": {
+          "false_ft_only_rate": 0.43914141112064636,
+          "chat_specific_recall": 0.5,
+          "reconstruction_fve": 0.5862655557830219
+        },
+        "reason": "FVE 0.5862655557830219 outside [0.6, 1]",
         "suite_status": "failed",
         "failed_experiments": [
           "synthetic_chat_specificity",
@@ -44,30 +79,65 @@
         "n_decoupled_with_shared_factor": 16,
         "n_decoupled_with_spurious_chat_twin": 0,
         "n_latents": 512,
-        "n_alive": 192,
-        "mean_l0": 5.9940338134765625,
-        "base_fve": 0.977675512349967,
-        "chat_fve": 0.9728900941152637,
+        "n_alive": 182,
+        "mean_l0": 6.001228332519531,
+        "base_fve": 0.9777406338737294,
+        "chat_fve": 0.9728505155550736,
         "n_ft_only": 39,
-        "norm_false_ft_only_rate": 0.3076732327199373,
+        "norm_false_ft_only_rate": 0.3061977986983026,
         "selection": "raw-activation Latent Scaling at fixed top N",
         "n_selected": 32,
         "n_ft_only_genuine": 28,
-        "ft_only_mass": 0.7849639079490849,
+        "ft_only_mass": 0.7951789325029165,
         "spurious_mass_fraction_by_family": {
-          "unaligned": 0.3076732327199373
+          "unaligned": 0.3061977986983026
         },
         "recall_by_family": {
           "chat_only": 0.75,
-          "decoupled": 0.625
+          "decoupled": 0.75
         },
         "top_n": 32,
-        "n_genuine_in_top_n": 22,
-        "latent_scaling_false_ft_only_fraction": 0.2564102564102564
+        "n_genuine_in_top_n": 24,
+        "latent_scaling_false_ft_only_fraction": 0.28205128205128205,
+        "raw_metrics": {
+          "false_ft_only_rate": 0.07716544230481916,
+          "chat_specific_recall": 0.75,
+          "reconstruction_fve": 0.9753037006099403
+        }
       },
       "l1": {
         "status": "failed",
-        "reason": "FVE 0.5861250586319633 outside [0.6, 1]",
+        "n_decoupled_with_shared_factor": 4,
+        "n_decoupled_with_spurious_chat_twin": 15,
+        "n_latents": 512,
+        "n_alive": 315,
+        "mean_l0": 6.326961517333984,
+        "base_fve": 0.5875505904562897,
+        "chat_fve": 0.5864236092269419,
+        "n_ft_only": 46,
+        "norm_false_ft_only_rate": 0.9855974122898814,
+        "selection": "raw-activation Latent Scaling at fixed top N",
+        "n_selected": 32,
+        "n_ft_only_genuine": 3,
+        "ft_only_mass": 1.5076385961177123,
+        "spurious_mass_fraction_by_family": {
+          "decoupled": 0.7524206683506035,
+          "shared": 0.01227139899390408,
+          "weak_shared": 0.22090534494537387
+        },
+        "recall_by_family": {
+          "chat_only": 0.1875,
+          "decoupled": 0.0
+        },
+        "top_n": 32,
+        "n_genuine_in_top_n": 3,
+        "latent_scaling_false_ft_only_fraction": 0.6304347826086957,
+        "raw_metrics": {
+          "false_ft_only_rate": 0.9625375839450342,
+          "chat_specific_recall": 0.09375,
+          "reconstruction_fve": 0.5869889725430817
+        },
+        "reason": "FVE 0.5869889725430817 outside [0.6, 1]",
         "suite_status": "failed",
         "failed_experiments": [
           "synthetic_chat_specificity",
