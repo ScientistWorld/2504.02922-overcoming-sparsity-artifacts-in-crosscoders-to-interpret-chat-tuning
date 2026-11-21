@@ -68,7 +68,7 @@
       "results": {
         "batchtopk": {
           "type": "proposed",
-          "false_ft_only_rate": 0.044045394296306085,
+          "false_ft_only_rate": 0.044059154416830726,
           "chat_specific_recall": 0.9375,
           "reconstruction_fve": 0.977313997900792
         },
@@ -117,8 +117,8 @@
       "results": {
         "batchtopk": {
           "type": "proposed",
-          "false_ft_only_rate": 0.06434843889305676,
-          "chat_specific_recall": 0.8125,
+          "false_ft_only_rate": 0.021031368257797077,
+          "chat_specific_recall": 0.84375,
           "reconstruction_fve": 0.9753037006099403
         },
         "l1": {

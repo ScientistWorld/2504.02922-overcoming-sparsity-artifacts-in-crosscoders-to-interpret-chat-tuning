@@ -13,7 +13,8 @@
         "chat_fve": 0.9773684791318111,
         "n_ft_only": 37,
         "norm_false_ft_only_rate": 0.10938360864764786,
-        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "selection": "feature/input covariance below fixed presence threshold",
+        "selected_mass": 1.9337434386197898,
         "minimum_firing_rate": 0.005,
         "presence_threshold": 0.2,
         "n_selected": 47,
@@ -29,7 +30,7 @@
         "n_genuine_selected": 30,
         "latent_scaling_false_ft_only_fraction": 0.21621621621621623,
         "raw_metrics": {
-          "false_ft_only_rate": 0.044045394296306085,
+          "false_ft_only_rate": 0.044059154416830726,
           "chat_specific_recall": 0.9375,
           "reconstruction_fve": 0.977313997900792
         }
@@ -45,10 +46,11 @@
         "chat_fve": 0.5956636796990199,
         "n_ft_only": 63,
         "norm_false_ft_only_rate": 0.7577773421858736,
-        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "selection": "feature/input covariance below fixed presence threshold",
+        "selected_mass": 0.8715847607996663,
         "minimum_firing_rate": 0.005,
         "presence_threshold": 0.2,
-        "n_selected": 17,
+        "n_selected": 16,
         "n_ft_only_genuine": 16,
         "ft_only_mass": 1.9875625149077203,
         "spurious_mass_fraction_by_family": {
@@ -63,7 +65,7 @@
         "n_genuine_selected": 16,
         "latent_scaling_false_ft_only_fraction": 0.4603174603174603,
         "raw_metrics": {
-          "false_ft_only_rate": 6.0671134123386905e-05,
+          "false_ft_only_rate": 0.0,
           "chat_specific_recall": 0.5,
           "reconstruction_fve": 0.5862655557830219
         },
@@ -87,24 +89,25 @@
         "chat_fve": 0.9728505155550736,
         "n_ft_only": 34,
         "norm_false_ft_only_rate": 0.31367560077556395,
-        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "selection": "feature/input covariance below fixed presence threshold",
+        "selected_mass": 0.6482109658246982,
         "minimum_firing_rate": 0.005,
         "presence_threshold": 0.2,
-        "n_selected": 34,
+        "n_selected": 41,
         "n_ft_only_genuine": 23,
         "ft_only_mass": 0.7762224352217675,
         "spurious_mass_fraction_by_family": {
           "unaligned": 0.31367560077556395
         },
         "recall_by_family": {
-          "chat_only": 0.625,
+          "chat_only": 0.6875,
           "decoupled": 1.0
         },
-        "n_genuine_selected": 26,
+        "n_genuine_selected": 27,
         "latent_scaling_false_ft_only_fraction": 0.3235294117647059,
         "raw_metrics": {
-          "false_ft_only_rate": 0.06434843889305676,
-          "chat_specific_recall": 0.8125,
+          "false_ft_only_rate": 0.021031368257797077,
+          "chat_specific_recall": 0.84375,
           "reconstruction_fve": 0.9753037006099403
         }
       },
@@ -119,10 +122,11 @@
         "chat_fve": 0.5864236092269419,
         "n_ft_only": 46,
         "norm_false_ft_only_rate": 0.9855974122898814,
-        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "selection": "feature/input covariance below fixed presence threshold",
+        "selected_mass": 0.053597452881840986,
         "minimum_firing_rate": 0.005,
         "presence_threshold": 0.2,
-        "n_selected": 4,
+        "n_selected": 3,
         "n_ft_only_genuine": 3,
         "ft_only_mass": 1.5076385961177123,
         "spurious_mass_fraction_by_family": {
@@ -137,7 +141,7 @@
         "n_genuine_selected": 3,
         "latent_scaling_false_ft_only_fraction": 0.6304347826086957,
         "raw_metrics": {
-          "false_ft_only_rate": 0.022537757766850734,
+          "false_ft_only_rate": 0.0,
           "chat_specific_recall": 0.09375,
           "reconstruction_fve": 0.5869889725430817
         },
