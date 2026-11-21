@@ -4,8 +4,8 @@
     "synthetic_chat_specificity": {
       "results": {
         "batchtopk": {
-          "false_ft_only_rate": 0.035267486917320574,
-          "chat_specific_recall": 0.6875,
+          "false_ft_only_rate": 0.02820391029058352,
+          "chat_specific_recall": 0.96875,
           "reconstruction_fve": 0.9754397729433727
         },
         "l1": {
@@ -18,8 +18,8 @@
     "synthetic_faint_chat_concepts": {
       "results": {
         "batchtopk": {
-          "false_ft_only_rate": 0.13465428202310475,
-          "chat_specific_recall": 0.625,
+          "false_ft_only_rate": 0.08800021331120657,
+          "chat_specific_recall": 0.9375,
           "reconstruction_fve": 0.9731934614357318
         },
         "l1": {

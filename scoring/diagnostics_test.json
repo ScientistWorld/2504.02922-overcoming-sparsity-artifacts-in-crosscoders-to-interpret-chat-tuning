@@ -7,45 +7,48 @@
         "n_decoupled_with_shared_factor": 16,
         "n_decoupled_with_spurious_chat_twin": 0,
         "n_latents": 512,
-        "n_alive": 186,
+        "n_alive": 143,
         "mean_l0": 6.021137237548828,
         "base_fve": 0.977250238534724,
         "chat_fve": 0.9773684791318111,
         "n_ft_only": 37,
         "norm_false_ft_only_rate": 0.10938360864764786,
-        "selection": "raw-activation Latent Scaling at fixed top N",
-        "n_selected": 32,
+        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "minimum_firing_rate": 0.005,
+        "presence_threshold": 0.2,
+        "n_selected": 47,
         "n_ft_only_genuine": 27,
         "ft_only_mass": 1.9774411548487116,
         "spurious_mass_fraction_by_family": {
           "unaligned": 0.10938360864764786
         },
         "recall_by_family": {
-          "chat_only": 0.6875,
-          "decoupled": 0.3125
+          "chat_only": 1.0,
+          "decoupled": 0.875
         },
-        "top_n": 32,
-        "n_genuine_in_top_n": 16,
+        "n_genuine_selected": 30,
         "latent_scaling_false_ft_only_fraction": 0.21621621621621623,
         "raw_metrics": {
-          "false_ft_only_rate": 0.05011969586562028,
-          "chat_specific_recall": 0.5,
+          "false_ft_only_rate": 0.044045394296306085,
+          "chat_specific_recall": 0.9375,
           "reconstruction_fve": 0.977313997900792
         }
       },
       "l1": {
         "status": "failed",
-        "n_decoupled_with_shared_factor": 6,
+        "n_decoupled_with_shared_factor": 3,
         "n_decoupled_with_spurious_chat_twin": 15,
         "n_latents": 512,
-        "n_alive": 328,
+        "n_alive": 235,
         "mean_l0": 5.78460693359375,
         "base_fve": 0.5752669345715686,
         "chat_fve": 0.5956636796990199,
         "n_ft_only": 63,
         "norm_false_ft_only_rate": 0.7577773421858736,
-        "selection": "raw-activation Latent Scaling at fixed top N",
-        "n_selected": 32,
+        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "minimum_firing_rate": 0.005,
+        "presence_threshold": 0.2,
+        "n_selected": 17,
         "n_ft_only_genuine": 16,
         "ft_only_mass": 1.9875625149077203,
         "spurious_mass_fraction_by_family": {
@@ -57,11 +60,10 @@
           "chat_only": 1.0,
           "decoupled": 0.0
         },
-        "top_n": 32,
-        "n_genuine_in_top_n": 16,
+        "n_genuine_selected": 16,
         "latent_scaling_false_ft_only_fraction": 0.4603174603174603,
         "raw_metrics": {
-          "false_ft_only_rate": 0.43914141112064636,
+          "false_ft_only_rate": 6.0671134123386905e-05,
           "chat_specific_recall": 0.5,
           "reconstruction_fve": 0.5862655557830219
         },
@@ -79,29 +81,30 @@
         "n_decoupled_with_shared_factor": 16,
         "n_decoupled_with_spurious_chat_twin": 0,
         "n_latents": 512,
-        "n_alive": 182,
+        "n_alive": 139,
         "mean_l0": 6.001228332519531,
         "base_fve": 0.9777406338737294,
         "chat_fve": 0.9728505155550736,
-        "n_ft_only": 39,
-        "norm_false_ft_only_rate": 0.3061977986983026,
-        "selection": "raw-activation Latent Scaling at fixed top N",
-        "n_selected": 32,
-        "n_ft_only_genuine": 28,
-        "ft_only_mass": 0.7951789325029165,
+        "n_ft_only": 34,
+        "norm_false_ft_only_rate": 0.31367560077556395,
+        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "minimum_firing_rate": 0.005,
+        "presence_threshold": 0.2,
+        "n_selected": 34,
+        "n_ft_only_genuine": 23,
+        "ft_only_mass": 0.7762224352217675,
         "spurious_mass_fraction_by_family": {
-          "unaligned": 0.3061977986983026
+          "unaligned": 0.31367560077556395
         },
         "recall_by_family": {
-          "chat_only": 0.75,
-          "decoupled": 0.75
+          "chat_only": 0.625,
+          "decoupled": 1.0
         },
-        "top_n": 32,
-        "n_genuine_in_top_n": 24,
-        "latent_scaling_false_ft_only_fraction": 0.28205128205128205,
+        "n_genuine_selected": 26,
+        "latent_scaling_false_ft_only_fraction": 0.3235294117647059,
         "raw_metrics": {
-          "false_ft_only_rate": 0.07716544230481916,
-          "chat_specific_recall": 0.75,
+          "false_ft_only_rate": 0.06434843889305676,
+          "chat_specific_recall": 0.8125,
           "reconstruction_fve": 0.9753037006099403
         }
       },
@@ -110,14 +113,16 @@
         "n_decoupled_with_shared_factor": 4,
         "n_decoupled_with_spurious_chat_twin": 15,
         "n_latents": 512,
-        "n_alive": 315,
+        "n_alive": 232,
         "mean_l0": 6.326961517333984,
         "base_fve": 0.5875505904562897,
         "chat_fve": 0.5864236092269419,
         "n_ft_only": 46,
         "norm_false_ft_only_rate": 0.9855974122898814,
-        "selection": "raw-activation Latent Scaling at fixed top N",
-        "n_selected": 32,
+        "selection": "raw-activation Latent Scaling below fixed presence threshold",
+        "minimum_firing_rate": 0.005,
+        "presence_threshold": 0.2,
+        "n_selected": 4,
         "n_ft_only_genuine": 3,
         "ft_only_mass": 1.5076385961177123,
         "spurious_mass_fraction_by_family": {
@@ -129,11 +134,10 @@
           "chat_only": 0.1875,
           "decoupled": 0.0
         },
-        "top_n": 32,
-        "n_genuine_in_top_n": 3,
+        "n_genuine_selected": 3,
         "latent_scaling_false_ft_only_fraction": 0.6304347826086957,
         "raw_metrics": {
-          "false_ft_only_rate": 0.9625375839450342,
+          "false_ft_only_rate": 0.022537757766850734,
           "chat_specific_recall": 0.09375,
           "reconstruction_fve": 0.5869889725430817
         },
